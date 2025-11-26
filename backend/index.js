@@ -204,6 +204,10 @@ app.post("/search",async(req,res)=>{
 const {search}= req.body
 const product = await prod.findOne({name:search})
 res.send(product)
+
+})
+
+app.post("/addtosearch",async(req,res)=>{
 try {
     const {prod,quant}=req.body
     const token = req.cookies.user;
@@ -216,6 +220,7 @@ try {
 } catch (error) {
 }
 })
+
 
 
 const PORT = 5000;

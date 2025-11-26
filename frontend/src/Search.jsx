@@ -17,7 +17,7 @@ function Search() {
     }
       async function button(e,prodid){
       e.preventDefault();
-      const res = await axios.post("http://localhost:5000/search",{prod,quant},{ withCredentials: true });
+      const res = await axios.post("http://localhost:5000/addtosearch",{prod,quant},{ withCredentials: true });
       
 
     }
