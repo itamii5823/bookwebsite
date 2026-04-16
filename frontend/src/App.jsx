@@ -108,7 +108,7 @@ export default function Home() {
       {/* THEME SWITCH (DESKTOP ONLY) */}
       <div className="hidden md:flex fixed top-20 right-5 z-50 flex-col gap-2">
         <button onClick={() => setTheme("cute")} className="px-3 py-1 bg-blue-300 rounded-full text-xs shadow">Cute</button>
-        <button onClick={() => setTheme("dark")} className="px-3 py-1 bg-black text-white rounded-full text-xs shadow">Dark</button>
+        <button onClick={() => setTheme("dark")} className="px-3 py-1 bg-orange-600 text-white rounded-full text-xs shadow">Dark</button>
         <button onClick={() => setTheme("neutral")} className="px-3 py-1 bg-gray-300 rounded-full text-xs shadow">Neutral</button>
       </div>
 
