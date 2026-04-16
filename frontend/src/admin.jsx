@@ -1,86 +1,82 @@
-import axios from 'axios'
-import React from 'react'
-import { useNavigate } from "react-router-dom";
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React from "react";
 
-
-function Admin() {
- const [product,setproduct]=useState({name:"",price:"",image:null,quantity:"",color:"#000000",items:"default"})
-
-
-
-//change function 
-  function change(e){
-  const {name,value}=e.target
-    setproduct({...product,[name]:value}) //we used [name] becouse name is key and a dynamic value
-   }
-   
-
-//postdata
-   async function postdata(e){
-     e.preventDefault();
-     const formData = new FormData()
-     formData.append("items",product.items)
-     formData.append("name", product.name);
-     formData.append("price", product.price);
-     formData.append("quantity", product.quantity);
-     formData.append("image", product.image);
-     formData.append("color",product.color);
-     const res = await axios.post("http://localhost:5000/addprod",formData,{withCredentials:true})
-     console.log(res);
-     
-   }
-
-    const navigate = useNavigate();
-    useEffect(() => {
-     async function isadmin(){
-      try {
-      const res = await axios.post("http://localhost:5000/isadmin","heyy",{withCredentials:true});
-    if(res.data=="user doesnt exist"){
-       navigate("/");
-       
-    }}
-    catch(err){
-      console.log("backend failed",err);
-      navigate("/")
-    }
-   }
-   isadmin()
-    }, [])
-    
-  
-
+export default function Login() {
   return (
-    <>
-     <div className='w-full h-full bg-cyan-900 flex items-center justify-center'>
-      <div className='w-1/3 h-115 bg-cyan-100/90 text-xl font-sans flex flex-col items-center rounded-xl '>
-       <form className='flex flex-col' encType='multipart/form-data' onSubmit={postdata}>
-        <input className='mt-6 text-center bg-cyan-600/30 rounded-xl px-4 py-2 ' type="text" name='name' onChange={change} placeholder='name' value={product.name}/>
-        <input className='mt-6 text-center bg-cyan-600/30 rounded-xl px-4 py-2 ' type="number" name='price' placeholder='price' onChange={change} value={product.price}/>
-        <input className='mt-6 text-center bg-cyan-600/30 rounded-xl px-4 py-2 ' type="number"  name='quantity' placeholder='quantity' onChange={change} value={product.quantity}/>
-        <input className='mt-6 text-center bg-cyan-600/30 rounded-xl px-4 py-2 ' onChange={(e)=>{
-          console.log(e.target.files[0])
-          setproduct({...product,image: e.target.files[0]})}} type="file" name='image' placeholder='name'/>
-        <input className='m-4 text-center bg-cyan-600/30 rounded-xl px-4 py-2 mb-2' onChange={change} type="color" name='color' placeholder='name' value={product.color}/>
-        <select className='bg-amber-50/25 px-4 py-2 rounded-xl' name='items' onChange={change} value={product.items}>
-          <option className='bg-cyan-600/30' value="default">default</option>
-          <option className='bg-cyan-600/25' value="glocerry">glocerry</option>
-          <option className='bg-cyan-600/20' value="electronics">electronics</option>
-          <option className='bg-cyan-600/15' value="gifts">gifts</option>
-          <option className='bg-cyan-600/10' value="mens feshion">mens feshion</option>
-          <option className='bg-cyan-600/5' value="womens">womens</option>
-          <option value="kids">kids</option>
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#F0F9FF] via-[#E0F2FE] to-[#F0F9FF] relative overflow-hidden">
 
+      {/* BLOBS */}
+      <div className="absolute top-10 left-10 w-64 h-64 bg-blue-200 rounded-full blur-3xl opacity-40"></div>
+      <div className="absolute bottom-10 right-10 w-64 h-64 bg-sky-200 rounded-full blur-3xl opacity-40"></div>
 
-        </select>
-        <button className=' rounded-xl px-3 py-2 text-cyan-950 mt-4 bg-gradient-to-r from-cyan-600/70 to-cyan-200' type='sumit'>submit</button>
-       </form>
+      {/* CARD */}
+      <div className="relative z-10 bg-white/70 backdrop-blur-xl border border-blue-100 shadow-lg rounded-2xl p-7 w-full max-w-sm">
+
+        <h2 className="text-2xl font-bold text-center text-blue-500 mb-1">
+          Welcome Back 
+        </h2>
+
+        <p className="text-center text-gray-500 mb-5 text-xs">
+          Login to continue your journey
+        </p>
+
+        <form className="space-y-3">
+
+          {/* USERNAME + EMAIL SIDE BY SIDE */}
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              type="text"
+              placeholder="Username"
+              className="px-3 py-2 rounded-lg border border-blue-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-300 text-xs"
+            />
+
+            <input
+              type="email"
+              placeholder="Email"
+              className="px-3 py-2 rounded-lg border border-blue-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-300 text-xs"
+            />
+          </div>
+
+          {/* PASSWORD */}
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full px-3 py-2 rounded-lg border border-blue-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-300 text-xs"
+          />
+
+          {/* OPTIONS */}
+          <div className="flex justify-between text-xs text-gray-500">
+            <label className="flex items-center gap-1">
+              <input type="checkbox" />
+              Remember
+            </label>
+
+            <button type="button" className="text-blue-500">
+              Forgot?
+            </button>
+          </div>
+
+          {/* BUTTON */}
+          <button
+            type="submit"
+            className="w-full py-2.5 rounded-lg text-white font-medium text-sm
+            bg-[#38BDF8] shadow-md hover:shadow-lg
+            hover:scale-[1.02] active:scale-[0.98]
+            transition-all"
+          >
+            Login 
+          </button>
+
+        </form>
+
+        {/* SIGNUP */}
+        <p className="text-center text-xs text-gray-500 mt-4">
+          Don’t have an account?{" "}
+          <span className="text-blue-500 cursor-pointer">
+            Sign up
+          </span>
+        </p>
+
       </div>
-
-     </div>
-    </>
-  )
+    </div>
+  );
 }
-
-export default Admin;

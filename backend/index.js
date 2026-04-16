@@ -43,7 +43,7 @@ app.use("/uploads", express.static("upload"));
 
 
 app.get('/',(req,res)=>{
-    res.send("hello")
+    res.send("hello")              
 });
 
 app.post("/login",async(req,res)=>{
@@ -52,7 +52,7 @@ app.post("/login",async(req,res)=>{
     if(user){
         if(user.password==password){
          console.log("verified");
-         const token = jwt.sign({"email":email,"password":password},secret)
+         const token = jwt.sign({"email":email,"username":username},secret)
          res.cookie("user",token);
          res.send("done")
         }
@@ -141,7 +141,6 @@ app.get("/getdata",async(req,res)=>{
 
 app.post("/addtocart",async(req,res)=>{
     const{prodid,quantity,num,product} = req.body
-
     const token = req.cookies.user;
     const tokens = jwt.verify(token,secret)
     const users = tokens.username
@@ -221,7 +220,38 @@ try {
 }
 })
 
+app.post('/checkout', async (req, res) => {
+  try {
+    const token = req.cookies.user;
+    const tokens = jwt.verify(token, secret);
+    const users = tokens.username;
 
+    const finduser = await User.findOne({ username: users }).populate("cart.product");
+
+    if (!finduser) {
+      return res.status(404).send("User not found");
+    }
+
+    let total = 0;
+
+    for (let i = 0; i < finduser.cart.length; i++) {
+      const rate = Number(finduser.cart[i].product.rate);
+      const quantity = finduser.cart[i].quantity;
+      total += rate * quantity;
+    }
+
+    res.json({
+      cart: finduser.cart,
+      total: total
+    });
+    finduser.cart = []
+    await finduser.save()
+
+  } catch (err) {
+    console.log("CHECKOUT ERROR:", err);
+    res.status(500).send("error");
+  }
+});
 
 const PORT = 5000;
 app.listen(PORT,()=>{
