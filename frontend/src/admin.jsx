@@ -5,7 +5,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#F0F9FF] via-[#E0F2FE] to-[#F0F9FF] relative overflow-hidden">
 
       {/* BLOBS */}
-      <div className="absolute top-10 left-10 w-64 h-64 bg-blue-200 rounded-full blur-3xl opacity-40"></div>
+      <div className="absolute top-10 left-10 w-64 h-64 bg-green-200 rounded-full blur-3xl opacity-40"></div>
       <div className="absolute bottom-10 right-10 w-64 h-64 bg-sky-200 rounded-full blur-3xl opacity-40"></div>
 
       {/* CARD */}
