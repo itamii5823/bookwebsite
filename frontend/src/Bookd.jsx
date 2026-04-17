@@ -33,7 +33,7 @@ export default function BookDetail() {
         {/* COVER */}
         <div className="rounded-xl overflow-hidden border border-gray-200">
           <img
-            src={book.cover}
+            src={`data:image/jpeg;base64,${book.cover}`}
             alt="cover"
             className="w-full h-56 sm:h-72 object-cover"
           />

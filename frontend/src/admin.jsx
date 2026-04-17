@@ -7,22 +7,24 @@ export default function Admin() {
   const [form, setForm] = useState({
     title: "",
     description: "",
-    cover: "",
-    content: ""
+    cover: null,
+    content: "",
+    category: "" // ✅ ADDED
   });
-    console.log(form);
-    
+
   const [alert, setAlert] = useState(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ VALIDATION
+    // ✅ VALIDATION (added category)
     if (
       !form.title.trim() ||
       !form.description.trim() ||
-      !form.cover.trim() ||
-      !form.content.trim()
+      !form.cover ||
+      !form.content.trim() ||
+      !form.category // ✅ ADDED
     ) {
       return setAlert({
         type: "error",
@@ -31,31 +33,41 @@ export default function Admin() {
     }
 
     try {
+      const formData = new FormData();
+
+      formData.append("title", form.title.trim());
+      formData.append("description", form.description.trim());
+      formData.append("content", form.content.trim());
+      formData.append("cover", form.cover);
+      formData.append("category", form.category); // ✅ ADDED
+
       await axios.post(
         "http://localhost:5000/addbook",
+        formData,
         {
-          title: form.title.trim(),
-          description: form.description.trim(),
-          cover: form.cover.trim(),
-          content: form.content.trim()
-        },
-        { withCredentials: true }
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
       );
-      
+
       setAlert({
         type: "success",
         message: "Book published successfully 📚✨",
-
       });
-       navigate("/book")
+
+      navigate("/book");
+
       // RESET FORM
       setForm({
         title: "",
         description: "",
-        cover: "",
-        content: ""
+        cover: null,
+        content: "",
+        category: "" // ✅ RESET
       });
-      
+
     } catch (err) {
       console.log(err);
 
@@ -140,12 +152,25 @@ export default function Admin() {
             className="w-full px-4 py-3 rounded-xl border border-blue-200"
           />
 
+          {/* ✅ CATEGORY DROPDOWN (NEW) */}
+          <select
+            value={form.category}
+            onChange={(e)=>setForm({...form, category:e.target.value})}
+            className="w-full px-4 py-3 rounded-xl border border-blue-200 bg-white"
+          >
+            <option value="">Select Category 📂</option>
+            <option value="Romance">Romance 💖</option>
+            <option value="Fantasy">Fantasy 🧙</option>
+            <option value="Drama">Drama 🎭</option>
+            <option value="Horror">Horror 👻</option>
+            <option value="Adventure">Adventure 🗺️</option>
+          </select>
+
           {/* COVER */}
           <input
-            type="text"
-            placeholder="Cover Image URL 🖼️"
-            value={form.cover}
-            onChange={(e)=>setForm({...form, cover:e.target.value})}
+            type="file"
+            accept="image/*"
+            onChange={(e)=>setForm({...form, cover:e.target.files[0]})}
             className="w-full px-4 py-3 rounded-xl border border-blue-200"
           />
 

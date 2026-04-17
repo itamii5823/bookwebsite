@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 import cuteLogo from "../public/hehe.png";
 import darkLogo from "../public/hehe.png";
@@ -8,6 +8,10 @@ import neutralLogo from "../public/hehe.png";
 export default function Home() {
   const [theme, setTheme] = useState("cute");
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // ✅ CHANGED (dummy → real)
+  const [books, setBooks] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,29 +23,13 @@ export default function Home() {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  const books = [
-    {
-      id: 1,
-      title: "Whispers of Moonlight",
-      author: "Aanya Verma",
-      description: "A dreamy romantic fantasy under soft starlight.",
-      cover: "https://images.unsplash.com/photo-1519681393784-d120267933ba"
-    },
-    {
-      id: 2,
-      title: "Petals & Promises",
-      author: "Riya Kapoor",
-      description: "A soft love story filled with warmth and petals.",
-      cover: "https://images.unsplash.com/photo-1507842217343-583bb7270b66"
-    },
-    {
-      id: 3,
-      title: "Starlight Letters",
-      author: "Ishaan Mehta",
-      description: "Letters that travel across stars and emotions.",
-      cover: "https://images.unsplash.com/photo-1528207776546-365bb710ee93"
-    }
-  ];
+  // ✅ ADDED (fetch real books)
+  useEffect(() => {
+    fetch("http://localhost:5000/books")
+      .then(res => res.json())
+      .then(data => setBooks(data))
+      .catch(err => console.log(err));
+  }, []);
 
   const content = {
     cute: {
@@ -66,22 +54,19 @@ export default function Home() {
       bg: "bg-gradient-to-br from-[#F0F9FF] via-[#E0F2FE] to-[#F0F9FF]",
       nav: "bg-white/70 backdrop-blur-xl shadow-sm",
       card: "bg-white/70 border border-blue-100 shadow-md hover:shadow-xl",
-      primaryBtn:
-        "bg-[#38BDF8] text-white shadow-md hover:scale-105",
-      secondaryBtn:
-        "bg-white text-blue-500 border border-blue-200 hover:bg-blue-50",
+      primaryBtn: "bg-[#38BDF8] text-white shadow-md hover:scale-105",
+      secondaryBtn: "bg-white text-blue-500 border border-blue-200 hover:bg-blue-50",
       accent: "text-blue-500",
       input: "bg-white border border-blue-200",
       logo: cuteLogo,
       hover: "hover:bg-blue-50"
     },
     dark: {
-      bg: "bg-gradient-to-br from-black via-[#140a10] to-[#1f0a14] text-gray-200",
+      bg: "bg-[#0B0F1A] text-gray-200",
       nav: "bg-black/40 backdrop-blur-xl",
       card: "bg-white/5 border border-white/10",
       primaryBtn: "bg-red-500 text-white hover:scale-105",
-      secondaryBtn:
-        "bg-white/10 text-white border border-white/20 hover:bg-white/20",
+      secondaryBtn: "bg-white/10 text-white border border-white/20 hover:bg-white/20",
       accent: "text-red-400",
       input: "bg-white/10 border border-white/20 text-white",
       logo: darkLogo,
@@ -92,8 +77,7 @@ export default function Home() {
       nav: "bg-white shadow-sm",
       card: "bg-white shadow-sm",
       primaryBtn: "bg-gray-900 text-white hover:scale-105",
-      secondaryBtn:
-        "bg-gray-100 text-gray-800 hover:bg-gray-200",
+      secondaryBtn: "bg-gray-100 text-gray-800 hover:bg-gray-200",
       accent: "text-gray-800",
       input: "bg-white border",
       logo: neutralLogo,
@@ -103,11 +87,11 @@ export default function Home() {
 
   const current = themes[theme];
   const text = content[theme];
-         
+
   return (
     <div className={`${current.bg} min-h-screen`}>
 
-      {/* THEME SWITCH (DESKTOP ONLY) */}
+      {/* THEME SWITCH */}
       <div className="hidden md:flex fixed top-20 right-5 z-50 flex-col gap-2">
         <button onClick={() => setTheme("cute")} className="px-3 py-1 bg-blue-300 rounded-full text-xs shadow">Cute</button>
         <button onClick={() => setTheme("dark")} className="px-3 py-1 bg-black text-white rounded-full text-xs shadow">Dark</button>
@@ -116,151 +100,122 @@ export default function Home() {
 
       {/* NAVBAR */}
       <nav className={`h-16 flex justify-between items-center px-4 md:px-8 sticky top-0 z-40 ${current.nav}`}>
-        
-        <img src={current.logo} className="h-16 mt-2 object-contain" />
+        <img src={current.logo} className="h-16 object-contain" />
 
-        {/* DESKTOP MENU */}
         <div className="space-x-8 hidden md:flex">
-          <button onClick={()=>{navigate("/book")}} >Books</button>
-          <button onClick={()=>{navigate("/sign")}}>Submit</button>
+          <button onClick={()=>navigate("/book")}>Books</button>
+          <button onClick={()=>navigate("/sign")}>Submit</button>
           <button>About</button>
           <button>Contact</button>
         </div>
-
-        {/* HAMBURGER */}
-        <button
-          className="md:hidden flex flex-col gap-1"
-          onClick={() => setMenuOpen(true)}
-        >
-          <span className="w-6 h-0.5 bg-gray-700"></span>
-          <span className="w-6 h-0.5 bg-gray-700"></span>
-          <span className="w-6 h-0.5 bg-gray-700"></span>
-        </button>
       </nav>
 
-      {/* MOBILE MENU */}
-      {menuOpen && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50">
-          
-          <div className={`absolute right-0 top-0 h-full w-[75%] max-w-xs ${current.nav} shadow-2xl p-6 flex flex-col`}>
-
-            {/* HEADER */}
-            <div className="flex justify-between items-center mb-6">
-              <span className="font-semibold text-lg">Menu</span>
-              <button onClick={() => setMenuOpen(false)} className="text-xl">✕</button>
-            </div>
-
-            {/* THEME SWITCH (MOBILE) */}
-            <div className="mb-6">
-              <p className="text-sm mb-2 opacity-60">Theme</p>
-              <div className="flex gap-2">
-                <button onClick={() => setTheme("cute")} className="px-3 py-1 bg-blue-300 rounded-full text-xs">Cute</button>
-                <button onClick={() => setTheme("dark")} className="px-3 py-1 bg-black text-white rounded-full text-xs">Dark</button>
-                <button onClick={() => setTheme("neutral")} className="px-3 py-1 bg-gray-300 rounded-full text-xs">Neutral</button>
-              </div>
-            </div>
-
-            {/* MENU ITEMS */}
-            <div className="flex flex-col gap-4">
-              {["Books", "Submit", "About", "Contact"].map((item) => (
-                <button
-                  key={item}
-                  className={`text-left px-4 py-3 rounded-xl font-medium transition ${current.hover}`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <div className="mt-auto">
-              <button onClick={()=>{navigate("/book")}} className={`w-full py-3 rounded-xl font-semibold ${current.primaryBtn}`}>
-                Explore
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
-
       {/* HERO */}
-      <section className="flex flex-col items-center text-center py-20 md:py-28 px-4 md:px-6">
-        <h2 className={`text-3xl md:text-5xl font-bold mb-4 md:mb-6 ${current.accent}`}>
+      <section className="text-center py-20 px-4">
+        <h2 className={`text-4xl md:text-6xl font-bold mb-6 ${current.accent}`}>
           {text.heading}
         </h2>
 
-        <p className="max-w-md md:max-w-xl mb-6 md:mb-8 text-sm md:text-lg opacity-80">
+        <p className="max-w-xl mx-auto mb-8 opacity-80">
           {text.sub}
         </p>
 
-        <div className="flex flex-col md:flex-row gap-3 md:gap-4">
-          <button onClick={()=>{navigate("/book")}} className={`px-6 md:px-8 py-2 md:py-3 rounded-full font-semibold ${current.primaryBtn}`}>
-            Explore
+        <div className="flex justify-center gap-4 flex-wrap">
+          <button onClick={()=>navigate("/book")} className={`px-8 py-3 rounded-xl font-semibold ${current.primaryBtn}`}>
+            Explore Stories
           </button>
 
-          <button onClick={()=>{navigate("/admin")}} className={`px-6 md:px-8 py-2 md:py-3 rounded-full font-semibold ${current.secondaryBtn}`}>
-            Submit
+          <button onClick={()=>navigate("/admin")} className={`px-8 py-3 rounded-xl font-semibold ${current.secondaryBtn}`}>
+            Submit Story
           </button>
         </div>
       </section>
 
-      {/* BOOKS */}
-      <section className="py-16 md:py-20 px-4 md:px-8">
-        <h3 className="text-2xl md:text-3xl font-semibold text-center mb-10 md:mb-14">
-          Featured Stories
+      {/* MAIN CONTENT */}
+      <section className="max-w-7xl mx-auto px-4 md:px-8 py-10">
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          {/* FEATURED */}
+          <div className="lg:col-span-2 space-y-6">
+            <h3 className="text-xl font-semibold">Featured Stories</h3>
+
+            {books.slice(-3).map((book) => (
+              <div
+                key={book._id}
+                onClick={() => navigate(`/bookd/${book._id}`)} // ✅ clickable
+                className={`flex gap-4 p-4 rounded-2xl cursor-pointer ${current.card}`}
+              >
+                <img
+                  src={`data:image/jpeg;base64,${book.cover}`} // ✅ real image
+                  className="w-28 h-20 object-cover rounded-lg"
+                />
+                <div>
+                  <h4 className={`font-semibold ${current.accent}`}>{book.title}</h4>
+                  <p className="text-sm opacity-70 line-clamp-2">{book.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* SIDEBAR */}
+          <div className={`p-5 rounded-2xl ${current.card}`}>
+            <h3 className="text-sm font-semibold mb-4">Trending</h3>
+
+            <div className="space-y-3">
+              {books.map((b) => (
+                <p
+                  key={b._id}
+                  onClick={() => navigate(`/bookd/${b._id}`)} // ✅ clickable
+                  className="text-sm opacity-70 hover:opacity-100 cursor-pointer"
+                >
+                  {b.title}
+                </p>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* GRID */}
+        <h3 className="text-xl font-semibold mt-14 mb-6 text-center">
+          New Stories
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 max-w-6xl mx-auto">
-          {books.map((book) => (
-            <div key={book.id} className={`rounded-3xl overflow-hidden ${current.card}`}>
-              <img src={book.cover} className="h-60 md:h-72 w-full object-cover" />
-              <div className="p-4 md:p-6">
-                <h4 className={`text-base md:text-lg font-semibold mb-2 ${current.accent}`}>
-                  {book.title}
-                </h4>
-                <p className="text-xs md:text-sm opacity-70">
-                  {book.description}
-                </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {books.slice(-3).map((book) => (
+            <div
+              key={book._id}
+              onClick={() => navigate(`/bookd/${book._id}`)} // ✅ clickable
+              className={`rounded-2xl overflow-hidden cursor-pointer ${current.card}`}
+            >
+              <img
+                src={`data:image/jpeg;base64,${book.cover}`} // ✅ real image
+                className="h-60 w-full object-cover"
+              />
+              <div className="p-4">
+                <h4 className={`font-semibold ${current.accent}`}>{book.title}</h4>
+                <p className="text-sm opacity-70 mt-1">{book.description}</p>
               </div>
             </div>
           ))}
         </div>
+
       </section>
 
       {/* ABOUT */}
-      <section className="text-center py-16 md:py-24 px-4 md:px-6">
-        <div className={`max-w-xl md:max-w-3xl mx-auto p-6 md:p-10 rounded-3xl ${current.card}`}>
-          <h3 className="text-xl md:text-2xl font-semibold mb-4">
-            Our Story
-          </h3>
-          <p className="text-sm md:text-base opacity-80">
-            {text.about}
-          </p>
+      <section className="text-center py-20 px-6">
+        <div className={`max-w-3xl mx-auto p-10 rounded-3xl ${current.card}`}>
+          <h3 className="text-2xl font-semibold mb-4">Our Story</h3>
+          <p className="opacity-80">{text.about}</p>
         </div>
       </section>
 
-      {/* NEWSLETTER */}
-      <section className="py-16 md:py-24 text-center px-4 md:px-6">
-        <h3 className="text-lg md:text-xl font-semibold mb-6">
-          Join Our Circle 💌
-        </h3>
-
-        <div className="flex flex-col md:flex-row justify-center gap-3">
-          <input
-            type="email"
-            placeholder="Enter your email..."
-            className={`px-4 md:px-6 py-2 md:py-3 rounded-full ${current.input}`}
-          />
-
-          <button className={`px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold ${current.primaryBtn}`}>
-            Subscribe
-          </button>
-        </div>
-      </section>
-
+      {/* FOOTER */}
       <footer className="text-center py-6 text-sm opacity-60">
         © 2026 Moonlit Pages
       </footer>
+
     </div>
   );
 }

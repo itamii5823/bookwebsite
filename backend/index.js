@@ -4,11 +4,19 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
+const multer = require("multer"); // 🔥 ADDED
+
 const app = express();
-const secret = "dhsgsghdshggd";
+
+// 🔥 ENV MODE
+const isProd = process.env.NODE_ENV === "production";
+const secret = process.env.JWT_SECRET || "dhsgsghdshggd";
 
 // ================= DB CONNECTION =================
-mongoose.connect("mongodb://127.0.0.1:27017/bookapp")
+
+const MONGO_URI = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/bookapp";
+
+mongoose.connect(MONGO_URI)
 .then(()=>console.log("MongoDB Connected"))
 .catch(err=>console.log(err));
 
@@ -19,19 +27,24 @@ const userSchema = new mongoose.Schema({
   password: String
 });
 
-
-const Book = require("./database/Book"); // 
+const Book = require("./database/Book");
 
 const User = mongoose.model("User", userSchema);
 
 // ================= MIDDLEWARE =================
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: isProd 
+    ? process.env.FRONTEND_URL 
+    : "http://localhost:5173",
   credentials: true
 }));
 
 app.use(express.json());
 app.use(cookieParser());
+
+// 🔥 MULTER SETUP (ADDED)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // ================= ROUTES =================
 
@@ -45,6 +58,10 @@ app.post("/signup", async (req, res) => {
   const { username, password, email } = req.body;
 
   try {
+    if (!username || !password || !email) {
+      return res.status(400).send("All fields required");
+    }
+
     const existinguser = await User.findOne({ username });
 
     if (existinguser) {
@@ -62,7 +79,8 @@ app.post("/signup", async (req, res) => {
 
     res.cookie("user", token, {
       httpOnly: true,
-      sameSite: "lax"
+      sameSite: isProd ? "none" : "lax",
+      secure: isProd
     });
 
     res.send("signup success");
@@ -78,6 +96,10 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    if (!username || !password) {
+      return res.status(400).send("All fields required");
+    }
+
     const user = await User.findOne({ username });
 
     if (!user) {
@@ -96,7 +118,8 @@ app.post("/login", async (req, res) => {
 
     res.cookie("user", token, {
       httpOnly: true,
-      sameSite: "lax"
+      sameSite: isProd ? "none" : "lax",
+      secure: isProd
     });
 
     res.send("login success");
@@ -108,7 +131,8 @@ app.post("/login", async (req, res) => {
 });
 
 // ================= ADD BOOK =================
-app.post("/addbook", async (req, res) => {
+// 🔥 ONLY THIS ROUTE UPDATED
+app.post("/addbook", upload.single("cover"), async (req, res) => {
   try {
     const token = req.cookies.user;
 
@@ -118,13 +142,19 @@ app.post("/addbook", async (req, res) => {
 
     const data = jwt.verify(token, secret);
 
-    const { title, description, cover, content } = req.body;
+    const { title, description, content ,category } = req.body;
+    const cover = req.file;
+
+    if (!title || !description || !content || !cover) {
+      return res.status(400).send("All fields required");
+    }
 
     const book = new Book({
       title,
       description,
-      cover,
       content,
+      category,
+      cover: cover.buffer.toString("base64"), // 🔥 store image
       username: data.username,
       email: data.email
     });
@@ -139,7 +169,8 @@ app.post("/addbook", async (req, res) => {
     res.status(500).send("error");
   }
 });
-// ================= Check user  =================
+
+// ================= CHECK USER =================
 app.get("/me", (req, res) => {
   try {
     const token = req.cookies.user;
@@ -150,7 +181,7 @@ app.get("/me", (req, res) => {
 
     const data = jwt.verify(token, secret);
 
-    res.json(data); // user is valid
+    res.json(data);
   } catch (err) {
     return res.status(401).send("invalid");
   }
@@ -169,12 +200,17 @@ app.get("/books", async (req, res) => {
 
 // ================= LOGOUT =================
 app.get("/logout", (req, res) => {
-  res.clearCookie("user");
+  res.clearCookie("user", {
+    httpOnly: true,
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd
+  });
   res.send("logged out");
 });
 
 // ================= START SERVER =================
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
 });
