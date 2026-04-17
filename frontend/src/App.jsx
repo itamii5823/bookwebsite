@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"
 
 import cuteLogo from "../public/hehe.png";
 import darkLogo from "../public/hehe.png";
@@ -7,6 +8,7 @@ import neutralLogo from "../public/hehe.png";
 export default function Home() {
   const [theme, setTheme] = useState("cute");
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
@@ -101,7 +103,7 @@ export default function Home() {
 
   const current = themes[theme];
   const text = content[theme];
-
+         
   return (
     <div className={`${current.bg} min-h-screen`}>
 
@@ -119,8 +121,8 @@ export default function Home() {
 
         {/* DESKTOP MENU */}
         <div className="space-x-8 hidden md:flex">
-          <button>Books</button>
-          <button>Submit</button>
+          <button onClick={()=>{navigate("/book")}} >Books</button>
+          <button onClick={()=>{navigate("/sign")}}>Submit</button>
           <button>About</button>
           <button>Contact</button>
         </div>
@@ -172,7 +174,7 @@ export default function Home() {
 
             {/* CTA */}
             <div className="mt-auto">
-              <button className={`w-full py-3 rounded-xl font-semibold ${current.primaryBtn}`}>
+              <button onClick={()=>{navigate("/book")}} className={`w-full py-3 rounded-xl font-semibold ${current.primaryBtn}`}>
                 Explore
               </button>
             </div>
@@ -192,11 +194,11 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col md:flex-row gap-3 md:gap-4">
-          <button className={`px-6 md:px-8 py-2 md:py-3 rounded-full font-semibold ${current.primaryBtn}`}>
+          <button onClick={()=>{navigate("/book")}} className={`px-6 md:px-8 py-2 md:py-3 rounded-full font-semibold ${current.primaryBtn}`}>
             Explore
           </button>
 
-          <button className={`px-6 md:px-8 py-2 md:py-3 rounded-full font-semibold ${current.secondaryBtn}`}>
+          <button onClick={()=>{navigate("/admin")}} className={`px-6 md:px-8 py-2 md:py-3 rounded-full font-semibold ${current.secondaryBtn}`}>
             Submit
           </button>
         </div>
