@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import cuteLogo from "../public/hehe.png";
-import darkLogo from "../public/hehe.png";
-import neutralLogo from "../public/hehe.png";
+import cuteLogo from "/hehe.png";
+import darkLogo from "/hehe.png";
+import neutralLogo from "/hehe.png";
 
 export default function Home() {
-  const [theme, setTheme] = useState("cute");
+  const [theme, setTheme] = useState("dark");
   const [menuOpen, setMenuOpen] = useState(false);
 
   // ✅ CHANGED (dummy → real)

@@ -5,6 +5,7 @@ import Login from "./Login";
 import Sign from "./Sign";
 import Books from "./Book";
 import Bookd from "./Bookd";
+import Search from "./Search";
 
 
 
@@ -18,6 +19,7 @@ function Mainroutes(){
           <Route path="/sign" element={<Sign/>}/>
           <Route path="/book" element={<Books/>}/>
           <Route path="/bookd/:id" element={<Bookd/>}/>
+          <Route path="/search" element={<Search/>}/>
 
 
        </Routes>

@@ -9,7 +9,7 @@ export default function Admin() {
     description: "",
     cover: null,
     content: "",
-    category: "" // ✅ ADDED
+    category: ""
   });
 
   const [alert, setAlert] = useState(null);
@@ -18,13 +18,12 @@ export default function Admin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ VALIDATION (added category)
     if (
       !form.title.trim() ||
       !form.description.trim() ||
       !form.cover ||
       !form.content.trim() ||
-      !form.category // ✅ ADDED
+      !form.category
     ) {
       return setAlert({
         type: "error",
@@ -39,7 +38,7 @@ export default function Admin() {
       formData.append("description", form.description.trim());
       formData.append("content", form.content.trim());
       formData.append("cover", form.cover);
-      formData.append("category", form.category); // ✅ ADDED
+      formData.append("category", form.category);
 
       await axios.post(
         "http://localhost:5000/addbook",
@@ -59,13 +58,12 @@ export default function Admin() {
 
       navigate("/book");
 
-      // RESET FORM
       setForm({
         title: "",
         description: "",
         cover: null,
         content: "",
-        category: "" // ✅ RESET
+        category: ""
       });
 
     } catch (err) {
@@ -86,26 +84,26 @@ export default function Admin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#E0F2FE] via-[#F0F9FF] to-[#E0F2FE] relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#060304] relative overflow-hidden text-white">
 
-      {/* BLOBS */}
-      <div className="absolute top-10 left-10 w-72 h-72 bg-blue-200 rounded-full blur-3xl opacity-40"></div>
-      <div className="absolute bottom-10 right-10 w-72 h-72 bg-sky-200 rounded-full blur-3xl opacity-40"></div>
+      {/* 🔥 PREMIUM GLOW BACKGROUND */}
+      <div className="absolute w-125 h-125 bg-[#E37EAF] blur-[180px] opacity-20 -top-37.5 -left-37.5"></div>
+      <div className="absolute w-125 h-125 bg-purple-600 blur-[200px] opacity-20 -bottom-37.5 -right-37.5"></div>
 
       {/* ALERT */}
       {alert && (
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-          <div className="bg-white/80 backdrop-blur-xl border border-blue-200 shadow-xl rounded-2xl px-6 py-4 flex items-center gap-3">
+          <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl px-6 py-4 flex items-center gap-3">
 
             <span className="text-xl">
               {alert.type === "error" ? "💔" : "✨"}
             </span>
 
-            <p className="text-sm text-gray-700">{alert.message}</p>
+            <p className="text-sm text-white">{alert.message}</p>
 
             <button
               onClick={() => setAlert(null)}
-              className="ml-2 text-gray-400 hover:text-gray-600"
+              className="ml-2 text-gray-400 hover:text-white"
             >
               ✕
             </button>
@@ -113,87 +111,81 @@ export default function Admin() {
         </div>
       )}
 
-      {/* CARD */}
-      <div className="relative z-10 bg-white/70 backdrop-blur-xl border border-blue-100 shadow-xl rounded-3xl p-8 w-full max-w-md">
+      {/* 🔥 MAIN CARD */}
+      <div className="relative z-10 bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_20px_80px_rgba(0,0,0,0.5)] rounded-3xl p-8 w-full max-w-md">
 
         {/* HEADER */}
         <div className="text-center mb-6">
-          <div className="text-4xl mb-2">📖✨</div>
+          <div className="text-4xl mb-2">📖</div>
 
-          <h2 className="text-3xl font-bold text-blue-500">
-            Create Your Book 💙
+          <h2 className="text-3xl font-bold bg-linear-to-r from-[#E37EAF] to-purple-400 text-transparent bg-clip-text">
+            Create Story
           </h2>
 
-          <p className="text-sm text-blue-400 mt-1">
-            Turn your imagination into something real…
+          <p className="text-sm text-gray-400 mt-1">
+            Turn your imagination into reality
           </p>
         </div>
 
-        <div className="w-12 h-1 bg-blue-300 mx-auto rounded-full mb-6"></div>
+        <div className="w-12 h-0.5 bg-linear-to-r from-[#E37EAF] to-purple-400 mx-auto rounded-full mb-6"></div>
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* TITLE */}
           <input
             type="text"
-            placeholder="Book Title 📚"
+            placeholder="Book Title"
             value={form.title}
             onChange={(e)=>setForm({...form, title:e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-blue-200"
+            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-[#E37EAF] focus:outline-none"
           />
 
-          {/* DESCRIPTION */}
           <textarea
             rows="3"
-            placeholder="Short description ✍️"
+            placeholder="Short description"
             value={form.description}
             onChange={(e)=>setForm({...form, description:e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-blue-200"
+            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-[#E37EAF] focus:outline-none"
           />
 
-          {/* ✅ CATEGORY DROPDOWN (NEW) */}
+          {/* CATEGORY */}
           <select
             value={form.category}
             onChange={(e)=>setForm({...form, category:e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-blue-200 bg-white"
+            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-[#E37EAF] focus:outline-none text-gray-300"
           >
-            <option value="">Select Category 📂</option>
-            <option value="Romance">Romance 💖</option>
-            <option value="Fantasy">Fantasy 🧙</option>
-            <option value="Drama">Drama 🎭</option>
-            <option value="Horror">Horror 👻</option>
-            <option value="Adventure">Adventure 🗺️</option>
+            <option className="bg-white/10"  value="">Select Category</option>
+            <option value="Romance">Romance</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Drama">Drama</option>
+            <option value="Horror">Horror</option>
+            <option value="Adventure">Adventure</option>
           </select>
 
-          {/* COVER */}
           <input
             type="file"
             accept="image/*"
             onChange={(e)=>setForm({...form, cover:e.target.files[0]})}
-            className="w-full px-4 py-3 rounded-xl border border-blue-200"
+            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 file:text-white"
           />
 
-          {/* CONTENT */}
           <textarea
             rows="6"
-            placeholder="Write your full story here... 📖✨"
+            placeholder="Write your story..."
             value={form.content}
             onChange={(e)=>setForm({...form, content:e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-blue-200"
+            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-[#E37EAF] focus:outline-none"
           />
 
-          {/* BUTTON */}
           <button
             type="submit"
-            className="w-full py-3 rounded-xl font-semibold text-white 
-            bg-linear-to-r from-[#38BDF8] to-[#60A5FA]
-            shadow-[0_10px_25px_rgba(56,189,248,0.35)]
-            hover:shadow-[0_15px_35px_rgba(56,189,248,0.5)]
-            hover:scale-[1.02] active:scale-[0.98]
+            className="w-full py-3 rounded-xl font-semibold 
+            bg-linear-to-r from-[#E37EAF] to-purple-500
+            hover:scale-[1.03] active:scale-[0.97]
+            shadow-[0_10px_40px_rgba(227,126,175,0.4)]
             transition-all duration-300"
           >
-            Publish Story ✨
+            Publish Story 🚀
           </button>
 
         </form>
