@@ -34,8 +34,8 @@ const User = mongoose.model("User", userSchema);
 // ================= MIDDLEWARE =================
 app.use(cors({
   origin:
-  [ process.env.FRONTEND_URL ,
-     "https://bookwebsite-g8rv.vercel.app"],
+  [  process.env.FRONTEND_URL ,
+     "http://localhost:5173"],
   credentials: true
 }));
 
@@ -50,7 +50,7 @@ const upload = multer({ storage });
 
 // TEST
 app.get("/", (req, res) => {
-  res.send("Backend Running 🚀");
+  res.send("Backend Running ");
 });
 
 // ================= SIGNUP =================

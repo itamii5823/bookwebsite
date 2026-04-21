@@ -9,7 +9,6 @@ export default function Home() {
   const [theme, setTheme] = useState("dark");
   const [menuOpen, setMenuOpen] = useState(false);
 
-
   const [books, setBooks] = useState([]);
 
   const navigate = useNavigate();
@@ -23,7 +22,6 @@ export default function Home() {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  // ✅ ADDED (fetch real books)
   useEffect(() => {
     fetch("https://bookwebsite-4q2b.onrender.com/books")
       .then(res => res.json())
@@ -91,7 +89,7 @@ export default function Home() {
   return (
     <div className={`${current.bg} min-h-screen`}>
 
-      {/* THEME SWITCH */}
+      {/* THEME SWITCH (DESKTOP) */}
       <div className="hidden md:flex fixed top-20 right-5 z-50 flex-col gap-2">
         <button onClick={() => setTheme("cute")} className="px-3 py-1 bg-blue-300 rounded-full text-xs shadow">Cute</button>
         <button onClick={() => setTheme("dark")} className="px-3 py-1 bg-black text-white rounded-full text-xs shadow">Dark</button>
@@ -108,7 +106,47 @@ export default function Home() {
           <button>About</button>
           <button>Contact</button>
         </div>
+
+        {/* MODERN HAMBURGER */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-white/10 transition"
+        >
+          <span className={`block w-6 h-0.5 bg-current transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-1.5" : ""}`} />
+          <span className={`block w-6 h-0.5 bg-current my-1 transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+          <span className={`block w-6 h-0.5 bg-current transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
+        </button>
       </nav>
+
+      {/* MOBILE MENU */}
+      {menuOpen && (
+        <div className="md:hidden fixed top-16 left-0 w-full z-50">
+
+          {/* BACKDROP */}
+          <div 
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setMenuOpen(false)}
+          />
+
+          {/* PANEL */}
+          <div className={`relative mx-4 mt-2 rounded-2xl p-5 space-y-4 ${current.nav} shadow-2xl animate-slideDown`}>
+
+            <button onClick={()=>{navigate("/book"); setMenuOpen(false);}} className="block w-full text-left text-lg font-medium">Books</button>
+            <button onClick={()=>{navigate("/sign"); setMenuOpen(false);}} className="block w-full text-left text-lg font-medium">Submit</button>
+            <button className="block w-full text-left text-lg font-medium">About</button>
+            <button className="block w-full text-left text-lg font-medium">Contact</button>
+
+            <div className="border-t border-white/10 pt-4" />
+
+            <div className="flex gap-2">
+              <button onClick={() => setTheme("cute")} className="flex-1 py-2 rounded-xl bg-blue-300 text-sm font-medium">Cute</button>
+              <button onClick={() => setTheme("dark")} className="flex-1 py-2 rounded-xl bg-black text-white text-sm font-medium">Dark</button>
+              <button onClick={() => setTheme("neutral")} className="flex-1 py-2 rounded-xl bg-gray-300 text-sm font-medium">Neutral</button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* HERO */}
       <section className="text-center py-20 px-4">
@@ -131,6 +169,8 @@ export default function Home() {
         </div>
       </section>
 
+      {/* (rest of your code unchanged below...) */}
+
       {/* MAIN CONTENT */}
       <section className="max-w-7xl mx-auto px-4 md:px-8 py-10">
 
@@ -143,7 +183,7 @@ export default function Home() {
             {books.slice(-3).map((book) => (
               <div
                 key={book._id}
-                onClick={() => navigate(`/bookd/${book._id}`)} // ✅ clickable
+                onClick={() => navigate(`/bookd/${book._id}`)} // 
                 className={`flex gap-4 p-4 rounded-2xl cursor-pointer ${current.card}`}
               >
                 <img
