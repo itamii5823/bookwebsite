@@ -35,7 +35,7 @@ const User = mongoose.model("User", userSchema);
 app.use(cors({
   origin:
   [ process.env.FRONTEND_URL ,
-     "http://localhost:5173"],
+     "https://bookwebsite-g8rv.vercel.app"],
   credentials: true
 }));
 
