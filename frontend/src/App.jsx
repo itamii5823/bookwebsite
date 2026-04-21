@@ -169,7 +169,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* (rest of your code unchanged below...) */}
 
       {/* MAIN CONTENT */}
       <section className="max-w-7xl mx-auto px-4 md:px-8 py-10">
