@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import cuteLogo from "/hehe.png";
-import darkLogo from "/hehe.png";
+
+import { BookOpen, Feather, Info, Mail, Sparkles } from "lucide-react";
+
+import cuteLogo from "/silver.png";
+import darkLogo from "/silver.png";
 import neutralLogo from "/hehe.png";
 
 export default function Home() {
   const [theme, setTheme] = useState("dark");
   const [menuOpen, setMenuOpen] = useState(false);
-
   const [books, setBooks] = useState([]);
 
   const navigate = useNavigate();
@@ -30,123 +32,167 @@ export default function Home() {
   }, []);
 
   const content = {
-    cute: {
-      heading: "Soft Sky Stories ☁️💙",
-      sub: "A calm dreamy space where stories feel light and magical.",
-      about: "We create soft, peaceful storytelling experiences."
-    },
-    dark: {
-      heading: "Love in the Dark 🖤",
-      sub: "Stories filled with passion, mystery, and intensity.",
-      about: "We explore deep emotions and dark storytelling."
-    },
-    neutral: {
-      heading: "Stories, Simply Told",
-      sub: "Clean and minimal storytelling experience.",
-      about: "We focus on clarity and meaningful writing."
-    }
-  };
+  cute: {
+    heading: "Where stories slip beyond the veil.",
+    sub: "Soft worlds unfold where tenderness, wonder, and quiet magic gently pull you somewhere kinder.",
+    about: "A space for gentle narratives, soft emotions, and stories that feel like a quiet escape."
+  },
+
+  dark: {
+    heading: "Where stories are not just told, but sworn.",
+    sub: "Every tale is a pact of shadows, binding you to truths that linger long after the last page.",
+    about: "Here, stories are heavier — filled with depth, consequence, and echoes that refuse to fade."
+  },
+
+  neutral: {
+    heading: "Where stories find you under moonlight.",
+    sub: "In the hush between extremes, stories arrive with depth, meaning, and a touch of fate.",
+    about: "Balanced storytelling that blends emotion, clarity, and quiet elegance."
+  }
+};
 
   const themes = {
-    cute: {
-      bg: "bg-gradient-to-br from-[#F0F9FF] via-[#E0F2FE] to-[#F0F9FF]",
-      nav: "bg-white/70 backdrop-blur-xl shadow-sm",
-      card: "bg-white/70 border border-blue-100 shadow-md hover:shadow-xl",
-      primaryBtn: "bg-[#38BDF8] text-white shadow-md hover:scale-105",
-      secondaryBtn: "bg-white text-blue-500 border border-blue-200 hover:bg-blue-50",
-      accent: "text-blue-500",
-      input: "bg-white border border-blue-200",
-      logo: cuteLogo,
-      hover: "hover:bg-blue-50"
-    },
-    dark: {
-      bg: "bg-[#0B0F1A] text-gray-200",
-      nav: "bg-black/40 backdrop-blur-xl",
-      card: "bg-white/5 border border-white/10",
-      primaryBtn: "bg-red-500 text-white hover:scale-105",
-      secondaryBtn: "bg-white/10 text-white border border-white/20 hover:bg-white/20",
-      accent: "text-red-400",
-      input: "bg-white/10 border border-white/20 text-white",
-      logo: darkLogo,
-      hover: "hover:bg-white/10"
-    },
-    neutral: {
-      bg: "bg-[#FAF7F2] text-gray-800",
-      nav: "bg-white shadow-sm",
-      card: "bg-white shadow-sm",
-      primaryBtn: "bg-gray-900 text-white hover:scale-105",
-      secondaryBtn: "bg-gray-100 text-gray-800 hover:bg-gray-200",
-      accent: "text-gray-800",
-      input: "bg-white border",
-      logo: neutralLogo,
-      hover: "hover:bg-gray-100"
-    }
-  };
 
+  // 🌸 KEEP SAME (you didn’t ask change)
+  cute: {
+    bg: "bg-gradient-to-br from-[#ffe4e6] via-[#fbcfe8] to-[#e5e5e5] text-gray-800",
+    nav: "bg-white/40 backdrop-blur-xl shadow-sm",
+    card: "bg-white/70 border border-pink-100 shadow-md hover:shadow-xl",
+    primaryBtn: "bg-pink-400 text-white hover:bg-pink-500 transition-all",
+    secondaryBtn: "bg-white text-pink-500 border border-pink-200 hover:bg-pink-50 transition-all",
+    accent: "text-pink-500",
+    input: "bg-white border border-pink-200",
+    logo: cuteLogo,
+    hover: "hover:bg-pink-50"
+  },
+
+  // 🖤 OBSIDIAN INK (REAL DARK THEME)
+  dark: {
+    bg: "bg-[#0B0B0C] text-[#B8B8C0]",
+    nav: "bg-[#0B0B0C]/90 backdrop-blur-xl border-b border-[#2B0F1A]",
+    card: "bg-[#2B0F1A]/30 border border-[#2B0F1A] backdrop-blur-md",
+
+    primaryBtn:
+      "bg-[#3A2FFF] text-white hover:bg-[#2a22cc] hover:shadow-indigo-500/40 transition-all duration-300",
+
+    secondaryBtn:
+      "bg-[#2B0F1A] text-[#B8B8C0] border border-[#2B0F1A] hover:bg-[#3a1624] transition-all",
+
+    accent: "text-[#3A2FFF]",
+    input: "bg-[#2B0F1A] border border-[#2B0F1A] text-[#B8B8C0]",
+    logo: darkLogo,
+    hover: "hover:bg-[#2B0F1A]"
+  },
+
+  // 🍷 CRIMSON THREAD (NEUTRAL)
+  neutral: {
+    bg: "bg-[#5A0F1C] text-[#F5F2EE]",
+    nav: "bg-[#5A0F1C]/90 backdrop-blur-xl border-b border-[#8B3A3A]",
+    card: "bg-[#8B3A3A]/20 border border-[#8B3A3A]",
+
+    primaryBtn:
+      "bg-[#C2A878] text-black hover:bg-[#b89c6c] hover:shadow-yellow-600/30 transition-all",
+
+    secondaryBtn:
+      "bg-transparent text-[#F5F2EE] border border-[#C2A878] hover:bg-[#C2A878] hover:text-black transition-all",
+
+    accent: "text-[#C2A878]",
+    input: "bg-[#8B3A3A]/20 border border-[#8B3A3A] text-[#F5F2EE]",
+    logo: neutralLogo,
+    hover: "hover:bg-[#8B3A3A]/20"
+  }
+};
   const current = themes[theme];
   const text = content[theme];
 
   return (
     <div className={`${current.bg} min-h-screen`}>
 
-      {/* THEME SWITCH (DESKTOP) */}
+      {/* THEME SWITCH */}
       <div className="hidden md:flex fixed top-20 right-5 z-50 flex-col gap-2">
-        <button onClick={() => setTheme("cute")} className="px-3 py-1 bg-blue-300 rounded-full text-xs shadow">Cute</button>
+        <button onClick={() => setTheme("cute")} className="px-3 py-1 bg-pink-300 rounded-full text-xs shadow">Cute</button>
         <button onClick={() => setTheme("dark")} className="px-3 py-1 bg-black text-white rounded-full text-xs shadow">Dark</button>
-        <button onClick={() => setTheme("neutral")} className="px-3 py-1 bg-gray-300 rounded-full text-xs shadow">Neutral</button>
+        <button onClick={() => setTheme("neutral")} className="px-3 py-1 bg-red-900 text-white rounded-full text-xs shadow">Neutral</button>
       </div>
 
-      {/* NAVBAR */}
+      {/* NAV */}
       <nav className={`h-16 flex justify-between items-center px-4 md:px-8 sticky top-0 z-40 ${current.nav}`}>
         <img src={current.logo} className="h-16 object-contain" />
 
         <div className="space-x-8 hidden md:flex">
-          <button onClick={()=>navigate("/book")}>Books</button>
-          <button onClick={()=>navigate("/sign")}>Submit</button>
-          <button>About</button>
-          <button>Contact</button>
+
+          <button onClick={()=>navigate("/book")} className="flex items-center gap-2 hover:text-pink-400 transition">
+            <BookOpen size={18}/> Books
+          </button>
+
+          <button onClick={()=>navigate("/sign")} className="flex items-center gap-2 hover:text-purple-400 transition">
+            <Feather size={18}/> Submit
+          </button>
+
+          <button className="flex items-center gap-2 hover:text-blue-400 transition">
+            <Info size={18}/> About
+          </button>
+
+          <button className="flex items-center gap-2 hover:text-red-400 transition">
+            <Mail size={18}/> Contact
+          </button>
+
         </div>
 
-        {/* MODERN HAMBURGER */}
+        {/* HAMBURGER */}
+        
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-white/10 transition"
         >
-          <span className={`block w-6 h-0.5 bg-current transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-1.5" : ""}`} />
-          <span className={`block w-6 h-0.5 bg-current my-1 transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
-          <span className={`block w-6 h-0.5 bg-current transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
+          <span className={`block w-6 h-0.5 bg-current ${menuOpen ? "rotate-45 translate-y-1.5" : ""}`} />
+          <span className={`block w-6 h-0.5 bg-current my-1 ${menuOpen ? "opacity-0" : ""}`} />
+          <span className={`block w-6 h-0.5 bg-current ${menuOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
         </button>
-      </nav>
+        </nav>
 
-      {/* MOBILE MENU */}
-      {menuOpen && (
-        <div className="md:hidden fixed top-16 left-0 w-full z-50">
+{/* 👇 PASTE HERE */}
+{menuOpen && (
+  <div className="md:hidden fixed inset-0 z-[999]">
 
-          {/* BACKDROP */}
-          <div 
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setMenuOpen(false)}
-          />
+    <div
+      className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+      onClick={() => setMenuOpen(false)}
+    />
 
-          {/* PANEL */}
-          <div className={`relative mx-4 mt-2 rounded-2xl p-5 space-y-4 ${current.nav} shadow-2xl animate-slideDown`}>
+    <div className="absolute top-16 left-0 w-full px-4">
+      <div className={`rounded-2xl p-5 space-y-4 ${current.nav} shadow-2xl`}>
 
-            <button onClick={()=>{navigate("/book"); setMenuOpen(false);}} className="block w-full text-left text-lg font-medium">Books</button>
-            <button onClick={()=>{navigate("/sign"); setMenuOpen(false);}} className="block w-full text-left text-lg font-medium">Submit</button>
-            <button className="block w-full text-left text-lg font-medium">About</button>
-            <button className="block w-full text-left text-lg font-medium">Contact</button>
+        <button onClick={()=>{navigate("/book"); setMenuOpen(false);}} className="flex items-center gap-2 w-full">
+          <BookOpen size={18}/> Books
+        </button>
 
-            <div className="border-t border-white/10 pt-4" />
+        <button onClick={()=>{navigate("/sign"); setMenuOpen(false);}} className="flex items-center gap-2 w-full">
+          <Feather size={18}/> Submit
+        </button>
 
-            <div className="flex gap-2">
-              <button onClick={() => setTheme("cute")} className="flex-1 py-2 rounded-xl bg-blue-300 text-sm font-medium">Cute</button>
-              <button onClick={() => setTheme("dark")} className="flex-1 py-2 rounded-xl bg-black text-white text-sm font-medium">Dark</button>
-              <button onClick={() => setTheme("neutral")} className="flex-1 py-2 rounded-xl bg-gray-300 text-sm font-medium">Neutral</button>
-            </div>
+        <button className="flex items-center gap-2 w-full">
+          <Info size={18}/> About
+        </button>
 
-          </div>
+        <button className="flex items-center gap-2 w-full">
+          <Mail size={18}/> Contact
+        </button>
+
+        <div className="border-t border-white/10 pt-4" />
+
+        <div className="flex gap-2">
+          <button onClick={() => setTheme("cute")} className="flex-1 py-2 rounded-xl bg-pink-300 text-sm">Cute</button>
+          <button onClick={() => setTheme("dark")} className="flex-1 py-2 rounded-xl bg-black text-white text-sm">Dark</button>
+          <button onClick={() => setTheme("neutral")} className="flex-1 py-2 rounded-xl bg-red-900 text-white text-sm">Neutral</button>
         </div>
-      )}
+
+      </div>
+    </div>
+
+  </div>
+)}
+      
 
       {/* HERO */}
       <section className="text-center py-20 px-4">
@@ -158,16 +204,29 @@ export default function Home() {
           {text.sub}
         </p>
 
+        {/* 🔥 ICON BUTTONS */}
         <div className="flex justify-center gap-4 flex-wrap">
-          <button onClick={()=>navigate("/book")} className={`px-8 py-3 rounded-xl font-semibold ${current.primaryBtn}`}>
+
+          <button
+            onClick={()=>navigate("/book")}
+            className={`px-8 py-3 rounded-xl font-semibold flex items-center gap-2 hover:scale-105 ${current.primaryBtn}`}
+          >
+            <BookOpen size={20}/>
             Explore Stories
           </button>
 
-          <button onClick={()=>navigate("/admin")} className={`px-8 py-3 rounded-xl font-semibold ${current.secondaryBtn}`}>
+          <button
+            onClick={()=>navigate("/admin")}
+            className={`px-8 py-3 rounded-xl font-semibold flex items-center gap-2 hover:scale-105 ${current.secondaryBtn}`}
+          >
+            <Sparkles size={20}/>
             Submit Story
           </button>
+
         </div>
       </section>
+
+     
 
 
       {/* MAIN CONTENT */}
@@ -252,7 +311,7 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="text-center py-6 text-sm opacity-60">
-        © 2026 Moonlit Pages
+        © 2026 Silver.veil.press
       </footer>
 
     </div>

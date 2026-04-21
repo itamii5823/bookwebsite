@@ -10,8 +10,52 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.01em;
+}
+.heading-soft {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.02em;
 }
 
+/* 🖤 DARK (Obsidian Ink) */
+.heading-dark {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.05em;
+}
+
+/* 🍷 NEUTRAL (Crimson Thread) */
+.heading-editorial {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ✨ GLITCH ACCENT (for dark theme) */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+.glitch::before {
+  color: #7A0F0F;
+  transform: translateX(-2px);
+  opacity: 0.6;
+}
+
+.glitch::after {
+  color: #3A2FFF;
+  transform: translateX(2px);
+  opacity: 0.6;
+}
 @import "tailwindcss";
 
 @font-face {

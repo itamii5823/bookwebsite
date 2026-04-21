@@ -211,7 +211,7 @@ export default function Books() {
 
       {/* FOOTER */}
       <div className="text-center text-gray-500 text-sm py-10 border-t border-white/10">
-        © 2026 StarLit Stories
+        © 2026 SilverVeil.Press
       </div>
 
     </div>
