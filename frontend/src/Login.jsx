@@ -25,7 +25,7 @@ export default function Login() {
 
     try {
       await axios.post(
-        "http://localhost:5000/login",
+        "https://bookwebsite-4q2b.onrender.com/login",
         {
           username: user.username.trim(),
           password: user.password.trim()
@@ -48,22 +48,22 @@ export default function Login() {
       if (message === "user not found") {
         setAlert({
           type: "error",
-          message: "User does not exist 😢 Create account!"
+          message: "User does not exist  Create account!"
         });
       } else if (message === "wrong password") {
         setAlert({
           type: "error",
-          message: "Wrong password ❌"
+          message: "Wrong password "
         });
       } else if (message === "All fields required") {
         setAlert({
           type: "error",
-          message: "Fill all fields properly 😶"
+          message: "Fill all fields properly "
         });
       } else {
         setAlert({
           type: "error",
-          message: "Something went wrong 😵"
+          message: "Something went wrong "
         });
       }
     }
@@ -82,7 +82,7 @@ export default function Login() {
           <div className="bg-white/80 backdrop-blur-xl border border-blue-200 shadow-xl rounded-2xl px-6 py-4 flex items-center gap-3">
 
             <span className="text-xl">
-              {alert.type === "error" ? "💔" : "✨"}
+              {alert.type === "error" ? "" : ""}
             </span>
 
             <p className="text-sm text-gray-700">{alert.message}</p>
@@ -114,7 +114,7 @@ export default function Login() {
 
           <input
             type="text"
-            placeholder="Username ✨"
+            placeholder="Username "
             value={user.username}
             onChange={(e)=>setUser({...user, username:e.target.value})}
             className="w-full px-4 py-3 rounded-xl border border-blue-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-300"
@@ -122,14 +122,14 @@ export default function Login() {
 
           <input
             type="password"
-            placeholder="Password 🔐"
+            placeholder="Password "
             value={user.password}
             onChange={(e)=>setUser({...user, password:e.target.value})}
             className="w-full px-4 py-3 rounded-xl border border-blue-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
 
           <button className="w-full py-3 bg-[#38BDF8] text-white rounded-xl">
-            Login ✨
+            Login 
           </button>
 
         </form>

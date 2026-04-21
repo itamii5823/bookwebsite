@@ -1,7 +1,7 @@
 const mongosse = require("mongoose");
 
 
-mongosse.connect("mongodb://localhost:27017/user");
+mongosse.connect(process.env.MONGO_URL);
 
 const userSchema = mongosse.Schema({
     username: {
@@ -16,12 +16,14 @@ const userSchema = mongosse.Schema({
   },
   password: {
     type: String,
+
     required: true},
-    cart: [{
-       product:{type:mongosse.Schema.Types.ObjectId , ref:"prod"},
-       quantity:{type:Number , default:1},
-       total:{type:Number,default:0}
-    }]
+
+ savedBooks: {
+  type: [String],
+  default: []
+}
+    
 });
 
 module.exports = mongosse.model("user",userSchema);

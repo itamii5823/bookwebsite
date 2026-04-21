@@ -13,7 +13,7 @@ export default function SearchPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://localhost:5000/books")
+    axios.get("https://bookwebsite-4q2b.onrender.com/books")
       .then(res => {
         setBooks(res.data);
         setLoading(false);
@@ -43,7 +43,7 @@ export default function SearchPage() {
   return (
     <div className="min-h-screen bg-[#060304] text-white">
 
-      {/* 🔥 HERO SEARCH SECTION (DIFFERENT LOOK) */}
+      {/*HERO SEARCH SECTION*/}
       <div className="flex flex-col items-center justify-center text-center py-20 px-4">
 
         <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-linear-to-r from-[#E37EAF] to-purple-400 text-transparent bg-clip-text">
@@ -55,7 +55,7 @@ export default function SearchPage() {
         </p>
 
         {/* SEARCH BOX */}
-        <div className="relative w-full max-w-xl">
+        <div className="relative w-full max-w-xl ">
 
           <input
             type="text"
@@ -118,7 +118,7 @@ export default function SearchPage() {
       </div>
 
       {/* RESULTS */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 ">
 
         {loading && (
           <p className="text-gray-400 text-center">Loading...</p>

@@ -4,11 +4,11 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-const multer = require("multer"); // 🔥 ADDED
+const multer = require("multer"); 
 
 const app = express();
 
-// 🔥 ENV MODE
+
 const isProd = process.env.NODE_ENV === "production";
 const secret = process.env.JWT_SECRET || "dhsgsghdshggd";
 
@@ -34,8 +34,8 @@ const User = mongoose.model("User", userSchema);
 // ================= MIDDLEWARE =================
 app.use(cors({
   origin:
-  [ "https://bookwebsite-eta.vercel.app" ,
-     "http://localhost:5173" ],
+  [ process.env.FRONTEND_URL ,
+     "http://localhost:5173"],
   credentials: true
 }));
 
@@ -208,6 +208,107 @@ app.get("/logout", (req, res) => {
   res.send("logged out");
 });
 
+// ================= RATE BOOK =================
+app.post("/rate", async (req, res) => {
+  try {
+    const token = req.cookies.user;
+
+    if (!token) {
+      return res.status(401).send("not logged in");
+    }
+
+    const userData = jwt.verify(token, secret);
+    const { bookId, value } = req.body;
+
+    const book = await Book.findById(bookId);
+
+    
+    if (!book.ratings) book.ratings = [];
+
+    let found = false;
+
+    for (let i = 0; i < book.ratings.length; i++) {
+      if (book.ratings[i].email === userData.email) {
+        book.ratings[i].value = value;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      book.ratings.push({
+        email: userData.email,
+        value
+      });
+    }
+
+   
+    let total = 0;
+    for (let i = 0; i < book.ratings.length; i++) {
+      total += book.ratings[i].value;
+    }
+
+    const avg = total / book.ratings.length;
+
+   
+    book.average = avg;
+
+    await book.save();
+
+    res.json({ average: avg });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("error");
+  }
+});
+
+// ================= SAVE/UNSAVE BOOK =================
+app.post("/save", async (req, res) => {
+  try {
+    const token = req.cookies.user;
+
+    if (!token) {
+      return res.status(401).send("not logged in");
+    }
+
+    const userData = jwt.verify(token, secret);
+    console.log("JWT EMAIL:", userData.email);
+
+    const user = await User.findOne({ email: userData.email });
+    console.log("USER:", user);
+
+    if (!user) {
+      return res.status(404).send("user not found");
+    }
+
+    const { bookId } = req.body;
+
+    if (!user.savedBooks) {
+      user.savedBooks = [];
+    }
+
+    const id = String(bookId);
+
+    const index = user.savedBooks.indexOf(id);
+
+    if (index === -1) {
+      user.savedBooks.push(id);
+      await user.save();
+      console.log("SAVED:", user.savedBooks);
+      return res.send("saved");
+    } else {
+      user.savedBooks.splice(index, 1);
+      await user.save();
+      console.log("UNSAVED:", user.savedBooks);
+      return res.send("unsaved");
+    }
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("error");
+  }
+});
 // ================= START SERVER =================
 const PORT = process.env.PORT || 5000;
 

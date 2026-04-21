@@ -27,7 +27,7 @@ export default function Admin() {
     ) {
       return setAlert({
         type: "error",
-        message: "All fields are required 💔"
+        message: "All fields are required "
       });
     }
 
@@ -53,7 +53,7 @@ export default function Admin() {
 
       setAlert({
         type: "success",
-        message: "Book published successfully 📚✨",
+        message: "Book published successfully ",
       });
 
       navigate("/book");
@@ -72,12 +72,12 @@ export default function Admin() {
       if (err.response?.data === "not logged in") {
         setAlert({
           type: "error",
-          message: "Please login first 😢"
+          message: "Please login first "
         });
       } else {
         setAlert({
           type: "error",
-          message: "Failed to publish 😵"
+          message: "Failed to publish "
         });
       }
     }
@@ -86,7 +86,7 @@ export default function Admin() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#060304] relative overflow-hidden text-white">
 
-      {/* 🔥 PREMIUM GLOW BACKGROUND */}
+      
       <div className="absolute w-125 h-125 bg-[#E37EAF] blur-[180px] opacity-20 -top-37.5 -left-37.5"></div>
       <div className="absolute w-125 h-125 bg-purple-600 blur-[200px] opacity-20 -bottom-37.5 -right-37.5"></div>
 
@@ -96,7 +96,7 @@ export default function Admin() {
           <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl px-6 py-4 flex items-center gap-3">
 
             <span className="text-xl">
-              {alert.type === "error" ? "💔" : "✨"}
+              {alert.type === "error" ? "" : ""}
             </span>
 
             <p className="text-sm text-white">{alert.message}</p>
@@ -111,7 +111,7 @@ export default function Admin() {
         </div>
       )}
 
-      {/* 🔥 MAIN CARD */}
+      {/*  MAIN CARD */}
       <div className="relative z-10 bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_20px_80px_rgba(0,0,0,0.5)] rounded-3xl p-8 w-full max-w-md">
 
         {/* HEADER */}
@@ -185,7 +185,7 @@ export default function Admin() {
             shadow-[0_10px_40px_rgba(227,126,175,0.4)]
             transition-all duration-300"
           >
-            Publish Story 🚀
+            Publish Story 
           </button>
 
         </form>

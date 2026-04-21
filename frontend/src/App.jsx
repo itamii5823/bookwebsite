@@ -9,7 +9,7 @@ export default function Home() {
   const [theme, setTheme] = useState("dark");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // ✅ CHANGED (dummy → real)
+
   const [books, setBooks] = useState([]);
 
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function Home() {
 
   // ✅ ADDED (fetch real books)
   useEffect(() => {
-    fetch("http://localhost:5000/books")
+    fetch("https://bookwebsite-4q2b.onrender.com/books")
       .then(res => res.json())
       .then(data => setBooks(data))
       .catch(err => console.log(err));
@@ -147,7 +147,7 @@ export default function Home() {
                 className={`flex gap-4 p-4 rounded-2xl cursor-pointer ${current.card}`}
               >
                 <img
-                  src={`data:image/jpeg;base64,${book.cover}`} // ✅ real image
+                  src={`data:image/jpeg;base64,${book.cover}`} // 
                   className="w-28 h-20 object-cover rounded-lg"
                 />
                 <div>
@@ -166,7 +166,7 @@ export default function Home() {
               {books.map((b) => (
                 <p
                   key={b._id}
-                  onClick={() => navigate(`/bookd/${b._id}`)} // ✅ clickable
+                  onClick={() => navigate(`/bookd/${b._id}`)} 
                   className="text-sm opacity-70 hover:opacity-100 cursor-pointer"
                 >
                   {b.title}
@@ -186,11 +186,11 @@ export default function Home() {
           {books.slice(-3).map((book) => (
             <div
               key={book._id}
-              onClick={() => navigate(`/bookd/${book._id}`)} // ✅ clickable
+              onClick={() => navigate(`/bookd/${book._id}`)} 
               className={`rounded-2xl overflow-hidden cursor-pointer ${current.card}`}
             >
               <img
-                src={`data:image/jpeg;base64,${book.cover}`} // ✅ real image
+                src={`data:image/jpeg;base64,${book.cover}`} 
                 className="h-60 w-full object-cover"
               />
               <div className="p-4">

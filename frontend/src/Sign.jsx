@@ -13,7 +13,7 @@ export default function Signup() {
 
   // ✅ CHECK LOGIN STATUS
   useEffect(() => {
-    axios.get("http://localhost:5000/me", {
+    axios.get("https://bookwebsite-4q2b.onrender.com/me", {
       withCredentials: true
     })
     .then(() => {
@@ -29,7 +29,7 @@ export default function Signup() {
 
     try {
       await axios.post(
-        "http://localhost:5000/signup",
+        "https://bookwebsite-4q2b.onrender.com/signup",
         user,
         { withCredentials: true }
       );
@@ -44,7 +44,7 @@ export default function Signup() {
   };
 
   return (
-    // ❌ DON'T CHANGE YOUR UI (keeping same)
+    
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#E0F2FE] via-[#F0F9FF] to-[#E0F2FE] relative overflow-hidden">
 
       <div className="absolute top-10 left-10 w-72 h-72 bg-blue-200 rounded-full blur-3xl opacity-40"></div>

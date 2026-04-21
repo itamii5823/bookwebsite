@@ -7,13 +7,12 @@ export default function Books() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ ADDED
   const [category, setCategory] = useState("All");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://localhost:5000/books")
+    axios.get("https://bookwebsite-4q2b.onrender.com/books", { withCredentials: true })
       .then(res => {
         setBooks(res.data);
         setLoading(false);
@@ -21,11 +20,61 @@ export default function Books() {
       .catch(() => setLoading(false));
   }, []);
 
-  //  FILTER LOGIC
+  // ✅ FIX: rating fallback
+  const getAverage = (book) => {
+    if (book.average) return book.average;
+
+    if (!book.ratings || book.ratings.length === 0) return 0;
+
+    let total = 0;
+    for (let i = 0; i < book.ratings.length; i++) {
+      total += book.ratings[i].value;
+    }
+
+    return total / book.ratings.length;
+  };
+
+  // FILTER
   const filteredBooks =
     category === "All"
       ? books
       : books.filter(book => book.category === category);
+
+  // RATE FUNCTION
+  const handleRating = async (bookId, value) => {
+    try {
+      const res = await axios.post(
+        "https://bookwebsite-4q2b.onrender.com/rate",
+        { bookId, value },
+        { withCredentials: true }
+      );
+
+      setBooks(prev =>
+        prev.map(b =>
+          b._id === bookId
+            ? { ...b, average: res.data.average }
+            : b
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // SAVE FUNCTION
+  const handleSave = async (bookId) => {
+    try {
+      const res = await axios.post(
+        "https://bookwebsite-4q2b.onrender.com/save",
+        { bookId },
+        { withCredentials: true }
+      );
+
+      alert(res.data); // 
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0B0F1A] text-white">
@@ -67,7 +116,7 @@ export default function Books() {
           All
         </button>
 
-        <button onClick={() => setCategory("Romance")} className="px-4 py-1.5  bg-white/5 border border-white/10 rounded-full text-sm hover:bg-white/10">
+        <button onClick={() => setCategory("Romance")} className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm hover:bg-white/10">
           Romance
         </button>
 
@@ -82,7 +131,8 @@ export default function Books() {
         <button onClick={() => setCategory("Horror")} className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm hover:bg-white/10">
           Horror
         </button>
-       <button onClick={() => setCategory("Adventure")} className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm hover:bg-white/10">
+
+        <button onClick={() => setCategory("Adventure")} className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm hover:bg-white/10">
           Adventure
         </button>
       </div>
@@ -94,14 +144,14 @@ export default function Books() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-          {filteredBooks.map((book) => (   // ✅ ONLY CHANGE HERE
+          {filteredBooks.map((book) => (
             <div
               key={book._id}
-              onClick={() => navigate(`/bookd/${book._id}`)}
               className="cursor-pointer bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:scale-[1.02] transition"
             >
 
               <img
+                onClick={() => navigate(`/bookd/${book._id}`)}
                 src={`data:image/jpeg;base64,${book.cover}`}
                 className="w-full h-48 object-cover"
               />
@@ -116,9 +166,38 @@ export default function Books() {
                   {book.description}
                 </p>
 
+                {/* ⭐ FIXED RATING */}
+                <p className="text-sm mt-2">
+                  ⭐ {getAverage(book).toFixed(1)}
+                </p>
+
+                <div className="flex gap-2 mt-2">
+                  {[1,2,3,4,5].map(star => (
+                    <button
+                      key={star}
+                      onClick={() => handleRating(book._id, star)}
+                      className="text-2xl px-2 py-1 rounded-lg transition 
+                        hover:scale-125 hover:text-yellow-300 
+                        active:scale-95"
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+
+                {/* 💾 SAVE */}
+                <button
+                  onClick={() => handleSave(book._id)}
+                  className="mt-2 text-xs px-3 py-1 bg-white/10 rounded hover:bg-white/20"
+                >
+                  Save
+                </button>
+
                 <div className="flex justify-between mt-3 text-xs text-gray-500">
                   <span>{book.username}</span>
-                  <span className="text-[#E37EAF]">Read →</span>
+                  <span onClick={() => navigate(`/bookd/${book._id}`)} className="text-[#E37EAF] cursor-pointer">
+                    Read →
+                  </span>
                 </div>
 
               </div>

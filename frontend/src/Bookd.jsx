@@ -8,7 +8,7 @@ export default function BookDetail() {
   const [book, setBook] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/books")
+    axios.get("https://bookwebsite-4q2b.onrender.com/books")
       .then(res => {
         const found = res.data.find(b => b._id === id);
         setBook(found);

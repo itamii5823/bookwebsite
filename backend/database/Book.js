@@ -30,9 +30,21 @@ const bookSchema = new mongoose.Schema({
     required: true
   }, 
   category: {
-    type: String,
-    required: true
-  },
+  type: String,
+  required: true,
+  default: "Other"  
+},
+  
+  ratings: {
+  type: [
+    {
+      email: String,
+      value: Number
+    }
+  ],
+  default: []   
+}
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Book", bookSchema);
