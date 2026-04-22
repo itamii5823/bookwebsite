@@ -9,7 +9,8 @@ export default function Admin() {
     description: "",
     cover: null,
     content: "",
-    category: ""
+    category: "",
+    side: ""
   });
 
   const [alert, setAlert] = useState(null);
@@ -58,12 +59,14 @@ export default function Admin() {
 
       navigate("/book");
 
+      // ✅ FIXED: reset state properly
       setForm({
         title: "",
         description: "",
         cover: null,
         content: "",
-        category: ""
+        category: "",
+        side: ""
       });
 
     } catch (err) {
@@ -86,7 +89,6 @@ export default function Admin() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#060304] relative overflow-hidden text-white">
 
-      
       <div className="absolute w-125 h-125 bg-[#E37EAF] blur-[180px] opacity-20 -top-37.5 -left-37.5"></div>
       <div className="absolute w-125 h-125 bg-purple-600 blur-[200px] opacity-20 -bottom-37.5 -right-37.5"></div>
 
@@ -94,13 +96,7 @@ export default function Admin() {
       {alert && (
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
           <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl rounded-2xl px-6 py-4 flex items-center gap-3">
-
-            <span className="text-xl">
-              {alert.type === "error" ? "" : ""}
-            </span>
-
             <p className="text-sm text-white">{alert.message}</p>
-
             <button
               onClick={() => setAlert(null)}
               className="ml-2 text-gray-400 hover:text-white"
@@ -111,7 +107,7 @@ export default function Admin() {
         </div>
       )}
 
-      {/*  MAIN CARD */}
+      {/* MAIN CARD */}
       <div className="relative z-10 bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_20px_80px_rgba(0,0,0,0.5)] rounded-3xl p-8 w-full max-w-md">
 
         {/* HEADER */}
@@ -148,18 +144,57 @@ export default function Admin() {
             className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-[#E37EAF] focus:outline-none"
           />
 
-          {/* CATEGORY */}
+          {/* SIDE SELECT */}
+          <select
+            value={form.side}
+            onChange={(e)=>setForm({...form, side:e.target.value, category:""})}
+            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-[#E37EAF] focus:outline-none text-gray-300"
+          >
+            <option value="">Select Story Tone</option>
+            <option value="Cute">🌈 Cute</option>
+            <option value="Neutral">📘 Neutral</option>
+            <option value="Dark">🖤 Dark</option>
+          </select>
+
+          {/* GENRE SELECT */}
           <select
             value={form.category}
             onChange={(e)=>setForm({...form, category:e.target.value})}
             className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-[#E37EAF] focus:outline-none text-gray-300"
           >
-            <option className="bg-white/10"  value="">Select Category</option>
-            <option value="Romance">Romance</option>
-            <option value="Fantasy">Fantasy</option>
-            <option value="Drama">Drama</option>
-            <option value="Horror">Horror</option>
-            <option value="Adventure">Adventure</option>
+            <option value="">Select Genre</option>
+
+            {form.side === "Cute" && (
+              <>
+                <option value="Cute | Romance">Romance</option>
+                <option value="Cute | Slice of Life">Slice of Life</option>
+                <option value="Cute | Cozy Fantasy">Cozy Fantasy</option>
+                <option value="Cute | Light Comedy">Light Comedy</option>
+                <option value="Cute | Young Adult">Young Adult</option>
+              </>
+            )}
+
+            {form.side === "Neutral" && (
+              <>
+                <option value="Neutral | Literary Fiction">Literary Fiction</option>
+                <option value="Neutral | Fantasy">Fantasy</option>
+                <option value="Neutral | Sci-Fi">Sci-Fi</option>
+                <option value="Neutral | Mystery">Mystery</option>
+                <option value="Neutral | Historical Fiction">Historical Fiction</option>
+                <option value="Neutral | Adventure">Adventure</option>
+              </>
+            )}
+
+            {form.side === "Dark" && (
+              <>
+                <option value="Dark | Dark Romance">Dark Romance</option>
+                <option value="Dark | Thriller">Thriller</option>
+                <option value="Dark | Horror">Horror</option>
+                <option value="Dark | Crime">Crime / Noir</option>
+                <option value="Dark | Gothic">Gothic Fiction</option>
+                <option value="Dark | Dystopian">Dystopian</option>
+              </>
+            )}
           </select>
 
           <input

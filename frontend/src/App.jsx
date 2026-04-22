@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 
-import { BookOpen, Feather, Info, Mail, Sparkles } from "lucide-react";
+import { BookOpen, Feather, Info, Mail, Sparkles, Search } from "lucide-react";
 
 import cuteLogo from "/silver.png";
 import darkLogo from "/silver.png";
@@ -12,6 +12,7 @@ export default function Home() {
   const [theme, setTheme] = useState("dark");
   const [menuOpen, setMenuOpen] = useState(false);
   const [books, setBooks] = useState([]);
+  const [filter, setFilter] = useState("All");
 
   const navigate = useNavigate();
 
@@ -30,6 +31,21 @@ export default function Home() {
       .then(data => setBooks(data))
       .catch(err => console.log(err));
   }, []);
+
+
+const getSide = (category) => {
+  if (!category) return "Unknown";
+  if (!category.includes("|")) return "Neutral";
+  return category.split(" | ")[0];
+};
+
+
+const filteredBooks =
+  filter === "All"
+    ? books
+    : books.filter((b) => getSide(b.category) === filter);
+
+
 
   const content = {
   cute: {
@@ -53,7 +69,7 @@ export default function Home() {
 
   const themes = {
 
-  // 🌸 KEEP SAME (you didn’t ask change)
+ 
   cute: {
     bg: "bg-gradient-to-br from-[#ffe4e6] via-[#fbcfe8] to-[#e5e5e5] text-gray-800",
     nav: "bg-white/40 backdrop-blur-xl shadow-sm",
@@ -66,7 +82,7 @@ export default function Home() {
     hover: "hover:bg-pink-50"
   },
 
-  // 🖤 OBSIDIAN INK (REAL DARK THEME)
+ 
   dark: {
     bg: "bg-[#0B0B0C] text-[#B8B8C0]",
     nav: "bg-[#0B0B0C]/90 backdrop-blur-xl border-b border-[#2B0F1A]",
@@ -84,7 +100,7 @@ export default function Home() {
     hover: "hover:bg-[#2B0F1A]"
   },
 
-  // 🍷 CRIMSON THREAD (NEUTRAL)
+  
   neutral: {
     bg: "bg-[#5A0F1C] text-[#F5F2EE]",
     nav: "bg-[#5A0F1C]/90 backdrop-blur-xl border-b border-[#8B3A3A]",
@@ -110,9 +126,9 @@ export default function Home() {
 
       {/* THEME SWITCH */}
       <div className="hidden md:flex fixed top-20 right-5 z-50 flex-col gap-2">
-        <button onClick={() => setTheme("cute")} className="px-3 py-1 bg-pink-300 rounded-full text-xs shadow">Cute</button>
-        <button onClick={() => setTheme("dark")} className="px-3 py-1 bg-black text-white rounded-full text-xs shadow">Dark</button>
-        <button onClick={() => setTheme("neutral")} className="px-3 py-1 bg-red-900 text-white rounded-full text-xs shadow">Neutral</button>
+        <button onClick={() => { setTheme("cute"); setFilter("Cute"); }} className="px-3 py-1 bg-pink-300 rounded-full text-xs shadow">Cute</button>
+        <button onClick={() => { setTheme("dark"); setFilter("Dark"); }} className="px-3 py-1 bg-black text-white rounded-full text-xs shadow">Dark</button>
+        <button onClick={() => { setTheme("neutral"); setFilter("Neutral"); }} className="px-3 py-1 bg-red-900 text-white rounded-full text-xs shadow">Neutral</button>
       </div>
 
       {/* NAV */}
@@ -129,12 +145,12 @@ export default function Home() {
             <Feather size={18}/> Submit
           </button>
 
-          <button className="flex items-center gap-2 hover:text-blue-400 transition">
-            <Info size={18}/> About
+          <button onClick={()=>navigate("/search")} className="flex items-center gap-2 hover:text-blue-400 transition">
+            <Search size={18}/> Search
           </button>
 
           <button className="flex items-center gap-2 hover:text-red-400 transition">
-            <Mail size={18}/> Contact
+            <Mail size={18}/> About
           </button>
 
         </div>
@@ -151,9 +167,9 @@ export default function Home() {
         </button>
         </nav>
 
-{/* 👇 PASTE HERE */}
+
 {menuOpen && (
-  <div className="md:hidden fixed inset-0 z-[999]">
+  <div className="md:hidden fixed inset-0 z-999">
 
     <div
       className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -171,12 +187,12 @@ export default function Home() {
           <Feather size={18}/> Submit
         </button>
 
-        <button className="flex items-center gap-2 w-full">
-          <Info size={18}/> About
+        <button onClick={()=>{navigate("/search"); setMenuOpen(false);}} className="flex items-center gap-2 w-full">
+          <Search size={18}/> Search
         </button>
 
         <button className="flex items-center gap-2 w-full">
-          <Mail size={18}/> Contact
+          <Mail size={18}/> About
         </button>
 
         <div className="border-t border-white/10 pt-4" />
@@ -204,7 +220,7 @@ export default function Home() {
           {text.sub}
         </p>
 
-        {/* 🔥 ICON BUTTONS */}
+        
         <div className="flex justify-center gap-4 flex-wrap">
 
           <button
@@ -238,7 +254,7 @@ export default function Home() {
           <div className="lg:col-span-2 space-y-6">
             <h3 className="text-xl font-semibold">Featured Stories</h3>
 
-            {books.slice(-3).map((book) => (
+            {filteredBooks.slice(-3).map((book) => (
               <div
                 key={book._id}
                 onClick={() => navigate(`/bookd/${book._id}`)} // 
@@ -261,7 +277,7 @@ export default function Home() {
             <h3 className="text-sm font-semibold mb-4">Trending</h3>
 
             <div className="space-y-3">
-              {books.map((b) => (
+              {filteredBooks.map((b) => (
                 <p
                   key={b._id}
                   onClick={() => navigate(`/bookd/${b._id}`)} 
@@ -281,21 +297,47 @@ export default function Home() {
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {books.slice(-3).map((book) => (
-            <div
-              key={book._id}
-              onClick={() => navigate(`/bookd/${book._id}`)} 
-              className={`rounded-2xl overflow-hidden cursor-pointer ${current.card}`}
-            >
-              <img
-                src={`data:image/jpeg;base64,${book.cover}`} 
-                className="h-60 w-full object-cover"
-              />
-              <div className="p-4">
-                <h4 className={`font-semibold ${current.accent}`}>{book.title}</h4>
-                <p className="text-sm opacity-70 mt-1">{book.description}</p>
-              </div>
-            </div>
+          {filteredBooks.slice(-3).map((book) => (
+           <div
+  key={book._id}
+  onClick={() => navigate(`/bookd/${book._id}`)}
+  className={`rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ${current.card}`}
+>
+  {/* IMAGE */}
+  <div className="relative">
+    <img
+      src={`data:image/jpeg;base64,${book.cover}`}
+      className="h-60 w-full object-cover group-hover:scale-105 transition duration-300"
+    />
+
+    {/* CATEGORY BADGE */}
+    {book.category && (
+      <div className="absolute top-3 left-3 px-3 py-1 text-xs rounded-full backdrop-blur-md bg-black/40 text-white border border-white/20">
+        {book.category.split(" | ")[0]} {/* Cute / Dark / Neutral */}
+      </div>
+    )}
+  </div>
+
+  {/* CONTENT */}
+  <div className="p-4 space-y-2">
+
+    <h4 className={`font-semibold text-lg ${current.accent}`}>
+      {book.title}
+    </h4>
+
+    <p className="text-sm opacity-70 line-clamp-2">
+      {book.description}
+    </p>
+
+    {/* GENRE */}
+    {book.category && (
+      <p className="text-xs opacity-50">
+        {book.category.split(" | ")[1]} {/* Romance / Thriller */}
+      </p>
+    )}
+
+  </div>
+</div>
           ))}
         </div>
 
@@ -311,7 +353,7 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="text-center py-6 text-sm opacity-60">
-        © 2026 Silver.veil.press
+        © 2026 Silverveil.press
       </footer>
 
     </div>

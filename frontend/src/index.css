@@ -3,7 +3,13 @@ body,
 #root {
     height: 100%;
 }
-
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 body {
   background-image: url('/1317711.jpg');
   background-size: cover;
