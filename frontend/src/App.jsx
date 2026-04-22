@@ -199,8 +199,8 @@ const filteredBooks =
 
         <div className="flex gap-2">
           <button onClick={() => { setTheme("cute"); setFilter("Cute"); }} className="flex-1 py-2 rounded-xl bg-pink-300 text-sm">Cute</button>
-          <button onClick={() => { setTheme("dark"); setFilter("dark"); }} className="flex-1 py-2 rounded-xl bg-black text-white text-sm">Dark</button>
-          <button onClick={() => { setTheme("neutral"); setFilter("neutral"); }} className="flex-1 py-2 rounded-xl bg-red-900 text-white text-sm">Neutral</button>
+          <button onClick={() => { setTheme("dark"); setFilter("Dark"); }} className="flex-1 py-2 rounded-xl bg-black text-white text-sm">Dark</button>
+          <button onClick={() => { setTheme("neutral"); setFilter("Neutral"); }} className="flex-1 py-2 rounded-xl bg-red-900 text-white text-sm">Neutral</button>
         </div>
 
       </div>
