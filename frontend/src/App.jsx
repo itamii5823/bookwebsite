@@ -71,16 +71,24 @@ const filteredBooks =
 
  
   cute: {
-    bg: "bg-gradient-to-br from-[#ffe4e6] via-[#fbcfe8] to-[#e5e5e5] text-gray-800",
-    nav: "bg-white/40 backdrop-blur-xl shadow-sm",
-    card: "bg-white/70 border border-pink-100 shadow-md hover:shadow-xl",
-    primaryBtn: "bg-pink-400 text-white hover:bg-pink-500 transition-all",
-    secondaryBtn: "bg-white text-pink-500 border border-pink-200 hover:bg-pink-50 transition-all",
-    accent: "text-pink-500",
-    input: "bg-white border border-pink-200",
-    logo: cuteLogo,
-    hover: "hover:bg-pink-50"
-  },
+  bg: "bg-white text-gray-800",
+
+  nav: "bg-white shadow-sm", // remove blur + opacity
+
+  card: "bg-white border border-pink-100 shadow-md hover:shadow-xl",
+
+  primaryBtn: "bg-pink-400 text-white hover:bg-pink-500 transition-all",
+
+  secondaryBtn: "bg-white text-pink-500 border border-pink-200 hover:bg-pink-50 transition-all",
+
+  accent: "text-pink-500",
+
+  input: "bg-white border border-pink-200",
+
+  logo: cuteLogo,
+
+  hover: "hover:bg-pink-50"
+},
 
  
   dark: {
