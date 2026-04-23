@@ -131,7 +131,7 @@ app.post("/login", async (req, res) => {
 });
 
 // ================= ADD BOOK =================
-// 🔥 ONLY THIS ROUTE UPDATED
+
 app.post("/addbook", upload.single("cover"), async (req, res) => {
   try {
     const token = req.cookies.user;
@@ -171,7 +171,7 @@ app.post("/addbook", upload.single("cover"), async (req, res) => {
 });
 
 // ================= CHECK USER =================
-app.get("/me", (req, res) => {
+app.get("/me", async (req, res) => {
   try {
     const token = req.cookies.user;
 
@@ -181,9 +181,31 @@ app.get("/me", (req, res) => {
 
     const data = jwt.verify(token, secret);
 
-    res.json(data);
+    const user = await User.findOne({ email: data.email });
+
+    if (!user) {
+      return res.status(404).send("user not found");
+    }
+
+    let savedBooks = [];
+
+    if (user.savedBooks && user.savedBooks.length > 0) {
+      savedBooks = await Book.find({
+        _id: { $in: user.savedBooks }
+      });
+    }
+
+    res.json({
+      user: {
+        username: user.username,
+        email: user.email
+      },
+      saved: savedBooks
+    });
+
   } catch (err) {
-    return res.status(401).send("invalid");
+    console.log(err);
+    res.status(500).send("error");
   }
 });
 
@@ -304,6 +326,56 @@ app.post("/save", async (req, res) => {
       return res.send("unsaved");
     }
 
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("error");
+  }
+});
+
+// ================= update =================
+app.post("/update-profile", async (req, res) => {
+  try {
+    const token = req.cookies.user;
+    if (!token) return res.status(401).send("not logged in");
+
+    const data = jwt.verify(token, secret);
+    const { username, email } = req.body;
+
+    const user = await User.findOne({ email: data.email });
+
+    if (!user) return res.status(404).send("user not found");
+
+    if (username) user.username = username;
+    if (email) user.email = email;
+
+    await user.save();
+
+    res.send("updated");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("error");
+  }
+});
+
+// ================= change passs =================
+app.post("/change-password", async (req, res) => {
+  try {
+    const token = req.cookies.user;
+    if (!token) return res.status(401).send("not logged in");
+
+    const data = jwt.verify(token, secret);
+    const { oldPassword, newPassword } = req.body;
+
+    const user = await User.findOne({ email: data.email });
+
+    if (user.password !== oldPassword) {
+      return res.status(400).send("wrong password");
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.send("password updated");
   } catch (err) {
     console.log(err);
     res.status(500).send("error");

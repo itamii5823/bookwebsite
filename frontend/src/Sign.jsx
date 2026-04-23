@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // ✅ add useEffect
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -11,21 +11,27 @@ export default function Signup() {
     password: ""
   });
 
-  
+  const [alert, setAlert] = useState(null);
+
   useEffect(() => {
     axios.get("https://bookwebsite-4q2b.onrender.com/me", {
       withCredentials: true
     })
     .then(() => {
-      navigate("/admin"); // already logged in
+      navigate("/book");
     })
-    .catch(() => {
-      // not logged in → stay here
-    });
+    .catch(() => {});
   }, []);
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    if (!user.username.trim() || !user.email.trim() || !user.password.trim()) {
+      return setAlert({
+        type: "error",
+        message: "All fields are required"
+      });
+    }
 
     try {
       await axios.post(
@@ -34,79 +40,115 @@ export default function Signup() {
         { withCredentials: true }
       );
 
-      alert("Signup successful ✨");
-      navigate("/admin");
+      setAlert({
+        type: "success",
+        message: "Signup successful"
+      });
+
+      setTimeout(() => {
+        navigate("/admin");
+      }, 1000);
 
     } catch (err) {
       console.log(err);
-      alert("User already exists");
+      setAlert({
+        type: "error",
+        message: "User already exists"
+      });
     }
   };
 
   return (
-    
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#E0F2FE] via-[#F0F9FF] to-[#E0F2FE] relative overflow-hidden">
+    <div className="min-h-screen flex bg-[#060304] text-white">
 
-      <div className="absolute top-10 left-10 w-72 h-72 bg-blue-200 rounded-full blur-3xl opacity-40"></div>
-      <div className="absolute bottom-10 right-10 w-72 h-72 bg-sky-200 rounded-full blur-3xl opacity-40"></div>
+      {/* LEFT SIDE */}
+      <div className="hidden md:flex flex-1 items-center justify-center relative overflow-hidden">
 
-      <div className="relative z-10 bg-white/70 backdrop-blur-xl border border-blue-100 shadow-xl rounded-3xl p-8 w-full max-w-sm">
+        <div className="absolute w-125 h-125 bg-pink-400/20 rounded-full blur-3xl"></div>
 
-        <h2 className="text-3xl font-bold text-center text-blue-500 mb-1">
-          Join Us 
-        </h2>
+        <div className="relative z-10 max-w-md px-10">
+          <h1 className="text-4xl font-semibold leading-tight">
+            Start your writing journey.
+          </h1>
+          <p className="text-gray-400 mt-4 text-sm leading-relaxed">
+            Create your account to publish stories, connect with readers, and build your own creative space.
+          </p>
+        </div>
 
-        <p className="text-center text-gray-500 text-sm mb-6">
-          Create your account to publish stories
-        </p>
+      </div>
 
-        <form onSubmit={handleSignup} className="space-y-5">
+      {/* RIGHT SIDE */}
+      <div className="flex flex-1 items-center justify-center px-6">
 
-          <div>
-            <label className="text-xs text-gray-500">Username</label>
-            <input
-              type="text"
-              placeholder="your_username"
-              onChange={(e)=>setUser({...user, username:e.target.value})}
-              className="w-full mt-1 px-4 py-3 rounded-xl border border-blue-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm transition"
-            />
+        {/* ALERT */}
+        {alert && (
+          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl px-5 py-3 flex items-center gap-3">
+              <div className={`w-2 h-2 rounded-full ${
+                alert.type === "error" ? "bg-red-400" : "bg-green-400"
+              }`} />
+              <p className="text-sm text-gray-200">{alert.message}</p>
+              <button onClick={() => setAlert(null)} className="text-gray-500 hover:text-white">✕</button>
+            </div>
           </div>
+        )}
 
-          <div>
-            <label className="text-xs text-gray-500">Email</label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              onChange={(e)=>setUser({...user, email:e.target.value})}
-              className="w-full mt-1 px-4 py-3 rounded-xl border border-blue-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm transition"
-            />
-          </div>
+        {/* FORM */}
+        <div className="w-full max-w-sm">
 
-          <div>
-            <label className="text-xs text-gray-500">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              onChange={(e)=>setUser({...user, password:e.target.value})}
-              className="w-full mt-1 px-4 py-3 rounded-xl border border-blue-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm transition"
-            />
-          </div>
+          <h2 className="text-3xl font-semibold mb-2">
+            Create account
+          </h2>
+          <p className="text-gray-400 text-sm mb-8">
+            Join and start publishing
+          </p>
 
-          <button className="w-full py-3 rounded-xl font-semibold text-white bg-[#38BDF8]">
-            Sign Up 
-          </button>
+          <form onSubmit={handleSignup} className="space-y-5">
 
-        </form>
+            <div>
+              <label className="text-xs text-gray-400">Username</label>
+              <input
+                type="text"
+                onChange={(e)=>setUser({...user, username:e.target.value})}
+                className="w-full mt-1 px-4 py-3 rounded-xl bg-white/5 border-2 border-white/10 focus:border-[#e04f95] focus:outline-none text-sm"
+              />
+            </div>
 
-        <p className="text-center text-sm text-gray-400 mt-6">
-          Already have an account?{" "}
-          <span
-            onClick={()=>navigate("/login")}
-            className="text-blue-500 cursor-pointer font-medium"
-          >
-            Login
-          </span>
-        </p>
+            <div>
+              <label className="text-xs text-gray-400">Email</label>
+              <input
+                type="email"
+                onChange={(e)=>setUser({...user, email:e.target.value})}
+                className="w-full mt-1 px-4 py-3 rounded-xl bg-white/5 border-2 border-white/10 focus:border-[#e04f95] focus:outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs text-gray-400">Password</label>
+              <input
+                type="password"
+                onChange={(e)=>setUser({...user, password:e.target.value})}
+                className="w-full mt-1 px-4 py-3 rounded-xl bg-white/5 border-2 border-white/10 focus:border-[#e04f95] focus:outline-none text-sm"
+              />
+            </div>
+
+            <button className="w-full py-3 rounded-xl font-medium bg-[#E37EAF] hover:bg-[#e04f95] transition">
+              Sign Up
+            </button>
+
+          </form>
+
+          <p className="text-sm text-center mt-8 text-gray-500">
+            Already have an account?{" "}
+            <span
+              className="text-[#E37EAF] cursor-pointer"
+              onClick={()=>navigate("/login")}
+            >
+              Login
+            </span>
+          </p>
+
+        </div>
 
       </div>
     </div>

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
-import { Sparkles, Moon, BookOpen, Grid, Heart, Skull, Compass } from "lucide-react";
+import { Sparkles, BookOpen, Grid, Heart, Skull, Compass } from "lucide-react";
 
 export default function Books() {
 
@@ -14,6 +13,7 @@ export default function Books() {
   const [subCategory, setSubCategory] = useState("All");
 
   const navigate = useNavigate();
+  const scrollRef = useRef();
 
   useEffect(() => {
     axios.get("https://bookwebsite-4q2b.onrender.com/books", { withCredentials: true })
@@ -65,10 +65,11 @@ export default function Books() {
     );
   });
 
+  
   const subMap = {
-    Cute: ["Romance", "Slice of Life", "Cozy Fantasy"],
-    Dark: ["Thriller", "Horror", "Crime"],
-    Neutral: ["Fantasy", "Adventure", "Mystery"]
+    Cute: ["Romance","Slice of Life","Coming-of-Age","Cozy Fantasy","Light Comedy","Young Adult"],
+    Neutral: ["Literary Fiction","Adventure","Fantasy","Mystery","Sci-Fi"],
+    Dark: ["Dark Romance","Thriller","Horror","Crime","Dystopian"]
   };
 
   const handleRating = async (bookId, value) => {
@@ -118,6 +119,7 @@ export default function Books() {
           <span onClick={()=>navigate("/admin")} className="cursor-pointer hover:text-white">Submit</span>
           <span onClick={()=>navigate("/")} className="cursor-pointer hover:text-white">About</span>
           <span onClick={()=>navigate("/search")} className="cursor-pointer hover:text-white">Search</span>
+          <span onClick={()=>navigate("/setting")} className="cursor-pointer hover:text-white">Dashboard</span>
         </div>
 
         <div className="flex gap-3 text-sm">
@@ -135,9 +137,6 @@ export default function Books() {
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <Sparkles size={20}/> All Stories
         </h1>
-        <p className="text-gray-400 text-sm mt-1">
-          Browse and discover stories from the community
-        </p>
       </div>
 
       {/* MAIN CATEGORY */}
@@ -161,20 +160,47 @@ export default function Books() {
 
       </div>
 
-      {/* SUB CATEGORY */}
-      <div className="px-6 py-2 border-b border-white/10 flex gap-3 overflow-x-auto">
+   
+      <div className="relative px-6 py-2 border-b border-white/10">
 
-        {category === "All" && ["Romance","Fantasy","Horror","Adventure"].map(sub => (
-          <button key={sub} onClick={()=>setSubCategory(sub)} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm hover:bg-white/10">
-            {sub}
-          </button>
-        ))}
+        {/* LEFT */}
+        <button
+          onClick={() => scrollRef.current.scrollBy({ left: -200, behavior: "smooth" })}
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black px-2 py-1 rounded-full"
+        >
+          ‹
+        </button>
 
-        {category !== "All" && subMap[category]?.map(sub => (
-          <button key={sub} onClick={()=>setSubCategory(sub)} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm hover:bg-white/10">
-            {sub}
-          </button>
-        ))}
+        {/* RIGHT */}
+        <button
+          onClick={() => scrollRef.current.scrollBy({ left: 200, behavior: "smooth" })}
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black px-2 py-1 rounded-full"
+        >
+          ›
+        </button>
+
+        <div ref={scrollRef} className="overflow-x-auto no-scrollbar px-8">
+          <div className="flex gap-2 min-w-max">
+
+            {(category === "All"
+              ? [
+                  "Romance","Slice of Life","Coming-of-Age","Cozy Fantasy","Light Comedy","Young Adult",
+                  "Literary Fiction","Adventure","Fantasy","Mystery","Sci-Fi",
+                  "Dark Romance","Thriller","Horror","Crime","Dystopian"
+                ]
+              : subMap[category] || []
+            ).map(sub => (
+              <button
+                key={sub}
+                onClick={()=>setSubCategory(sub)}
+                className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm hover:bg-white/10 whitespace-nowrap"
+              >
+                {sub}
+              </button>
+            ))}
+
+          </div>
+        </div>
 
       </div>
 
@@ -194,49 +220,16 @@ export default function Books() {
                   src={`data:image/jpeg;base64,${book.cover}`}
                   className="w-full h-48 object-cover group-hover:scale-105 transition"
                 />
-
-                <div className="absolute top-2 left-2 text-xs px-2 py-1 bg-black/50 rounded">
-                  {getSide(book.category)}
-                </div>
               </div>
 
               <div className="p-4">
-
                 <h2 className="text-sm font-semibold line-clamp-2">
                   {book.title}
                 </h2>
 
-                <p className="text-xs text-gray-400 mt-1 line-clamp-2">
-                  {book.description}
-                </p>
-
                 <p className="text-xs mt-1 opacity-60">
                   {getGenre(book.category)}
                 </p>
-
-                <p className="text-sm mt-2">
-                   {getAverage(book).toFixed(1)}
-                </p>
-
-                <div className="flex gap-2 mt-2">
-                  {[1,2,3,4,5].map(star => (
-                    <button key={star} onClick={() => handleRating(book._id, star)} className="text-xl hover:scale-125 hover:text-yellow-300 transition">
-                      ★
-                    </button>
-                  ))}
-                </div>
-
-                <button onClick={() => handleSave(book._id)} className="mt-2 text-xs px-3 py-1 bg-white/10 rounded hover:bg-white/20">
-                  Save
-                </button>
-
-                <div className="flex justify-between mt-3 text-xs text-gray-500">
-                  <span>{book.username}</span>
-                  <span onClick={() => navigate(`/bookd/${book._id}`)} className="text-[#E37EAF] cursor-pointer">
-                    Read →
-                  </span>
-                </div>
-
               </div>
 
             </div>
@@ -244,11 +237,6 @@ export default function Books() {
 
         </div>
 
-      </div>
-
-      {/* FOOTER */}
-      <div className="text-center text-gray-500 text-sm py-10 border-t border-white/10">
-        © 2026 SilverVeil.Press
       </div>
 
     </div>

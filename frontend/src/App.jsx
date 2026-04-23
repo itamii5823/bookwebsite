@@ -6,13 +6,13 @@ import { BookOpen, Feather, Info, Mail, Sparkles, Search } from "lucide-react";
 
 import cuteLogo from "/silver.png";
 import darkLogo from "/silver.png";
-import neutralLogo from "/hehe.png";
+import neutralLogo from "/hehe.png";  
 
 export default function Home() {
   const [theme, setTheme] = useState("dark");
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);  
   const [books, setBooks] = useState([]);
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState("All"); 
 
   const navigate = useNavigate();
 
