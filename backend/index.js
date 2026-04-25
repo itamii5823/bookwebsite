@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const razorpay = require('razorpay')
 
 const multer = require("multer"); 
 
