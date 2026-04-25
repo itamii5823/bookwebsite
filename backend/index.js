@@ -384,16 +384,20 @@ app.post("/change-password", async (req, res) => {
 
 app.post("/create-order", async (req, res) => {
   try {
+    console.log("HIT CREATE ORDER");
+
     const order = await razorpay.orders.create({
-      amount: 9900, // ₹99
+      amount: 9900,
       currency: "INR",
       receipt: "order_" + Date.now()
     });
 
+    console.log("ORDER:", order);
+
     res.json(order);
 
   } catch (err) {
-    console.log(err);
+    console.log("ERROR:", err);  // 🔥 VERY IMPORTANT
     res.status(500).send("error");
   }
 });
