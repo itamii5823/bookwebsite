@@ -22,7 +22,9 @@ const userSchema = mongosse.Schema({
  savedBooks: {
   type: [String],
   default: []
-}
+},
+isPremium: { type: Boolean, default: false },
+premiumExpiry: Date
     
 });
 

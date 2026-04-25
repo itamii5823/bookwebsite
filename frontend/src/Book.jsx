@@ -105,6 +105,50 @@ export default function Books() {
     }
   };
 
+
+
+  const handleBuyPremium = async () => {
+  try {
+   
+    const { data } = await axios.post(
+      "https://bookwebsite-4q2b.onrender.com/create-order",
+      {},
+      { withCredentials: true }
+    );
+
+    
+    const options = {
+      key: "rzp_test_ShZapsd7RsMLIU", //
+      amount: data.amount,
+      currency: data.currency,
+      order_id: data.id,
+
+      handler: async function (response) {
+  try {
+    const res = await axios.post(
+      "https://bookwebsite-4q2b.onrender.com/verify-payment",
+      response,
+      { withCredentials: true }
+    );
+
+    console.log("VERIFY SUCCESS:", res.data);
+    alert("Premium Activated 🎉");
+
+  } catch (err) {
+    console.log("VERIFY ERROR:", err.response?.data || err.message);
+    alert("Payment done but verification failed ");
+  }
+}
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (err) {
+    console.log(err);
+    alert("Payment failed");
+  }
+};
   return (
     <div className="min-h-screen bg-[#0B0F1A] text-white">
 
@@ -115,6 +159,12 @@ export default function Books() {
         </h1>
 
         <div className="hidden sm:flex gap-6 text-sm text-gray-400">
+          <button
+  onClick={handleBuyPremium}
+  className="px-4 py-1.5 rounded-lg bg-yellow-400 text-black font-medium"
+>
+  Get Premium
+</button>
           <span onClick={()=>navigate("/")} className="cursor-pointer hover:text-white">Home</span>
           <span onClick={()=>navigate("/admin")} className="cursor-pointer hover:text-white">Submit</span>
           <span onClick={()=>navigate("/")} className="cursor-pointer hover:text-white">About</span>

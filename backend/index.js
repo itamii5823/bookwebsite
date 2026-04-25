@@ -7,7 +7,13 @@ const mongoose = require('mongoose');
 const multer = require("multer"); 
 
 const app = express();
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
 
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID || "rzp_test_ShZapsd7RsMLIU",
+  key_secret: process.env.RAZORPAY_KEY_SECRET || "n60HodYxf5BnUImx695JKloA"
+});
 
 const isProd = process.env.NODE_ENV === "production";
 const secret = process.env.JWT_SECRET || "dhsgsghdshggd";
@@ -42,7 +48,6 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// 🔥 MULTER SETUP (ADDED)
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -50,7 +55,7 @@ const upload = multer({ storage });
 
 // TEST
 app.get("/", (req, res) => {
-  res.send("Backend Running 🚀");
+  res.send("Backend Running ");
 });
 
 // ================= SIGNUP =================
@@ -213,13 +218,35 @@ app.get("/me", async (req, res) => {
 app.get("/books", async (req, res) => {
   try {
     const books = await Book.find();
-    res.json(books);
+
+    const token = req.cookies.user;
+    let user = null;
+
+    if (token) {
+      try {
+        const data = jwt.verify(token, secret);
+        user = await User.findOne({ email: data.email });
+      } catch {}
+    }
+
+    const modifiedBooks = books.map(book => {
+      if (book.isPremium) {
+        if (!user || !user.isPremium || user.premiumExpiry < new Date()) {
+          return {
+            ...book.toObject(),
+            content: " Buy Premium to Read"
+          };
+        }
+      }
+      return book;
+    });
+
+    res.json(modifiedBooks);
+
   } catch (err) {
-    console.log(err);
     res.status(500).send("error");
   }
 });
-
 // ================= LOGOUT =================
 app.get("/logout", (req, res) => {
   res.clearCookie("user", {
@@ -381,6 +408,71 @@ app.post("/change-password", async (req, res) => {
     res.status(500).send("error");
   }
 });
+// ================= create order =================
+app.post("/create-order", async (req, res) => {
+  try {
+    const amount = 9900; // ₹99 (in paise)
+
+    const options = {
+      amount,
+      currency: "INR",
+      receipt: "order_" + Date.now()
+    };
+
+    const order = await razorpay.orders.create(options);
+
+    res.json(order);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("error creating order");
+  }
+});
+
+// ================= verify payment =================
+app.post("/verify-payment", async (req, res) => {
+  try {
+    const token = req.cookies.user;
+    if (!token) return res.status(401).send("not logged in");
+
+    const userData = jwt.verify(token, secret);
+
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature
+    } = req.body;
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", "n60HodYxf5BnUImx695JKloA" )
+      .update(body.toString())
+      .digest("hex");
+
+    if (expectedSignature !== razorpay_signature) {
+      return res.status(400).send("invalid signature");
+    }
+
+   console.log("EXPECTED:", expectedSignature);
+   console.log("RECEIVED:", razorpay_signature);
+    const user = await User.findOne({ email: userData.email });
+
+    user.isPremium = true;
+    user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+    await user.save();
+
+    res.send("payment success");
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("verification failed");
+  }
+});
+
+// ================= is premium =================
+
 // ================= START SERVER =================
 const PORT = process.env.PORT || 5000;
 
