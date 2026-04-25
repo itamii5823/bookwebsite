@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+require("dotenv").config();
 
 const multer = require("multer"); 
 
@@ -11,12 +12,14 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || "rzp_test_ShZapsd7RsMLIU",
-  key_secret: process.env.RAZORPAY_KEY_SECRET || "n60HodYxf5BnUImx695JKloA"
+  key_id: process.env.RAZORPAY_KEY_ID ,
+  key_secret: process.env.RAZORPAY_KEY_SECRET 
 });
 
 const isProd = process.env.NODE_ENV === "production";
-const secret = process.env.JWT_SECRET || "dhsgsghdshggd";
+const secret = process.env.JWT_SECRET;
+
+
 
 // ================= DB CONNECTION =================
 
@@ -446,7 +449,7 @@ app.post("/verify-payment", async (req, res) => {
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
     const expectedSignature = crypto
-      .createHmac("sha256", "n60HodYxf5BnUImx695JKloA" )
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET  )
       .update(body.toString())
       .digest("hex");
 
