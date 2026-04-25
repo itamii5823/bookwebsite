@@ -3,7 +3,13 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const razorpay = require('razorpay')
+const Razorpay = require("razorpay");
+require("dotenv").config();
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
+});
 
 const multer = require("multer"); 
 
@@ -43,7 +49,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// 🔥 MULTER SETUP (ADDED)
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -398,9 +404,16 @@ app.post("/create-order", async (req, res) => {
     res.json(order);
 
   } catch (err) {
-    console.log("ERROR:", err);  // 🔥 VERY IMPORTANT
+    console.log("ERROR:", err); 
     res.status(500).send("error");
   }
+});
+
+app.post("/verify-payment", (req, res) => {
+  console.log("PAYMENT DATA:", req.body);
+
+  // for now just accept everything
+  res.send("payment received");
 });
 // ================= START SERVER =================
 const PORT = process.env.PORT || 5000;
