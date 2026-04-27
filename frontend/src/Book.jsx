@@ -8,12 +8,23 @@ export default function Books() {
 
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isPremium, setIsPremium] = useState(false);
 
   const [category, setCategory] = useState("All");
   const [subCategory, setSubCategory] = useState("All");
 
   const navigate = useNavigate();
   const scrollRef = useRef();
+
+  useEffect(() => {
+  axios.get("https://bookwebsite-4q2b.onrender.com/me", { withCredentials: true })
+    .then(res => {
+      setIsPremium(res.data.user.isPremium);
+    })
+    .catch(() => {});
+}, []);
+
+
 
   useEffect(() => {
     axios.get("https://bookwebsite-4q2b.onrender.com/books", { withCredentials: true })
@@ -111,7 +122,7 @@ export default function Books() {
 const handleBuyPremium = async () => {
   try {
     const { data } = await axios.post(
-      "http://localhost:5000/create-order",
+      "https://bookwebsite-4q2b.onrender.com/create-order",
       {},
       { withCredentials: true }
     );
@@ -128,11 +139,16 @@ const handleBuyPremium = async () => {
       amount: data.amount,
       currency: data.currency,
       order_id: data.id,
+       method: {
+    upi: true
+  },
 
       handler: async function (response) {
         try {
+          
           const res = await axios.post(
-            "http://localhost:5000/verify-payment",
+            "https://bookwebsite-4q2b.onrender.com/verify-payment",
+            
             response,
             { withCredentials: true }
           );
@@ -167,12 +183,19 @@ const handleBuyPremium = async () => {
         </h1>
 
         <div className="hidden sm:flex gap-6 text-sm text-gray-400">
-          <button
-  onClick={handleBuyPremium}
-  className="px-4 py-1.5 rounded-lg bg-yellow-400 text-black font-medium"
->
-  Get Premium
-</button>
+          {isPremium ? (
+  <button className="px-4 py-1.5 rounded-lg bg-green-500 text-white font-medium cursor-not-allowed">
+    Subscription Active ✅
+  </button>
+) : (
+  <button
+    onClick={handleBuyPremium}
+    className="px-4 py-1.5 rounded-lg bg-yellow-400 text-black font-medium"
+  >
+    Get Premium
+  </button>
+)}
+
           <span onClick={()=>navigate("/")} className="cursor-pointer hover:text-white">Home</span>
           <span onClick={()=>navigate("/admin")} className="cursor-pointer hover:text-white">Submit</span>
           <span onClick={()=>navigate("/")} className="cursor-pointer hover:text-white">About</span>

@@ -124,7 +124,7 @@ app.post("/login", async (req, res) => {
     );
 
     res.cookie("user", token, {
-      httpOnly: true,
+      httpOnly: false,
       sameSite: isProd ? "none" : "lax",
       secure: isProd
     });
@@ -205,7 +205,8 @@ app.get("/me", async (req, res) => {
     res.json({
       user: {
         username: user.username,
-        email: user.email
+        email: user.email,
+         isPremium: user.isPremium
       },
       saved: savedBooks
     });
@@ -409,11 +410,79 @@ app.post("/create-order", async (req, res) => {
   }
 });
 
-app.post("/verify-payment", (req, res) => {
-  console.log("PAYMENT DATA:", req.body);
+const crypto = require("crypto");
 
-  // for now just accept everything
-  res.send("payment received");
+app.post("/verify-payment", async (req, res) => {
+  try {
+    console.log("PAYMENT DATA:", req.body);
+    
+
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      token 
+    } = req.body;
+
+    if (!token) {
+  console.log("❌ No JWT token received");
+  return res.status(401).json({
+    success: false,
+    message: "User not authenticated"
+  });
+}
+ 
+    const data = jwt.verify(token, secret);
+    const user = await User.findOne({ email: data.email });
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid payment data"
+      });
+    }
+
+   
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body.toString())
+      .digest("hex");
+
+    
+    if (expectedSignature === razorpay_signature) {
+      
+     
+      console.log("✅ Payment Verified");
+      if (user) {
+      user.isPremium = true;
+      await user.save();
+        }
+
+      return res.status(200).json({
+        success: true,
+        message: "Payment verified successfully"
+        
+      });
+
+    } else {
+      
+      console.log("❌ Invalid Signature");
+
+      return res.status(400).json({
+        success: false,
+        message: "Payment verification failed"
+      });
+    }
+
+  } catch (error) {
+    console.error("VERIFY ERROR:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
 });
 // ================= START SERVER =================
 const PORT = process.env.PORT || 5000;
