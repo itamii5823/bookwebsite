@@ -107,48 +107,56 @@ export default function Books() {
 
 
 
-  const handleBuyPremium = async () => {
+//premium 
+const handleBuyPremium = async () => {
   try {
-   
     const { data } = await axios.post(
-      "https://bookwebsite-4q2b.onrender.com/create-order",
+      "http://localhost:5000/create-order",
       {},
       { withCredentials: true }
     );
 
-    
+    console.log("ORDER:", data);
+
+    if (!window.Razorpay) {
+      alert("Razorpay not loaded");
+      return;
+    }
+
     const options = {
-      key: "rzp_test_ShZapsd7RsMLIU", //
+      key: "rzp_test_ShZapsd7RsMLIU",
       amount: data.amount,
       currency: data.currency,
       order_id: data.id,
 
       handler: async function (response) {
-  try {
-    const res = await axios.post(
-      "https://bookwebsite-4q2b.onrender.com/verify-payment",
-      response,
-      { withCredentials: true }
-    );
+        try {
+          const res = await axios.post(
+            "http://localhost:5000/verify-payment",
+            response,
+            { withCredentials: true }
+          );
 
-    console.log("VERIFY SUCCESS:", res.data);
-    alert("Premium Activated 🎉");
+          console.log("VERIFY SUCCESS:", res.data);
+          alert("Premium Activated 🎉");
 
-  } catch (err) {
-    console.log("VERIFY ERROR:", err.response?.data || err.message);
-    alert("Payment done but verification failed ");
-  }
-}
+        } catch (err) {
+          console.log("VERIFY ERROR:", err.response?.data || err.message);
+          alert("Verification failed ");
+        }
+      }
     };
 
     const rzp = new window.Razorpay(options);
     rzp.open();
 
   } catch (err) {
-    console.log(err);
-    alert("Payment failed");
+    console.log("CREATE ORDER ERROR:", err.response?.data || err.message);
+    alert("Create order failed ❌");
   }
 };
+
+  
   return (
     <div className="min-h-screen bg-[#0B0F1A] text-white">
 
