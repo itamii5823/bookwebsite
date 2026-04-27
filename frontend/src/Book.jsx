@@ -13,6 +13,7 @@ export default function Books() {
   const [category, setCategory] = useState("All");
   const [subCategory, setSubCategory] = useState("All");
 
+
   const navigate = useNavigate();
   const scrollRef = useRef();
 
@@ -144,12 +145,16 @@ const handleBuyPremium = async () => {
   },
 
       handler: async function (response) {
+          localStorage.setItem("token", token);
         try {
           
           const res = await axios.post(
             "https://bookwebsite-4q2b.onrender.com/verify-payment",
             
-            response,
+             {
+        ...response,
+         token
+            },
             { withCredentials: true }
           );
 
