@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
 
 const Book = require("./database/Book");
 
-const User = mongoose.model("User", userSchema);
+const User = require("./database/usermodule")
 
 // ================= MIDDLEWARE =================
 app.use(cors({
