@@ -476,7 +476,8 @@ app.post("/verify-payment", async (req, res) => {
     }
 
     console.log(" Payment Verified");
-
+    console.log(data.email);
+    
 
     await User.updateOne(
   { email: data.email },
