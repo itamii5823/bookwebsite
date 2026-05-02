@@ -426,7 +426,8 @@ app.post("/verify-payment", async (req, res) => {
 
     
     const token = req.cookies.user;
-
+  console.log(token);
+  
     if (!token) {
       return res.status(401).json({
         success: false,
