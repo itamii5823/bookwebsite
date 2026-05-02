@@ -541,9 +541,9 @@ app.post("/watch-time", async (req, res) => {
 });
 
 // ================= ADMIN DASHBOARD =================
-app.get("/admin/earnings", async (req, res) => {
+app.get("/earnings", async (req, res) => {
   try {
-    // 🔐 verify admin
+ 
     const token = req.cookies.user;
 
     if (!token) {
@@ -556,7 +556,7 @@ app.get("/admin/earnings", async (req, res) => {
       return res.status(403).send("Not authorized");
     }
 
-    // 💰 get total revenue
+   
     const payments = await Payment.find();
 
     let totalRevenue = 0;
@@ -572,11 +572,11 @@ app.get("/admin/earnings", async (req, res) => {
       totalWatchTime += w.totalTime;
     });
 
-    // 🧠 split money
+   
     const creatorPool = totalRevenue * 0.7;
     const ownerProfit = totalRevenue * 0.3;
 
-    // ⚠️ avoid crash
+  
     if (totalWatchTime === 0) {
       return res.json({
         totalRevenue,
@@ -585,7 +585,7 @@ app.get("/admin/earnings", async (req, res) => {
       });
     }
 
-    // 🔥 calculate creator earnings
+ 
     const creators = watchData.map(w => {
       const earning =
         (w.totalTime / totalWatchTime) * creatorPool;

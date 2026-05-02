@@ -10,7 +10,7 @@ export default function AdminDashboard() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          "https://bookwebsite-4q2b.onrender.com/admin/earnings",
+          "https://bookwebsite-4q2b.onrender.com/earnings",
           { withCredentials: true }
         );
 
