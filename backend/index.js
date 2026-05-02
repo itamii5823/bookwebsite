@@ -482,6 +482,7 @@ app.post("/verify-payment", async (req, res) => {
   { email: data.email },
   { $set: { isPremium: true } }
 );
+ await User.save()
 
    
     const exists = await Payment.findOne({

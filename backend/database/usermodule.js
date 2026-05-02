@@ -24,7 +24,7 @@ const userSchema = mongosse.Schema({
   default: []
 },
 isPremium: { type: Boolean, default: false },
-premiumExpiry: Date
+premiumExpiry: Date,
     
 });
 
