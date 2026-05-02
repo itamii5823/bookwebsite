@@ -19,7 +19,7 @@ const app = express();
 
 
 const isProd = process.env.NODE_ENV === "production";
-const secret = process.env.JWT_SECRET || "dhsgsghdshggd";
+const secret = process.env.JWT_SECRET || "mySuperSecretKey123";
 
 // ================= DB CONNECTION =================
 
