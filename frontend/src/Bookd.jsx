@@ -35,13 +35,68 @@ export default function BookDetail() {
     setPage(0);
   }, [fontSize]);
 
+// 🔥 WATCHTIME LOGIC
+
+useEffect(() => {
+  let lastActivity = Date.now();
+
+  const markActive = () => {
+    lastActivity = Date.now();
+  };
+
+  // track activity
+  window.addEventListener("mousemove", markActive);
+  window.addEventListener("keydown", markActive);
+  window.addEventListener("scroll", markActive);
+
+  // send watchtime every 10 sec
+  const interval = setInterval(async () => {
+    const now = Date.now();
+
+    const isActive =
+      now - lastActivity < 15000 && !document.hidden;
+
+    if (isActive) {
+      try {
+        await axios.post(
+          "https://bookwebsite-4q2b.onrender.com/watch-time",
+          {
+            bookId: id,
+            time: 10
+          },
+          {
+            withCredentials: true
+          }
+        );
+
+        console.log("⏱️ Sent 10 sec watchtime");
+      } catch (err) {
+        console.log("watchtime error", err);
+      }
+    }
+  }, 10000);
+
+  // cleanup
+  return () => {
+    clearInterval(interval);
+    window.removeEventListener("mousemove", markActive);
+    window.removeEventListener("keydown", markActive);
+    window.removeEventListener("scroll", markActive);
+  };
+
+}, [id]);
+
+
+
   if (!book) {
+    
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-gray-400">
         Loading...
       </div>
     );
   }
+  
 
 
   const words = book.content.split(" ");

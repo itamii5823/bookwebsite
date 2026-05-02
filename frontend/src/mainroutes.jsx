@@ -7,6 +7,7 @@ import Books from "./Book";
 import Bookd from "./Bookd";
 import Search from "./Search";
 import Settings from "./Settings";
+import AdminDashboard from "./Admindash";
 
 
 
@@ -22,6 +23,7 @@ function Mainroutes(){
           <Route path="/bookd/:id" element={<Bookd/>}/>
           <Route path="/search" element={<Search/>}/>
           <Route path="/setting" element={<Settings/>}/>
+          <Route path="/owner" element={<AdminDashboard/>}/>
 
 
        </Routes>

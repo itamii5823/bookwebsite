@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const Razorpay = require("razorpay");
+const Watch = require("./database/watchtime");
+const Payment = require("./database/payment")
 require("dotenv").config();
 
 const razorpay = new Razorpay({
@@ -389,7 +391,7 @@ app.post("/change-password", async (req, res) => {
     res.status(500).send("error");
   }
 });
-
+// ================= CREATE ORDER =================
 app.post("/create-order", async (req, res) => {
   try {
     console.log("HIT CREATE ORDER");
@@ -410,28 +412,26 @@ app.post("/create-order", async (req, res) => {
   }
 });
 
+// ================= VERIFY PAYMENT =================
 const crypto = require("crypto");
-
 app.post("/verify-payment", async (req, res) => {
   try {
     console.log("PAYMENT DATA:", req.body);
-    
 
     const {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
-      token 
+      token
     } = req.body;
 
     if (!token) {
-  console.log("❌ No JWT token received");
-  return res.status(401).json({
-    success: false,
-    message: "User not authenticated"
-  });
-}
- 
+      return res.status(401).json({
+        success: false,
+        message: "User not authenticated"
+      });
+    }
+
     const data = jwt.verify(token, secret);
     const user = await User.findOne({ email: data.email });
 
@@ -442,7 +442,6 @@ app.post("/verify-payment", async (req, res) => {
       });
     }
 
-   
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
     const expectedSignature = crypto
@@ -450,26 +449,31 @@ app.post("/verify-payment", async (req, res) => {
       .update(body.toString())
       .digest("hex");
 
-    
     if (expectedSignature === razorpay_signature) {
-      
-     
-      console.log("✅ Payment Verified");
+
+      console.log("Payment Verified");
+
+    
       if (user) {
-      user.isPremium = true;
-      await user.save();
-        }
+        user.isPremium = true;
+        await user.save();
+      }
+
+     
+      await Payment.create({
+        email: data.email,
+        amount: 100, 
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        type: "subscription"
+      });
 
       return res.status(200).json({
         success: true,
         message: "Payment verified successfully"
-        
       });
 
     } else {
-      
-      console.log("❌ Invalid Signature");
-
       return res.status(400).json({
         success: false,
         message: "Payment verification failed"
@@ -484,6 +488,129 @@ app.post("/verify-payment", async (req, res) => {
     });
   }
 });
+
+// ================= WATCHTIME =================
+app.post("/watch-time", async (req, res) => {
+  try {
+    const token = req.cookies.user;
+
+    if (!token) {
+      return res.status(401).send("Not logged in");
+    }
+
+    const data = jwt.verify(token, secret);
+
+    const { bookId, time } = req.body;
+
+
+    const safeTime = Math.min(time, 15);
+
+    const book = await Book.findById(bookId);
+
+    if (!book) {
+      return res.status(404).send("Book not found");
+    }
+
+  
+    let record = await Watch.findOne({
+      userEmail: data.email,
+      bookId: bookId
+    });
+
+    
+    if (!record) {
+      record = await Watch.create({
+        userEmail: data.email,
+        bookId: bookId,
+        creatorEmail: book.email, 
+        totalTime: safeTime
+      });
+    } else {
+     
+      record.totalTime += safeTime;
+      await record.save();
+    }
+   console.log("woeking");
+   
+    res.send("watchtime saved");
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("error");
+  }
+});
+
+// ================= ADMIN DASHBOARD =================
+app.get("/admin/earnings", async (req, res) => {
+  try {
+    // 🔐 verify admin
+    const token = req.cookies.user;
+
+    if (!token) {
+      return res.status(401).send("Not logged in");
+    }
+
+    const data = jwt.verify(token, secret);
+
+    if (data.role !== "admin") {
+      return res.status(403).send("Not authorized");
+    }
+
+    // 💰 get total revenue
+    const payments = await Payment.find();
+
+    let totalRevenue = 0;
+    payments.forEach(p => {
+      totalRevenue += p.amount;
+    });
+
+    // 👀 get watchtime
+    const watchData = await Watch.find();
+
+    let totalWatchTime = 0;
+    watchData.forEach(w => {
+      totalWatchTime += w.totalTime;
+    });
+
+    // 🧠 split money
+    const creatorPool = totalRevenue * 0.7;
+    const ownerProfit = totalRevenue * 0.3;
+
+    // ⚠️ avoid crash
+    if (totalWatchTime === 0) {
+      return res.json({
+        totalRevenue,
+        ownerProfit,
+        creators: []
+      });
+    }
+
+    // 🔥 calculate creator earnings
+    const creators = watchData.map(w => {
+      const earning =
+        (w.totalTime / totalWatchTime) * creatorPool;
+
+      return {
+        email: w.creatorEmail,
+        watchTime: w.totalTime,
+        earning: Math.floor(earning)
+      };
+    });
+
+    // ✅ final response
+    res.json({
+      totalRevenue,
+      ownerProfit,
+      totalWatchTime,
+      creators
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("error");
+  }
+});
+
 // ================= START SERVER =================
 const PORT = process.env.PORT || 5000;
 
