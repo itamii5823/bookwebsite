@@ -552,9 +552,9 @@ app.get("/earnings", async (req, res) => {
 
     const data = jwt.verify(token, secret);
 
-    if (data.role !== "admin") {
-      return res.status(403).send("Not authorized");
-    }
+    //if (data.role !== "admin") {
+     // return res.status(403).send("Not authorized");
+ //   }
 
    
     const payments = await Payment.find();
@@ -564,7 +564,7 @@ app.get("/earnings", async (req, res) => {
       totalRevenue += p.amount;
     });
 
-    // 👀 get watchtime
+  
     const watchData = await Watch.find();
 
     let totalWatchTime = 0;
@@ -597,7 +597,7 @@ app.get("/earnings", async (req, res) => {
       };
     });
 
-    // ✅ final response
+
     res.json({
       totalRevenue,
       ownerProfit,
