@@ -119,7 +119,7 @@ export default function Books() {
 
 
 
-//premium 
+
 const handleBuyPremium = async () => {
   try {
     const { data } = await axios.post(
@@ -185,8 +185,11 @@ const handleBuyPremium = async () => {
 
         <div className="hidden sm:flex gap-6 text-sm text-gray-400">
           {isPremium ? (
-  <button className="px-4 py-1.5 rounded-lg bg-green-500 text-white font-medium cursor-not-allowed">
-    Subscription Active ✅
+  <button
+    onClick={() => navigate("/premium")}
+    className="px-4 py-1.5 rounded-lg bg-purple-500 text-white font-medium"
+  >
+    Premium Books ⭐
   </button>
 ) : (
   <button

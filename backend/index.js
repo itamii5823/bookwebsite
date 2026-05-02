@@ -474,11 +474,13 @@ app.post("/verify-payment", async (req, res) => {
       });
     }
 
-    console.log("✅ Payment Verified");
+    console.log(" Payment Verified");
 
 
-    user.isPremium = true;
-    await user.save();
+    await User.updateOne(
+  { email: data.email },
+  { $set: { isPremium: true } }
+);
 
    
     const exists = await Payment.findOne({

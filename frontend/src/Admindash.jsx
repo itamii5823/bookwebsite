@@ -51,13 +51,13 @@ export default function AdminDashboard() {
 
         <div className="bg-white/5 p-4 rounded-xl">
           <p className="text-sm opacity-60">Total Revenue</p>
-          <p className="text-xl font-semibold">₹{data.totalRevenue}</p>
+          <p className="text-xl font-semibold">₹{data.totalRevenue/100}</p>
         </div>
 
         <div className="bg-white/5 p-4 rounded-xl">
           <p className="text-sm opacity-60">Owner Profit</p>
           <p className="text-xl font-semibold text-green-400">
-            ₹{data.ownerProfit}
+            ₹{data.ownerProfit/100}
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
                 <td className="p-3">{c.email}</td>
                 <td className="p-3">{c.watchTime} sec</td>
                 <td className="p-3 text-green-400">
-                  ₹{c.earning}
+                  ₹{c.earning/100}
                 </td>
               </tr>
             ))}
