@@ -421,9 +421,11 @@ app.post("/verify-payment", async (req, res) => {
     const {
       razorpay_order_id,
       razorpay_payment_id,
-      razorpay_signature,
-      token
+      razorpay_signature
     } = req.body;
+
+    
+    const token = req.cookies.user;
 
     if (!token) {
       return res.status(401).json({
@@ -432,8 +434,24 @@ app.post("/verify-payment", async (req, res) => {
       });
     }
 
-    const data = jwt.verify(token, secret);
+    let data;
+    try {
+      data = jwt.verify(token, secret);
+    } catch {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token"
+      });
+    }
+
     const user = await User.findOne({ email: data.email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({
@@ -446,39 +464,41 @@ app.post("/verify-payment", async (req, res) => {
 
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(body.toString())
+      .update(body)
       .digest("hex");
 
-    if (expectedSignature === razorpay_signature) {
-
-      console.log("Payment Verified");
-
-    
-      if (user) {
-        user.isPremium = true;
-        await user.save();
-      }
-
-     
-      await Payment.create({
-        email: data.email,
-        amount: 100, 
-        orderId: razorpay_order_id,
-        paymentId: razorpay_payment_id,
-        type: "subscription"
-      });
-
-      return res.status(200).json({
-        success: true,
-        message: "Payment verified successfully"
-      });
-
-    } else {
+    if (expectedSignature !== razorpay_signature) {
       return res.status(400).json({
         success: false,
         message: "Payment verification failed"
       });
     }
+
+    console.log("✅ Payment Verified");
+
+
+    user.isPremium = true;
+    await user.save();
+
+   
+    const exists = await Payment.findOne({
+      paymentId: razorpay_payment_id
+    });
+
+    if (!exists) {
+      await Payment.create({
+        email: data.email,
+        amount: 9900, 
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        type: "subscription"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Payment verified successfully"
+    });
 
   } catch (error) {
     console.error("VERIFY ERROR:", error);

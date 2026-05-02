@@ -145,27 +145,23 @@ const handleBuyPremium = async () => {
   },
 
       handler: async function (response) {
-          localStorage.setItem("token", token);
-        try {
-          
-          const res = await axios.post(
-            "https://bookwebsite-4q2b.onrender.com/verify-payment",
-            
-             {
-        ...response,
-         token
-            },
-            { withCredentials: true }
-          );
+  try {
+    const res = await axios.post(
+      "https://bookwebsite-4q2b.onrender.com/verify-payment",
+      {
+        ...response
+      },
+      { withCredentials: true }
+    );
 
-          console.log("VERIFY SUCCESS:", res.data);
-          alert("Premium Activated 🎉");
+    console.log("VERIFY SUCCESS:", res.data);
+    alert("Premium Activated ");
 
-        } catch (err) {
-          console.log("VERIFY ERROR:", err.response?.data || err.message);
-          alert("Verification failed ");
-        }
-      }
+  } catch (err) {
+    console.log("VERIFY ERROR:", err.response?.data || err.message);
+    alert("Verification failed ");
+  }
+}
     };
 
     const rzp = new window.Razorpay(options);
