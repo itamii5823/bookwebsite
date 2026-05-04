@@ -226,29 +226,14 @@ app.get("/me", async (req, res) => {
 // ================= GET BOOKS =================
 app.get("/books", async (req, res) => {
   try {
-    const token = req.cookies.user;
-    let isPremium = false;
-
-    if (token) {
-      const data = jwt.verify(token, secret);
-      const user = await User.findOne({ email: data.email });
-      isPremium = user?.isPremium;
-    }
-
     const books = await Book.find();
-
-    const filtered = books.filter(book => {
-      if (book.isPremium && !isPremium) return false;
-      return true;
-    });
-
-    res.json(filtered);
-
+    res.json(books);
   } catch (err) {
     console.log(err);
     res.status(500).send("error");
   }
 });
+
 // ================= LOGOUT =================
 app.get("/logout", (req, res) => {
   res.clearCookie("user", {
