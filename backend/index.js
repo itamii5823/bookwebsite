@@ -43,7 +43,7 @@ const User = require("./database/usermodule")
 // ================= MIDDLEWARE =================
 app.use(cors({
   origin:
-  [ "https://bookwebsite-g8rv.vercel.app" ,
+  [ "https://bookwebsite-eta.vercel.app" ,
      "http://localhost:5173"],
   credentials: true
 }));
