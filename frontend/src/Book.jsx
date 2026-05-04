@@ -9,6 +9,7 @@ export default function Books() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [category, setCategory] = useState("All");
   const [subCategory, setSubCategory] = useState("All");
@@ -181,6 +182,60 @@ const handleBuyPremium = async () => {
     <div className="min-h-screen bg-[#0B0F1A] text-white">
 
       {/* NAVBAR */}
+
+<div className="flex md:hidden sm:flex justify-between items-center px-6 py-4 border-b border-white/10 relative">
+
+  {/* RIGHT SIDE */}
+  <div className="flex items-center gap-3">
+
+    {/* HAMBURGER (MOBILE ONLY) */}
+    <button
+      onClick={() => setMenuOpen(!menuOpen)}
+      className="sm:hidden text-white text-2xl"
+    >
+      ☰
+    </button>
+  </div>
+
+  {/* MOBILE MENU */}
+  {menuOpen && (
+    <div className="absolute top-full left-0 w-full bg-[#0B0F1A] border-t border-white/10 flex flex-col gap-4 p-6 sm:hidden z-50">
+
+      {isPremium ? (
+        <button
+          onClick={() => { navigate("/premium"); setMenuOpen(false); }}
+          className="bg-purple-500 px-4 py-2 rounded-lg"
+        >
+          Premium Books
+        </button>
+      ) : (
+        <button
+          onClick={() => { handleBuyPremium(); setMenuOpen(false); }}
+          className="bg-yellow-400 text-black px-4 py-2 rounded-lg"
+        >
+          Get Premium
+        </button>
+      )}
+
+      <span onClick={()=>{navigate("/"); setMenuOpen(false);}}>Home</span>
+      <span onClick={()=>{navigate("/admin"); setMenuOpen(false);}}>Submit</span>
+      <span onClick={()=>{navigate("/"); setMenuOpen(false);}}>About</span>
+      <span onClick={()=>{navigate("/search"); setMenuOpen(false);}}>Search</span>
+      <span onClick={()=>{navigate("/setting"); setMenuOpen(false);}}>Dashboard</span>
+
+      <div className="flex gap-3 pt-4">
+        <button onClick={()=>navigate("/login")} className="flex-1 border border-white/20 py-2 rounded-lg">
+          Login
+        </button>
+        <button onClick={()=>navigate("/sign")} className="flex-1 bg-white text-black py-2 rounded-lg">
+          Register
+        </button>
+      </div>
+
+    </div>
+  )}
+</div>
+      
       <div className="flex justify-between items-center px-6 py-4 border-b border-white/10">
         <h1 className="text-xl font-semibold flex items-center gap-2">
           <BookOpen size={18}/> StarLit
