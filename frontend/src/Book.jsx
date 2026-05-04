@@ -238,6 +238,7 @@ const handleBuyPremium = async () => {
       <div className="flex justify-between items-center px-6 py-4 border-b border-white/10">
         <h1 className="text-xl font-semibold flex items-center gap-2">
           <BookOpen size={18}/> Silverveil
+        </h1>
 
         <div className="hidden sm:flex gap-6 text-sm text-gray-400">
           {isPremium ? (
