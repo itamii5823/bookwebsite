@@ -225,9 +225,7 @@ app.get("/me", async (req, res) => {
 // ================= GET BOOKS =================
 app.get("/books", async (req, res) => {
   try {
-     
     const books = await Book.find();
-    
     res.json(books);
   } catch (err) {
     console.log(err);
