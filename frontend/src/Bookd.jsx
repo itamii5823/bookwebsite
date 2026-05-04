@@ -11,6 +11,8 @@ export default function BookDetail() {
   const [fontSize, setFontSize] = useState(18);
   const [theme, setTheme] = useState("paper");
   const [showUI, setShowUI] = useState(true);
+  const [isPremium, setIsPremium] = useState(false);
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     axios.get("https://bookwebsite-4q2b.onrender.com/books")
@@ -20,6 +22,14 @@ export default function BookDetail() {
       });
   }, [id]);
 
+  useEffect(() => {
+  axios.get("https://bookwebsite-4q2b.onrender.com/me", { withCredentials: true })
+    .then(res => {
+      setIsPremium(res.data.user.isPremium);
+      setChecking(false);
+    })
+    .catch(() => setChecking(false));
+}, []);
  
   useEffect(() => {
     const handleKey = (e) => {
@@ -35,7 +45,7 @@ export default function BookDetail() {
     setPage(0);
   }, [fontSize]);
 
-// 🔥 WATCHTIME LOGIC
+
 
 useEffect(() => {
   let lastActivity = Date.now();
@@ -69,7 +79,7 @@ useEffect(() => {
           }
         );
 
-        console.log("⏱️ Sent 10 sec watchtime");
+        console.log("⏱ Sent 10 sec watchtime");
       } catch (err) {
         console.log("watchtime error", err);
       }
@@ -159,8 +169,26 @@ useEffect(() => {
     </svg>
   );
 
+  if (checking) {
+  return <div className="min-h-screen flex items-center justify-center text-gray-400">Checking access...</div>;
+}
+if (book?.isPremium && !isPremium) {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white">
+      <h1 className="text-xl mb-3">🔒 Premium Content</h1>
+      <p className="text-gray-400 mb-4">You need premium to read this book</p>
+      <button
+        onClick={() => window.location.href = "/book"}
+        className="px-4 py-2 bg-yellow-400 text-black rounded-lg"
+      >
+        Get Premium
+      </button>
+    </div>
+  );
+}
   return (
     <div
+    
       className={`min-h-screen transition-all duration-500 ${theme === "dark" ? "bg-black" : "bg-[#0b0f19]"}`}
       onClick={(e) => {
         const x = e.clientX;

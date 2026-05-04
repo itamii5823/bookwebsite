@@ -225,7 +225,11 @@ app.get("/me", async (req, res) => {
 // ================= GET BOOKS =================
 app.get("/books", async (req, res) => {
   try {
+     {
+  return res.status(403).send("Premium required");
+}
     const books = await Book.find();
+    if (book.isPremium && !user.isPremium)
     res.json(books);
   } catch (err) {
     console.log(err);
