@@ -43,7 +43,8 @@ const User = require("./database/usermodule")
 // ================= MIDDLEWARE =================
 app.use(cors({
   origin:
-  [ "https://bookwebsite-eta.vercel.app" ,
+  [ "https://bookwebsite-eta.vercel.app",
+    "https://bookwebsite-g8rv.vercel.app",
      "http://localhost:5173"],
   credentials: true
 }));
@@ -225,14 +226,29 @@ app.get("/me", async (req, res) => {
 // ================= GET BOOKS =================
 app.get("/books", async (req, res) => {
   try {
+    const token = req.cookies.user;
+    let isPremium = false;
+
+    if (token) {
+      const data = jwt.verify(token, secret);
+      const user = await User.findOne({ email: data.email });
+      isPremium = user?.isPremium;
+    }
+
     const books = await Book.find();
-    res.json(books);
+
+    const filtered = books.filter(book => {
+      if (book.isPremium && !isPremium) return false;
+      return true;
+    });
+
+    res.json(filtered);
+
   } catch (err) {
     console.log(err);
     res.status(500).send("error");
   }
 });
-
 // ================= LOGOUT =================
 app.get("/logout", (req, res) => {
   res.clearCookie("user", {
