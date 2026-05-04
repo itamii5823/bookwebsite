@@ -259,26 +259,56 @@ const filteredBooks =
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
           {/* FEATURED */}
-          <div className="lg:col-span-2 space-y-6">
-            <h3 className="text-xl font-semibold">Featured Stories</h3>
+         <div className="lg:col-span-2 space-y-4">
+  <h3 className="text-lg font-semibold">Featured Stories</h3>
 
-            {filteredBooks.slice(-3).map((book) => (
-              <div
-                key={book._id}
-                onClick={() => navigate(`/bookd/${book._id}`)} // 
-                className={`flex gap-4 p-4 rounded-2xl cursor-pointer ${current.card}`}
-              >
-                <img
-                  src={`data:image/jpeg;base64,${book.cover}`} // 
-                  className="w-28 h-20 object-cover rounded-lg"
-                />
-                <div>
-                  <h4 className={`font-semibold ${current.accent}`}>{book.title}</h4>
-                  <p className="text-sm opacity-70 line-clamp-2">{book.description}</p>
-                </div>
-              </div>
-            ))}
+  {filteredBooks.slice(-3).map((book) => (
+    <div
+      key={book._id}
+      onClick={() => {
+        if (book.isPremium) return;
+        navigate(`/bookd/${book._id}`);
+      }}
+      className={`flex items-center gap-4 p-3 rounded-xl cursor-pointer hover:scale-[1.01] transition ${current.card}`}
+    >
+
+      {/* BOOK COVER */}
+      <div className="relative w-20 aspect-[2/3] rounded-md overflow-hidden shadow-sm">
+
+        <img
+          loading="lazy"
+          src={`data:image/jpeg;base64,${book.cover}`}
+          className={`w-full h-full object-cover ${
+            book.isPremium
+              ? "blur-sm brightness-75"
+              : ""
+          }`}
+        />
+
+        {book.isPremium && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-xs">
+            🔒
           </div>
+        )}
+
+      </div>
+
+      {/* TEXT */}
+      <div className="flex-1">
+
+        <h4 className={`text-sm font-semibold ${current.accent}`}>
+          {book.title}
+        </h4>
+
+        <p className="text-xs opacity-70 line-clamp-2 mt-1">
+          {book.description}
+        </p>
+
+      </div>
+
+    </div>
+  ))}
+</div>
 
           {/* SIDEBAR */}
           <div className={`p-5 rounded-2xl ${current.card}`}>
@@ -306,47 +336,42 @@ const filteredBooks =
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredBooks.slice(-3).map((book) => (
-           <div
-  key={book._id}
-  onClick={() => navigate(`/bookd/${book._id}`)}
-  className={`rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ${current.card}`}
->
-  {/* IMAGE */}
-  <div className="relative">
-    <img
-      src={`data:image/jpeg;base64,${book.cover}`}
-      className="h-60 w-full object-cover group-hover:scale-105 transition duration-300"
-    />
+  <div
+    key={book._id}
+    onClick={() => {
+      if (book.isPremium) return;
+      navigate(`/bookd/${book._id}`);
+    }}
+    className={`flex gap-4 p-4 rounded-2xl cursor-pointer group ${current.card}`}
+  >
+    <div className="relative">
 
-    {/* CATEGORY BADGE */}
-    {book.category && (
-      <div className="absolute top-3 left-3 px-3 py-1 text-xs rounded-full backdrop-blur-md bg-black/40 text-white border border-white/20">
-        {book.category.split(" | ")[0]} {/* Cute / Dark / Neutral */}
-      </div>
-    )}
-  </div>
+      <img
+        loading="lazy"
+        src={`data:image/jpeg;base64,${book.cover}`}
+        className={`w-28 h-20 object-cover rounded-lg transition ${
+          book.isPremium ? "blur-sm brightness-75" : "group-hover:scale-105"
+        }`}
+      />
 
-  {/* CONTENT */}
-  <div className="p-4 space-y-2">
+      {book.isPremium && (
+        <div className="absolute inset-0 flex items-center justify-center text-xs text-white bg-black/50 rounded-lg">
+          🔒 Premium
+        </div>
+      )}
 
-    <h4 className={`font-semibold text-lg ${current.accent}`}>
-      {book.title}
-    </h4>
+    </div>
 
-    <p className="text-sm opacity-70 line-clamp-2">
-      {book.description}
-    </p>
-
-    {/* GENRE */}
-    {book.category && (
-      <p className="text-xs opacity-50">
-        {book.category.split(" | ")[1]} {/* Romance / Thriller */}
+    <div>
+      <h4 className={`font-semibold ${current.accent}`}>
+        {book.title}
+      </h4>
+      <p className="text-sm opacity-70 line-clamp-2">
+        {book.description}
       </p>
-    )}
-
+    </div>
   </div>
-</div>
-          ))}
+))}
         </div>
 
       </section>

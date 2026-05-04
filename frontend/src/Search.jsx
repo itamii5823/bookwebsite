@@ -10,6 +10,7 @@ export default function SearchPage() {
   const [subCategory, setSubCategory] = useState("All");
   const [loading, setLoading] = useState(true);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
 
   const navigate = useNavigate();
   const scrollRef = useRef();
@@ -22,7 +23,13 @@ export default function SearchPage() {
       })
       .catch(() => setLoading(false));
   }, []);
-
+useEffect(() => {
+  axios.get("https://bookwebsite-4q2b.onrender.com/me", { withCredentials: true })
+    .then(res => {
+      setIsPremium(res.data.user.isPremium);
+    })
+    .catch(() => {});
+}, []);
   const getSide = (cat) => {
     if (!cat) return "";
     if (!cat.includes("|")) return "Neutral";
@@ -206,30 +213,48 @@ export default function SearchPage() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
 
-        {filteredBooks.map(book => (
-          <div
-            key={book._id}
-            onClick={() => navigate(`/bookd/${book._id}`)}
-            className="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:scale-[1.03] transition cursor-pointer"
-          >
+       {filteredBooks.map(book => (
+  <div
+    key={book._id}
+    onClick={() => {
+      if (book.isPremium && !isPremium) return;
+      navigate(`/bookd/${book._id}`);
+    }}
+    className="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:scale-[1.03] transition cursor-pointer group"
+  >
 
-            <img
-              src={`data:image/jpeg;base64,${book.cover}`}
-              className="h-44 w-full object-cover"
-            />
+    <div className="relative">
 
-            <div className="p-3">
-              <h3 className="text-sm font-medium line-clamp-2">
-                {book.title}
-              </h3>
+      <img
+        src={`data:image/jpeg;base64,${book.cover}`}
+        className={`h-44 w-full object-cover ${
+          book.isPremium && !isPremium
+            ? "blur-sm brightness-75"
+            : "group-hover:scale-105 transition"
+        }`}
+      />
 
-              <p className="text-xs opacity-60 mt-1">
-                {getSide(book.category)} • {getGenre(book.category)}
-              </p>
-            </div>
+      {/* 🔒 LOCK */}
+      {book.isPremium && !isPremium && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-sm">
+          🔒 Premium
+        </div>
+      )}
 
-          </div>
-        ))}
+    </div>
+
+    <div className="p-3">
+      <h3 className="text-sm font-medium line-clamp-2">
+        {book.title}
+      </h3>
+
+      <p className="text-xs opacity-60 mt-1">
+        {getSide(book.category)} • {getGenre(book.category)}
+      </p>
+    </div>
+
+  </div>
+))}
 
       </div>
 

@@ -46,7 +46,7 @@ export default function Signup() {
       });
 
       setTimeout(() => {
-        navigate("/admin");
+        navigate("/book");
       }, 1000);
 
     } catch (err) {

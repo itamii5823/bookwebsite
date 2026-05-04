@@ -62,7 +62,6 @@ console.log("USER PREMIUM:", isPremium);
 
   const filteredBooks = books.filter(book => {
 
-      if (book.isPremium && !isPremium) return false;
 
     if (category === "All" && subCategory === "All") return true;
 
@@ -355,28 +354,48 @@ const handleBuyPremium = async () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
           {filteredBooks.map((book) => (
-            <div key={book._id} className="cursor-pointer bg-white/5 border border-white/10 rounded-xl overflow-hidden group hover:scale-[1.02] transition">
+  <div
+    key={book._id}
+    onClick={() => {
+      if (book.isPremium && !isPremium) return;
+      navigate(`/bookd/${book._id}`);
+    }}
+    className="cursor-pointer bg-white/5 border border-white/10 rounded-xl overflow-hidden group hover:scale-[1.02] transition"
+  >
 
-              <div className="relative">
-                <img
-                  onClick={() => navigate(`/bookd/${book._id}`)}
-                  src={`data:image/jpeg;base64,${book.cover}`}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition"
-                />
-              </div>
+    <div className="relative">
 
-              <div className="p-4">
-                <h2 className="text-sm font-semibold line-clamp-2">
-                  {book.title}
-                </h2>
+      <img
+        src={`data:image/jpeg;base64,${book.cover}`}
+        className={`w-full h-48 object-cover transition ${
+          book.isPremium && !isPremium
+            ? "blur-sm brightness-75"
+            : "group-hover:scale-105"
+        }`}
+      />
 
-                <p className="text-xs mt-1 opacity-60">
-                  {getGenre(book.category)}
-                </p>
-              </div>
+      {/* 🔒 LOCK OVERLAY */}
+      {book.isPremium && !isPremium && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white">
+          <span className="text-lg">🔒</span>
+          <span className="text-xs mt-1">Premium</span>
+        </div>
+      )}
 
-            </div>
-          ))}
+    </div>
+
+    <div className="p-4">
+      <h2 className="text-sm font-semibold line-clamp-2">
+        {book.title}
+      </h2>
+
+      <p className="text-xs mt-1 opacity-60">
+        {getGenre(book.category)}
+      </p>
+    </div>
+
+  </div>
+))}
 
         </div>
 
