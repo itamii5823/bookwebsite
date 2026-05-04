@@ -59,7 +59,7 @@ const upload = multer({ storage });
 
 // TEST
 app.get("/", (req, res) => {
-  res.send("Backend Running 🚀");
+  res.send("Backend Running ");
 });
 
 // ================= SIGNUP =================
@@ -151,8 +151,10 @@ app.post("/addbook", upload.single("cover"), async (req, res) => {
 
     const data = jwt.verify(token, secret);
 
-    const { title, description, content ,category } = req.body;
+    const { title, description, content ,category ,isPremium } = req.body;
     const cover = req.file;
+    console.log(isPremium);
+    
 
     if (!title || !description || !content || !cover) {
       return res.status(400).send("All fields required");
@@ -163,9 +165,10 @@ app.post("/addbook", upload.single("cover"), async (req, res) => {
       description,
       content,
       category,
-      cover: cover.buffer.toString("base64"), // 🔥 store image
+      cover: cover.buffer.toString("base64"), 
       username: data.username,
-      email: data.email
+      email: data.email,
+      isPremium: isPremium
     });
 
     await book.save();
@@ -536,6 +539,9 @@ app.post("/watch-time", async (req, res) => {
       return res.status(404).send("Book not found");
     }
 
+      if (!book.isPremium) {
+      return res.status(403).send("Watch time only for premium books");
+    }
   
     let record = await Watch.findOne({
       userEmail: data.email,

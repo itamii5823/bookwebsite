@@ -24,7 +24,7 @@ export default function Books() {
     })
     .catch(() => {});
 }, []);
-
+console.log("USER PREMIUM:", isPremium);
 
 
   useEffect(() => {
@@ -60,6 +60,8 @@ export default function Books() {
   };
 
   const filteredBooks = books.filter(book => {
+
+      if (book.isPremium && !isPremium) return false;
 
     if (category === "All" && subCategory === "All") return true;
 
@@ -155,6 +157,7 @@ const handleBuyPremium = async () => {
     );
 
     console.log("VERIFY SUCCESS:", res.data);
+    setIsPremium(true)
     alert("Premium Activated ");
 
   } catch (err) {
@@ -169,7 +172,7 @@ const handleBuyPremium = async () => {
 
   } catch (err) {
     console.log("CREATE ORDER ERROR:", err.response?.data || err.message);
-    alert("Create order failed ❌");
+    alert("Create order failed ");
   }
 };
 
@@ -189,7 +192,7 @@ const handleBuyPremium = async () => {
     onClick={() => navigate("/premium")}
     className="px-4 py-1.5 rounded-lg bg-purple-500 text-white font-medium"
   >
-    Premium Books ⭐
+    Premium Books 
   </button>
 ) : (
   <button

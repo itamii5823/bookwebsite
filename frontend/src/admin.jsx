@@ -10,7 +10,8 @@ export default function Admin() {
     cover: null,
     content: "",
     category: "",
-    side: ""
+    side: "",
+    isPremium: false 
   });
 
   const [alert, setAlert] = useState(null);
@@ -40,6 +41,7 @@ export default function Admin() {
       formData.append("content", form.content.trim());
       formData.append("cover", form.cover);
       formData.append("category", form.category);
+      formData.append("isPremium", form.isPremium);
 
       await axios.post(
         "https://bookwebsite-4q2b.onrender.com/addbook",
@@ -59,7 +61,7 @@ export default function Admin() {
 
       navigate("/book");
 
-      // ✅ FIXED: reset state properly
+    
       setForm({
         title: "",
         description: "",
@@ -211,6 +213,21 @@ export default function Admin() {
             onChange={(e)=>setForm({...form, content:e.target.value})}
             className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-[#E37EAF] focus:outline-none"
           />
+          <div className="flex items-center justify-between bg-white/5 border border-white/10 rounded-xl px-4 py-3">
+  <span className="text-sm text-gray-300">Make this Premium</span>
+
+  <button
+    type="button"
+    onClick={() => setForm({ ...form, isPremium: !form.isPremium })}
+    className={`px-4 py-1 rounded-lg text-sm font-semibold transition-all ${
+      form.isPremium
+        ? "bg-[#E37EAF] text-white"
+        : "bg-white/10 text-gray-400"
+    }`}
+  >
+    {form.isPremium ? "Premium" : "Free"}
+  </button>
+</div>
 
           <button
             type="submit"
