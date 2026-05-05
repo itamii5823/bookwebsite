@@ -585,9 +585,11 @@ app.get("/earnings", async (req, res) => {
 
     const data = jwt.verify(token, secret);
 
-    if (data.role !== "admin") {
-     return res.status(403).send("Not authorized");
-    }
+    const user = await User.findOne({ email: data.email });
+
+    if (!user || user.role !== "admin") {
+    return res.status(403).send("Not authorized");
+     }
 
    
     const payments = await Payment.find();
