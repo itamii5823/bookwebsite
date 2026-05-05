@@ -10,7 +10,8 @@ export default function Settings() {
   const [saved, setSaved] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPassword, setCurrentPassword] = useState("");
-const [newPassword, setNewPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [activeTab, setActiveTab] = useState("profile"); //
 
@@ -147,6 +148,45 @@ console.log(user);
 
       {/* MAIN */}
       <div className="flex-1 p-6 md:p-10 relative z-10">
+    <button
+      onClick={() => setMenuOpen(!menuOpen)}
+      className="block md:hidden sm:block text-2xl"
+    >
+      ☰
+    </button>
+    {menuOpen && (
+  <div className="mb-6 bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col gap-3 md:hidden">
+
+    <div
+      onClick={() => { setActiveTab("profile"); setMenuOpen(false); }}
+      className={`cursor-pointer ${activeTab === "profile" ? "text-white" : "text-gray-400"}`}
+    >
+      Profile
+    </div>
+
+    <div
+      onClick={() => { setActiveTab("saved"); setMenuOpen(false); }}
+      className={`cursor-pointer ${activeTab === "saved" ? "text-white" : "text-gray-400"}`}
+    >
+      Saved
+    </div>
+
+    <div
+      onClick={() => { setActiveTab("security"); setMenuOpen(false); }}
+      className={`cursor-pointer ${activeTab === "security" ? "text-white" : "text-gray-400"}`}
+    >
+      Security
+    </div>
+
+    <button
+      onClick={handleLogout}
+      className="mt-2 text-red-400 text-sm"
+    >
+      Logout
+    </button>
+
+  </div>
+)}
 
         {/* PROFILE */}
         {activeTab === "profile" && (
@@ -186,10 +226,17 @@ console.log(user);
     user?.role === "admin"
       ? "text-purple-400"
       : "text-green-400"
+      
   }`}
 >
   {user?.role === "admin" ? "Admin" : "User"}
-</p>
+</p><span className={`text-xs px-2 py-1 rounded-full ${
+    user?.isPremium
+      ? "bg-yellow-500/20 text-yellow-400"
+      : "bg-gray-500/20 text-gray-400"
+  }`}>
+    {user?.isPremium ? "Premium" : "Free"}
+  </span>
               </div>
 
               <div className="bg-white/5 border border-white/10 rounded-xl p-4">

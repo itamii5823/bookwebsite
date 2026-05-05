@@ -649,18 +649,17 @@ app.get("/earnings", async (req, res) => {
 
 app.delete("/delete-account", async (req, res) => {
   try {
-   
-    const email = req.user?.email;
+    const token = req.cookies.user;
 
-    if (!email) {
+    if (!token) {
       return res.status(401).json({ message: "Not logged in" });
     }
 
-   
-    await User.deleteOne({ email });
+    const data = jwt.verify(token, secret);
+    const email = data.email;
 
    
-    await Saved.deleteMany({ email });
+    await User.deleteOne({ email });
 
    
     await Book.updateMany(
@@ -668,8 +667,8 @@ app.delete("/delete-account", async (req, res) => {
       { $pull: { ratings: { email } } }
     );
 
-  
-    req.session.destroy(() => {});
+    
+    res.clearCookie("user");
 
     res.json({ message: "Account deleted successfully" });
 
