@@ -25,6 +25,11 @@ const userSchema = mongosse.Schema({
 },
 isPremium: { type: Boolean, default: false },
 premiumExpiry: Date,
+role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user"
+  }
     
 });
 

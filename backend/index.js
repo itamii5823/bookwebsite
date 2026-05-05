@@ -212,7 +212,8 @@ app.get("/me", async (req, res) => {
       user: {
         username: user.username,
         email: user.email,
-         isPremium: user.isPremium
+         isPremium: user.isPremium,
+         role: user.role
       },
       saved: savedBooks
     });
@@ -584,9 +585,9 @@ app.get("/earnings", async (req, res) => {
 
     const data = jwt.verify(token, secret);
 
-    //if (data.role !== "admin") {
-     // return res.status(403).send("Not authorized");
- //   }
+    if (data.role !== "admin") {
+     return res.status(403).send("Not authorized");
+    }
 
    
     const payments = await Payment.find();
@@ -643,6 +644,38 @@ app.get("/earnings", async (req, res) => {
   }
 });
 
+
+app.delete("/delete-account", async (req, res) => {
+  try {
+   
+    const email = req.user?.email;
+
+    if (!email) {
+      return res.status(401).json({ message: "Not logged in" });
+    }
+
+   
+    await User.deleteOne({ email });
+
+   
+    await Saved.deleteMany({ email });
+
+   
+    await Book.updateMany(
+      {},
+      { $pull: { ratings: { email } } }
+    );
+
+  
+    req.session.destroy(() => {});
+
+    res.json({ message: "Account deleted successfully" });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error deleting account" });
+  }
+});
 // ================= START SERVER =================
 const PORT = process.env.PORT || 5000;
 

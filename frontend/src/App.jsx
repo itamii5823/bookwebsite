@@ -6,7 +6,7 @@ import { BookOpen, Feather, Info, Mail, Sparkles, Search } from "lucide-react";
 
 import cuteLogo from "/silver.png";
 import darkLogo from "/silver.png";
-import neutralLogo from "/hehe.png";  
+import neutralLogo from "/silver.png";  
 
 export default function Home() {
   const [theme, setTheme] = useState("dark");
@@ -273,7 +273,7 @@ const filteredBooks =
     >
 
       {/* BOOK COVER */}
-      <div className="relative w-20 aspect-[2/3] rounded-md overflow-hidden shadow-sm">
+      <div className="relative w-20 aspect-2/3 rounded-md overflow-hidden shadow-sm">
 
         <img
           loading="lazy"

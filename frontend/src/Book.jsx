@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import { Sparkles, BookOpen, Grid, Heart, Skull, Compass } from "lucide-react";
+import { Sparkles, BookOpen, Grid, Heart, Skull, Compass, Star  } from "lucide-react";
 
 export default function Books() {
 
@@ -10,6 +10,7 @@ export default function Books() {
   const [loading, setLoading] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [savedBooks, setSavedBooks] = useState([]);
 
   const [category, setCategory] = useState("All");
   const [subCategory, setSubCategory] = useState("All");
@@ -107,17 +108,23 @@ console.log("USER PREMIUM:", isPremium);
   };
 
   const handleSave = async (bookId) => {
-    try {
-      const res = await axios.post(
-        "https://bookwebsite-4q2b.onrender.com/save",
-        { bookId },
-        { withCredentials: true }
-      );
-      alert(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  try {
+    await axios.post(
+      "https://bookwebsite-4q2b.onrender.com/save",
+      { bookId },
+      { withCredentials: true }
+    );
+
+    setSavedBooks(prev =>
+      prev.includes(bookId)
+        ? prev.filter(id => id !== bookId)
+        : [...prev, bookId]
+    );
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 
 
@@ -162,7 +169,7 @@ const handleBuyPremium = async () => {
 
   } catch (err) {
     console.log("VERIFY ERROR:", err.response?.data || err.message);
-    alert("Verification failed ");
+    alert("Verification failed login first ");
   }
 }
     };
@@ -175,6 +182,7 @@ const handleBuyPremium = async () => {
     alert("Create order failed ");
   }
 };
+
 
   
   return (
@@ -353,8 +361,11 @@ const handleBuyPremium = async () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-          {filteredBooks.map((book) => (
+          {filteredBooks.map((book) => {
+            const isSaved = savedBooks.includes(book._id);
+            return(
   <div
+  
     key={book._id}
     onClick={() => {
       if (book.isPremium && !isPremium) return;
@@ -364,6 +375,24 @@ const handleBuyPremium = async () => {
   >
 
     <div className="relative">
+
+
+     <button
+  onClick={(e) => {
+    e.stopPropagation();
+    handleSave(book._id);
+  }}
+  className="absolute top-2 right-2 z-10 bg-black/60 p-1.5 rounded-full hover:bg-black"
+>
+  <Heart
+    size={16}
+    className={
+      isSaved
+        ? "text-red-500 fill-red-500"
+        : "text-white"
+    }
+  />
+</button>
 
       <img
         src={`data:image/jpeg;base64,${book.cover}`}
@@ -381,6 +410,24 @@ const handleBuyPremium = async () => {
           <span className="text-xs mt-1">Premium</span>
         </div>
       )}
+      <div className="flex gap-1 mt-5 ml-2">
+        {[1,2,3,4,5].map((star) => (
+          <Star
+            key={star}
+            size={14}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRating(book._id, star);
+            }}
+            className={
+              star <= Math.round(getAverage(book))
+                ? "text-yellow-400 fill-yellow-400 cursor-pointer"
+                : "text-gray-500 cursor-pointer"
+            }
+          />
+        ))}
+      </div>
+
 
     </div>
 
@@ -394,8 +441,8 @@ const handleBuyPremium = async () => {
       </p>
     </div>
 
-  </div>
-))}
+  </div>)
+})}
 
         </div>
 

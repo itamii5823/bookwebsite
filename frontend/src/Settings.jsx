@@ -9,19 +9,21 @@ export default function Settings() {
   const [user, setUser] = useState(null);
   const [saved, setSaved] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPassword, setCurrentPassword] = useState("");
+const [newPassword, setNewPassword] = useState("");
+
+  const [activeTab, setActiveTab] = useState("profile"); //
 
   useEffect(() => {
-    axios.get("https://bookwebsite-4q2b.onrender.com/me", {
+    axios.get("https://bookwebsite-4q2b.onrender.com/me", { 
       withCredentials: true
     })
     .then(res => {
 
-    
       if (res.data.user) {
         setUser(res.data.user);
         setSaved(res.data.saved || []);
       } else {
-      
         setUser(res.data);
         setSaved([]);
       }
@@ -33,6 +35,46 @@ export default function Settings() {
     });
   }, []);
 
+  const handleChangePassword = async () => {
+  try {
+    await axios.post(
+      "https://bookwebsite-4q2b.onrender.com/change-password",
+      {
+        currentPassword,
+        newPassword
+      },
+      { withCredentials: true }
+    );
+
+    alert("Password updated");
+    setCurrentPassword("");
+    setNewPassword("");
+
+  } catch (err) {
+    alert("Failed to update password");
+    console.log(err);
+  }
+};
+
+const handleDeleteAccount = async () => {
+  const confirmDelete = confirm("Are you sure? This cannot be undone.");
+
+  if (!confirmDelete) return;
+
+  try {
+    await axios.delete(
+      "https://bookwebsite-4q2b.onrender.com/delete-account",
+      { withCredentials: true }
+    );
+
+    alert("Account deleted");
+    navigate("/signup");
+
+  } catch (err) {
+    alert("Failed to delete account");
+    console.log(err);
+  }
+};
   const handleLogout = async () => {
     await axios.get(
       "https://bookwebsite-4q2b.onrender.com/logout",
@@ -41,7 +83,6 @@ export default function Settings() {
     navigate("/login");
   };
 
-  
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#060304] text-gray-400">
@@ -50,11 +91,10 @@ export default function Settings() {
     );
   }
 
-
   if (!user) {
     return null;
   }
-
+console.log(user);
   return (
     <div className="min-h-screen flex bg-[#060304] text-white relative overflow-hidden">
 
@@ -71,9 +111,28 @@ export default function Settings() {
           </h1>
 
           <div className="space-y-3 text-sm">
-            <div className="text-white">Profile</div>
-            <div className="text-gray-400">Saved</div>
-            <div className="text-gray-400">Security</div>
+
+            <div
+              onClick={() => setActiveTab("profile")}
+              className={`cursor-pointer ${activeTab === "profile" ? "text-white" : "text-gray-400"}`}
+            >
+              Profile
+            </div>
+
+            <div
+              onClick={() => setActiveTab("saved")}
+              className={`cursor-pointer ${activeTab === "saved" ? "text-white" : "text-gray-400"}`}
+            >
+              Saved
+            </div>
+
+            <div
+              onClick={() => setActiveTab("security")}
+              className={`cursor-pointer ${activeTab === "security" ? "text-white" : "text-gray-400"}`}
+            >
+              Security
+            </div>
+
           </div>
         </div>
 
@@ -90,84 +149,161 @@ export default function Settings() {
       <div className="flex-1 p-6 md:p-10 relative z-10">
 
         {/* PROFILE */}
-        <div className="mb-10">
-          <h2 className="text-xl font-semibold mb-4">Profile</h2>
+        {activeTab === "profile" && (
+          <>
+            <div className="mb-10">
+              <h2 className="text-xl font-semibold mb-4">Profile</h2>
 
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div className="space-y-4">
 
-            <div className="space-y-4">
+                  <div>
+                    <p className="text-xs text-gray-400">Username</p>
+                    <p className="text-sm">{user?.username}</p>
+                  </div>
 
-              <div>
-                <p className="text-xs text-gray-400">Username</p>
-                <p className="text-sm">{user?.username}</p>
-              </div>
-
-              <div>
-                <p className="text-xs text-gray-400">Email</p>
-                <p className="text-sm">{user?.email}</p>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-
-        {/* STATS */}
-        <div className="mb-10 grid grid-cols-2 md:grid-cols-3 gap-4">
-
-          <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-            <p className="text-xs text-gray-400">Saved Books</p>
-            <p className="text-xl mt-1">{saved.length}</p>
-          </div>
-
-          <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-            <p className="text-xs text-gray-400">Account Type</p>
-            <p className="text-sm mt-1">User</p>
-          </div>
-
-          <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-            <p className="text-xs text-gray-400">Status</p>
-            <p className="text-sm mt-1 text-green-400">Active</p>
-          </div>
-
-        </div>
-
-        {/* SAVED BOOKS */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Saved Books</h2>
-
-          {saved.length === 0 ? (
-            <p className="text-gray-400 text-sm">
-              You haven’t saved any books yet.
-            </p>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-
-              {saved.map(book => (
-                <div
-                  key={book._id}
-                  onClick={() => navigate(`/bookd/${book._id}`)}
-                  className="cursor-pointer bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:scale-[1.03] transition"
-                >
-
-                  <img
-                    src={`data:image/jpeg;base64,${book.cover}`}
-                    className="h-40 w-full object-cover"
-                  />
-
-                  <div className="p-3">
-                    <p className="text-sm line-clamp-2">
-                      {book.title}
-                    </p>
+                  <div>
+                    <p className="text-xs text-gray-400">Email</p>
+                    <p className="text-sm">{user?.email}</p>
                   </div>
 
                 </div>
-              ))}
+              </div>
+            </div>
+
+            {/* STATS */}
+            <div className="mb-10 grid grid-cols-2 md:grid-cols-3 gap-4">
+
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p className="text-xs text-gray-400">Saved Books</p>
+                <p className="text-xl mt-1">{saved.length}</p>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p className="text-xs text-gray-400">Account Type</p>
+               <p
+  className={`text-sm mt-1 ${
+    user?.role === "admin"
+      ? "text-purple-400"
+      : "text-green-400"
+  }`}
+>
+  {user?.role === "admin" ? "Admin" : "User"}
+</p>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p className="text-xs text-gray-400">Status</p>
+                <p className="text-sm mt-1 text-green-400">Active</p>
+              </div>
 
             </div>
-          )}
+          </>
+        )}
 
-        </div>
+        {/* SAVED BOOKS */}
+        {activeTab === "saved" && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Saved Books</h2>
+
+            {saved.length === 0 ? (
+              <p className="text-gray-400 text-sm">
+                You haven’t saved any books yet.
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+
+                {saved.map(book => (
+                  <div
+                    key={book._id}
+                    onClick={() => navigate(`/bookd/${book._id}`)}
+                    className="cursor-pointer bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:scale-[1.03] transition"
+                  >
+                    <img
+                      src={`data:image/jpeg;base64,${book.cover}`}
+                      className="h-40 w-full object-cover"
+                    />
+
+                    <div className="p-3">
+                      <p className="text-sm line-clamp-2">
+                        {book.title}
+                      </p>
+                    </div>
+
+                  </div>
+                ))}
+
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* SECURITY */}
+        {activeTab === "security" && (
+  <div className="max-w-md">
+
+    <h2 className="text-xl font-semibold mb-6">Security</h2>
+
+    {/* CHANGE PASSWORD */}
+    <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-6">
+
+      <h3 className="text-sm font-medium mb-4">Change Password</h3>
+
+      <div className="space-y-3">
+
+        <input
+          type="password"
+          placeholder="Current password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none"
+        />
+
+        <input
+          type="password"
+          placeholder="New password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm outline-none"
+        />
+
+        <button
+          onClick={handleChangePassword}
+          className="w-full py-2 bg-blue-500 rounded-lg text-sm hover:bg-blue-600"
+        >
+          Update Password
+        </button>
+
+      </div>
+    </div>
+
+    {/* QUICK ACTIONS */}
+    <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-6">
+
+      <h3 className="text-sm font-medium mb-4">Quick Actions</h3>
+
+      <div className="flex flex-col gap-3">
+
+        <button
+          onClick={handleLogout}
+          className="py-2 bg-red-500/80 rounded-lg text-sm hover:bg-red-600"
+        >
+          Logout
+        </button>
+
+        <button
+          onClick={handleDeleteAccount}
+          className="py-2 bg-red-900/80 rounded-lg text-sm hover:bg-red-700"
+        >
+          Delete Account
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
 
       </div>
 
