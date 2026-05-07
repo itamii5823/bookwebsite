@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Lock } from "lucide-react";
 
 export default function SearchPage() {
 
@@ -226,7 +227,7 @@ useEffect(() => {
     <div className="relative">
 
       <img
-        src={`data:image/jpeg;base64,${book.cover}`}
+        src={book.cover}
         className={`h-44 w-full object-cover ${
           book.isPremium && !isPremium
             ? "blur-sm brightness-75"
@@ -237,7 +238,10 @@ useEffect(() => {
       {/* 🔒 LOCK */}
       {book.isPremium && !isPremium && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-sm">
-          🔒 Premium
+          <div className="flex items-center gap-1.5">
+  <Lock size={13} strokeWidth={2.5} />
+  <span>Premium</span>
+</div>
         </div>
       )}
 

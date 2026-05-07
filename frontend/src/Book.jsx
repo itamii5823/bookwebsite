@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import { Sparkles, BookOpen, Grid, Heart, Skull, Compass, Star  } from "lucide-react";
+import { Sparkles, BookOpen, Grid, Heart, Skull, Compass, Star , Lock } from "lucide-react";
 
 export default function Books() {
 
@@ -406,8 +406,10 @@ const handleBuyPremium = async () => {
       {/* 🔒 LOCK OVERLAY */}
       {book.isPremium && !isPremium && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white">
-          <span className="text-lg">🔒</span>
-          <span className="text-xs mt-1">Premium</span>
+          <div className="flex items-center gap-1.5">
+            <Lock size={13} strokeWidth={2.5} />
+           <span>Premium</span>
+            </div>
         </div>
       )}
       <div className="flex gap-1 mt-5 ml-2">
