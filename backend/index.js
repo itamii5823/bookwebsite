@@ -13,7 +13,7 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
-const multer = require("multer"); 
+ 
 
 const app = express();
 
@@ -53,8 +53,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = require("./multer")
 
 // ================= ROUTES =================
 
@@ -153,7 +152,7 @@ app.post("/addbook", upload.single("cover"), async (req, res) => {
     const data = jwt.verify(token, secret);
 
     const { title, description, content ,category ,isPremium } = req.body;
-    const cover = req.file;
+    const cover = req.file.path;
     console.log(isPremium);
     
 
@@ -166,7 +165,7 @@ app.post("/addbook", upload.single("cover"), async (req, res) => {
       description,
       content,
       category,
-      cover: cover.buffer.toString("base64"), 
+      cover,
       username: data.username,
       email: data.email,
       isPremium: isPremium

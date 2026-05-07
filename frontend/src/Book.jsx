@@ -395,7 +395,7 @@ const handleBuyPremium = async () => {
 </button>
 
       <img
-        src={`data:image/jpeg;base64,${book.cover}`}
+        src={book.cover}
         className={`w-full h-48 object-cover transition ${
           book.isPremium && !isPremium
             ? "blur-sm brightness-75"

@@ -277,7 +277,7 @@ const filteredBooks =
 
         <img
           loading="lazy"
-          src={`data:image/jpeg;base64,${book.cover}`}
+          src={book.cover}
           className={`w-full h-full object-cover ${
             book.isPremium
               ? "blur-sm brightness-75"
