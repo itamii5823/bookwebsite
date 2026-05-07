@@ -267,7 +267,7 @@ console.log(user);
                     className="cursor-pointer bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:scale-[1.03] transition"
                   >
                     <img
-                      src={`data:image/jpeg;base64,${book.cover}`}
+                      src={book.cover}
                       className="h-40 w-full object-cover"
                     />
 
