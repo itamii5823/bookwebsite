@@ -646,7 +646,7 @@ app.get("/earnings", async (req, res) => {
   }
 });
 
-
+// ================= DELETE ACCOUNT =================
 app.delete("/delete-account", async (req, res) => {
   try {
     const token = req.cookies.user;
@@ -678,10 +678,13 @@ app.delete("/delete-account", async (req, res) => {
   }
 });
 
+// ================= CREATOR =================
 app.get("/creator/:username", async (req, res) => {
 
   try {
-
+   const creator = await User.findOne({
+  username: req.params.username
+   });
     const books = await Book.find({
       username: req.params.username
     }).select(
@@ -708,9 +711,9 @@ app.get("/creator/:username", async (req, res) => {
   }
 });
 
-app.post(
-  "/upload-avatar",
-  upload.single("avatar"),
+// ================= CREATOR PFP =================
+app.post("/upload-avatar",
+upload.single("avatar"),
   async (req, res) => {
 
     try {
