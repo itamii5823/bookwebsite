@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  Crown,
+  Lock,
+  Heart
+} from "lucide-react";
 
 export default function Creator() {
 
@@ -110,7 +115,7 @@ export default function Creator() {
 
         <div className="
           absolute top-0 left-1/2 -translate-x-1/2
-          w-[700px] h-[700px]
+          w-175 h-175
           bg-fuchsia-600/20
           blur-[140px]
           rounded-full
@@ -118,7 +123,7 @@ export default function Creator() {
 
         <div className="
           absolute bottom-0 right-0
-          w-[500px] h-[500px]
+          w-125 h-125
           bg-violet-600/20
           blur-[120px]
           rounded-full
@@ -130,7 +135,7 @@ export default function Creator() {
       {/* PROFILE SECTION */}
       <div className="
         relative overflow-hidden
-        rounded-[32px]
+        rounded-4xl
         border border-white/10
         bg-white/5
         backdrop-blur-2xl
@@ -163,20 +168,48 @@ export default function Creator() {
           ">
 
             {/* AVATAR */}
-            <img
-              src={data?.avatar}
-              alt=""
-              className="
-                w-24 h-24 md:w-28 md:h-28
-                rounded-full
-                object-cover
-                border-2 border-white/10
-                shadow-[0_0_40px_rgba(217,70,239,0.5)]
-                shrink-0
-                bg-[#12071c]
-              "
-            />
+           <div className="
+  w-24 h-24 md:w-28 md:h-28
+  rounded-full
+  overflow-hidden
+  border-2 border-white/10
+  bg-[#1a1225]
+  flex items-center justify-center
+  shrink-0
+">
 
+  {data?.avatar ? (
+
+    <img
+      src={data.avatar}
+      alt=""
+      className="
+        w-full h-full
+        object-cover
+      "
+    />
+
+  ) : (
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="
+        w-14 h-14
+        text-gray-500
+      "
+    >
+      <path
+        fillRule="evenodd"
+        d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
+        clipRule="evenodd"
+      />
+    </svg>
+
+  )}
+
+</div>
             {/* INFO */}
             <div>
 
@@ -196,7 +229,7 @@ export default function Creator() {
                 <div className="
                   px-3 py-1
                   rounded-full
-                  bg-gradient-to-r
+                  bg-linear-to-r
                   from-yellow-400
                   to-orange-400
                   text-black
@@ -218,18 +251,21 @@ export default function Creator() {
                 Writing immersive fantasy and emotional stories on StarLit.
               </p>
 
-              <div className="
-                mt-5
-                inline-flex items-center gap-2
-                px-5 py-3
-                rounded-2xl
-                bg-white/5
-                border border-white/10
-                text-sm text-gray-300
-                backdrop-blur-xl
-              ">
-                ✨ Premium Story Creator
-              </div>
+             <div className="
+                       mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-gray-300
+  backdrop-blur-xl
+">
+
+  <Crown
+    size={16}
+    className="text-yellow-400"
+  />
+
+  <span>
+    Premium Story Creator
+  </span>
+
+</div>
 
             </div>
 
@@ -247,7 +283,7 @@ export default function Creator() {
               bg-black/30
               border border-white/10
               px-6 py-5
-              min-w-[130px]
+              min-w-32.5
               backdrop-blur-xl
             ">
               <p className="
@@ -271,7 +307,7 @@ export default function Creator() {
               bg-black/30
               border border-white/10
               px-6 py-5
-              min-w-[130px]
+              min-w-32.5
               backdrop-blur-xl
             ">
               <p className="
@@ -356,8 +392,8 @@ export default function Creator() {
               {/* COVER */}
               <div className="
                 relative
-                aspect-[2/3]
-                rounded-[24px]
+                aspect-2/3
+                rounded-3xl
                 overflow-hidden
                 bg-white/5
                 border border-white/10
@@ -384,7 +420,7 @@ export default function Creator() {
 
                 <div className="
                   absolute inset-0
-                  bg-gradient-to-t
+                  bg-linear-to-t
                   from-black
                   via-black/10
                   to-transparent
@@ -399,12 +435,10 @@ export default function Creator() {
                     backdrop-blur-[2px]
                   ">
 
-                    <div className="
-                      text-3xl
-                      mb-2
-                    ">
-                      🔒
-                    </div>
+                   <Lock
+                size={30}
+                  className="mb-2 text-white"
+                        />
 
                     <p className="
                       text-xs
@@ -420,7 +454,7 @@ export default function Creator() {
                 {book.isPremium && (
                   <div className="
                     absolute top-3 right-3
-                    bg-gradient-to-r
+                    bg-linear-to-r
                     from-yellow-400
                     to-orange-400
                     text-black
@@ -475,9 +509,17 @@ export default function Creator() {
                     {book.category}
                   </span>
 
-                  <span>
-                    ❤️ {book.ratings?.length || 0}
-                  </span>
+                  <div className="
+                   flex items-center gap-1">
+                        <Heart
+                         size={12}
+                        className="text-red-400 fill-red-400"
+                               />
+
+                             <span>
+                        {book.ratings?.length || 0}
+                                 </span>
+                   </div>
 
                 </div>
 

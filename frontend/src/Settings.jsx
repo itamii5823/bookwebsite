@@ -142,107 +142,190 @@ console.log(user);
       <div className="absolute -top-37.5 -left-37.5 w-125 h-125 bg-indigo-500/20 rounded-full blur-3xl"></div>
       <div className="absolute -bottom-37.5 -right-37.5 w-125 h-125 bg-cyan-400/10 rounded-full blur-3xl"></div>
 
-      {/* LEFT PANEL */}
-      <div className="hidden md:flex flex-col justify-between w-[320px] border-r border-white/10 p-8 relative z-10">
+     {/* LEFT PANEL */}
+<div className="
+  hidden md:flex
+  flex-col justify-between
+  w-[320px]
+  border-r border-white/10
+  p-8
+  relative z-10
+">
 
-        <div>
-          <h1 className="text-2xl font-semibold mb-6">
-            Settings
-          </h1>
+  <div>
 
-         <div className="flex flex-col items-center md:items-start">
+    <h1 className="text-2xl font-semibold mb-8">
+      Settings
+    </h1>
 
-  {/* AVATAR */}
-  <div className="relative">
+    {/* PROFILE */}
+    <div className="flex flex-col items-center">
 
-    <img
-  src={
-    data?.avatar && data.avatar !== ""
-      ? data.avatar
-      : `https://api.dicebear.com/7.x/initials/svg?seed=${data?.creator}`
-  }
-  onError={(e) => {
-    e.target.src =
-      `https://api.dicebear.com/7.x/initials/svg?seed=${data?.creator}`;
-  }}
-  alt=""
-  className="
-    w-24 h-24 md:w-28 md:h-28
-    rounded-full
-    object-cover
-    border-2 border-white/10
-    shadow-[0_0_40px_rgba(217,70,239,0.5)]
-    shrink-0
-    bg-[#12071c]
-  "
-/>
-    <label
-      className="
-        absolute bottom-0 right-0
-        w-9 h-9
-        rounded-full
-        bg-fuchsia-500
-        flex items-center justify-center
-        cursor-pointer
-        text-sm
-        hover:scale-105
-        transition
-      "
-    >
-      ✎
+      {/* AVATAR */}
+      <div className="relative">
 
-      <input
-        type="file"
-        accept="image/*"
-        hidden
-        onChange={handleAvatarUpload}
-      />
-    </label>
+        <div className="
+          w-28 h-28
+          rounded-full
+          overflow-hidden
+          border-2 border-white/10
+          shadow-xl
+          bg-[#1a1a1a]
+          flex items-center justify-center
+        ">
 
-  </div>
+          {user?.avatar ? (
 
-  {uploading && (
-    <p className="text-xs text-gray-400 mt-3">
-      Uploading...
-    </p>
-  )}
+            <img
+              src={user.avatar}
+              alt=""
+              className="
+                w-full h-full
+                object-cover
+              "
+            />
 
-  {/* INFO */}
-  <div className="mt-6 space-y-4 w-full">
+          ) : (
 
-    <div>
-      <p className="text-xs text-gray-400">
-        Username
-      </p>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="
+                w-14 h-14
+                text-gray-500
+              "
+            >
+              <path
+                fillRule="evenodd"
+                d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
+                clipRule="evenodd"
+              />
+            </svg>
 
-      <p className="text-sm">
-        {user?.username}
-      </p>
-    </div>
+          )}
 
-    <div>
-      <p className="text-xs text-gray-400">
-        Email
-      </p>
-
-      <p className="text-sm">
-        {user?.email}
-      </p>
-    </div>
-
-  </div>
-
-</div>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="text-sm text-red-400 hover:text-red-300"
+        {/* EDIT BUTTON */}
+        <label
+          className="
+            absolute bottom-0 right-0
+            w-9 h-9
+            rounded-full
+            bg-fuchsia-500
+            flex items-center justify-center
+            cursor-pointer
+            text-sm
+            hover:scale-105
+            transition
+          "
         >
-          Logout
-        </button>
+          ✎
+
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={handleAvatarUpload}
+          />
+        </label>
 
       </div>
+
+      {uploading && (
+        <p className="text-xs text-gray-400 mt-3">
+          Uploading...
+        </p>
+      )}
+
+      {/* USER INFO */}
+      <div className="mt-5 text-center">
+
+        <h2 className="text-lg font-semibold">
+          @{user?.username}
+        </h2>
+
+        <p className="text-sm text-gray-400 mt-1">
+          {user?.email}
+        </p>
+
+      </div>
+
+    </div>
+
+    {/* NAVIGATION */}
+    <div className="mt-10 space-y-3">
+
+      <button
+        onClick={() => setActiveTab("profile")}
+        className={`
+          w-full text-left
+          px-4 py-3
+          rounded-xl
+          transition
+          ${
+            activeTab === "profile"
+              ? "bg-white text-black"
+              : "bg-white/5 hover:bg-white/10"
+          }
+        `}
+      >
+        Profile
+      </button>
+
+      <button
+        onClick={() => setActiveTab("saved")}
+        className={`
+          w-full text-left
+          px-4 py-3
+          rounded-xl
+          transition
+          ${
+            activeTab === "saved"
+              ? "bg-white text-black"
+              : "bg-white/5 hover:bg-white/10"
+          }
+        `}
+      >
+        Saved Books
+      </button>
+
+      <button
+        onClick={() => setActiveTab("security")}
+        className={`
+          w-full text-left
+          px-4 py-3
+          rounded-xl
+          transition
+          ${
+            activeTab === "security"
+              ? "bg-white text-black"
+              : "bg-white/5 hover:bg-white/10"
+          }
+        `}
+      >
+        Security
+      </button>
+
+    </div>
+
+  </div>
+
+  {/* LOGOUT */}
+  <button
+    onClick={handleLogout}
+    className="
+      text-sm
+      text-red-400
+      hover:text-red-300
+      transition
+    "
+  >
+    Logout
+  </button>
+
+</div>
 
       {/* MAIN */}
       <div className="flex-1 p-6 md:p-10 relative z-10">
@@ -254,6 +337,85 @@ console.log(user);
     </button>
     {menuOpen && (
   <div className="mb-6 bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col gap-3 md:hidden">
+
+{/* MOBILE PROFILE */}
+<div className="
+  flex items-center gap-3
+  pb-4 mb-2
+  border-b border-white/10
+">
+
+  {/* AVATAR */}
+  <label className="
+    relative
+    shrink-0
+    cursor-pointer
+  ">
+
+    <div className="
+      w-14 h-14
+      rounded-full
+      overflow-hidden
+      border border-white/10
+      bg-[#1a1a1a]
+      flex items-center justify-center
+    ">
+
+      {user?.avatar ? (
+
+        <img
+          src={user.avatar}
+          alt=""
+          className="
+            w-full h-full
+            object-cover
+          "
+        />
+
+      ) : (
+
+        <div className="
+          w-full h-full
+          flex items-center justify-center
+          text-lg font-semibold
+          text-gray-400
+        ">
+          {user?.username?.charAt(0)?.toUpperCase()}
+        </div>
+
+      )}
+
+    </div>
+
+    <input
+      type="file"
+      accept="image/*"
+      hidden
+      onChange={handleAvatarUpload}
+    />
+
+  </label>
+
+  {/* INFO */}
+  <div className="min-w-0">
+
+    <h2 className="
+      text-sm font-semibold
+      truncate
+    ">
+      @{user?.username}
+    </h2>
+
+    <p className="
+      text-xs text-gray-400
+      truncate
+    ">
+      {user?.email}
+    </p>
+
+  </div>
+
+</div>
 
     <div
       onClick={() => { setActiveTab("profile"); setMenuOpen(false); }}

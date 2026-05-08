@@ -693,6 +693,7 @@ export default function Home() {
                       <p className="opacity-70 leading-7 line-clamp-3">
                         {book.description}
                       </p>
+                      
                     </div>
                   </div>
                 </div>
@@ -809,6 +810,21 @@ export default function Home() {
                   <p className="text-sm opacity-70 leading-7 line-clamp-3">
                     {book.description}
                   </p>
+                  <button
+  onClick={(e) => {
+    e.stopPropagation();
+    navigate(`/creator/${book.username}`);
+  }}
+  className="
+    mt-4
+    text-sm
+    text-white/50
+    hover:text-white
+    transition-all
+  "
+>
+  @{book.username}
+</button>
                 </div>
               </div>
             ))}

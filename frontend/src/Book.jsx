@@ -434,13 +434,31 @@ const handleBuyPremium = async () => {
     </div>
 
     <div className="p-4">
-      <h2 className="text-sm font-semibold line-clamp-2">
+      <h2 className="text-sm -mt-3 font-semibold line-clamp-2">
         {book.title}
       </h2>
 
       <p className="text-xs mt-1 opacity-60">
         {getGenre(book.category)}
       </p>
+      <div className="-mt-1">
+
+  <button
+  onClick={(e) => {
+    e.stopPropagation();
+    navigate(`/creator/${book.username}`);
+  }}
+  className="
+    text-xs
+    text-gray-400
+    hover:text-fuchsia-300
+    transition
+  "
+>
+  @{book.username}
+</button>
+
+</div>
     </div>
 
   </div>)

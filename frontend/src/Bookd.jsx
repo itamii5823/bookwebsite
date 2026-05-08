@@ -316,22 +316,9 @@ export default function BookDetail() {
       ${activeTheme.muted}
     `}
   >
-    <div className="
-      w-5 h-5
-      rounded-full
-      bg-linear-to-br
-      from-fuchsia-500
-      to-violet-500
-      flex items-center justify-center
-      text-[10px]
-      font-bold
-      text-white
-      shadow-lg
-    ">
-      {book.username?.charAt(0)?.toUpperCase()}
-    </div>
+   
 
-    <span className="group-hover:text-white transition">
+    <span className="group-hover:text-white transitio text-amber-600">
       @{book.username}
     </span>
   </button>

@@ -57,7 +57,8 @@ useEffect(() => {
       return (
         (category === "All" || side === category) &&
         (subCategory === "All" || genre === subCategory) &&
-        book.title.toLowerCase().includes(search.toLowerCase())
+        book.title.toLowerCase().includes(search.toLowerCase()) ||
+        book.username.toLowerCase().includes(search.toLowerCase())          
       );
     })
     .slice(0, 5);
@@ -71,8 +72,11 @@ useEffect(() => {
       (category === "All" || side === category) &&
       (subCategory === "All" || genre === subCategory) &&
       (
+       (
         book.title.toLowerCase().includes(search.toLowerCase()) ||
-        book.description.toLowerCase().includes(search.toLowerCase())
+        book.description.toLowerCase().includes(search.toLowerCase()) ||
+        book.username.toLowerCase().includes(search.toLowerCase())
+        )
       )
     );
   });
@@ -111,10 +115,29 @@ useEffect(() => {
                   onClick={() => navigate(`/bookd/${s._id}`)}
                   className="px-4 py-3 hover:bg-white/10 cursor-pointer border-b border-white/5 last:border-none"
                 >
-                  <div className="text-sm font-medium">{s.title}</div>
-                  <div className="text-xs opacity-60">
-                    {getSide(s.category)} • {getGenre(s.category)}
-                  </div>
+                  <div className="flex items-center justify-between">
+
+             <div className="text-sm font-medium">
+            {s.title}
+           </div>
+
+              <div className="
+              text-[11px]
+                   text-fuchsia-300
+                ">
+                @{s.username}
+                   </div>
+
+                </div>
+                  <div className="flex items-center justify-between mt-1">
+
+            <div className="text-xs opacity-60">
+            {getSide(s.category)} • {getGenre(s.category)}
+            </div>
+
+              
+
+</div>
                 </div>
               ))
             ) : (
@@ -235,7 +258,7 @@ useEffect(() => {
         }`}
       />
 
-      {/* 🔒 LOCK */}
+      {/*  LOCK */}
       {book.isPremium && !isPremium && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-sm">
           <div className="flex items-center gap-1.5">
@@ -252,9 +275,31 @@ useEffect(() => {
         {book.title}
       </h3>
 
-      <p className="text-xs opacity-60 mt-1">
-        {getSide(book.category)} • {getGenre(book.category)}
-      </p>
+      <div className="
+  flex items-center justify-between
+  mt-2
+">
+
+  <p className="text-xs opacity-60">
+    {getSide(book.category)} • {getGenre(book.category)}
+  </p>
+
+       <button
+           onClick={(e) => {
+        e.stopPropagation();
+          navigate(`/creator/${book.username}`);
+           }}
+        className="
+               text-[11px]
+              text-purple-200
+           hover:text-white
+            transition
+       "
+          >
+            @{book.username}
+          </button>
+
+                 </div>
     </div>
 
   </div>
