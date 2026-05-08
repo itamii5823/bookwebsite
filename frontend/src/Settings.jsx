@@ -156,20 +156,18 @@ console.log(user);
   <div className="relative">
 
     <img
-      src={
-        user?.avatar ||
-        `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username}`
-      }
-      alt=""
-      className="
-        w-28 h-28
-        rounded-full
-        object-cover
-        border-2 border-white/10
-        shadow-xl
-      "
-    />
-
+  src={user?.avatar}
+  alt=""
+  className="
+    w-24 h-24 md:w-28 md:h-28
+    rounded-full
+    object-cover
+    border-2 border-white/10
+    shadow-[0_0_40px_rgba(217,70,239,0.5)]
+    shrink-0
+    bg-[#12071c]
+  "
+/>
     <label
       className="
         absolute bottom-0 right-0

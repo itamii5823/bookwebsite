@@ -145,20 +145,24 @@ export default function Creator() {
           ">
 
             {/* AVATAR */}
-            <div className="
-              w-24 h-24 md:w-28 md:h-28
-              rounded-full
-              bg-gradient-to-br
-              from-fuchsia-500
-              to-violet-600
-              flex items-center justify-center
-              text-4xl font-black
-              shadow-[0_0_40px_rgba(217,70,239,0.5)]
-              shrink-0
-            ">
-              {data.creator?.charAt(0)?.toUpperCase()}
-            </div>
-
+         
+{/* AVATAR */}
+{/* AVATAR */}
+<img
+  src={
+    data.avatar
+  }
+  alt=""
+  className="
+    w-24 h-24 md:w-28 md:h-28
+    rounded-full
+    object-cover
+    border-2 border-white/10
+    shadow-[0_0_40px_rgba(217,70,239,0.5)]
+    shrink-0
+    bg-[#12071c]
+  "
+/>
 
             {/* INFO */}
             <div>
