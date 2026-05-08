@@ -212,7 +212,8 @@ app.get("/me", async (req, res) => {
         username: user.username,
         email: user.email,
          isPremium: user.isPremium,
-         role: user.role
+         role: user.role,
+         avatar: user.avatar,
       },
       saved: savedBooks
     });
@@ -705,6 +706,46 @@ app.get("/creator/:username", async (req, res) => {
     res.status(500).send("error");
   }
 });
+
+app.post(
+  "/upload-avatar",
+  upload.single("avatar"),
+  async (req, res) => {
+
+    try {
+
+      const token = req.cookies.user;
+
+      if (!token) {
+        return res.status(401).send("not logged in");
+      }
+
+      const data = jwt.verify(token, secret);
+
+      const user = await User.findOne({
+        email: data.email
+      });
+
+      if (!user) {
+        return res.status(404).send("user not found");
+      }
+
+      user.avatar = req.file.path;
+
+      await user.save();
+
+      res.json({
+        message: "avatar uploaded",
+        avatar: user.avatar
+      });
+
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("error");
+    }
+
+  }
+);
 // ================= START SERVER =================
 const PORT = process.env.PORT || 5000;
 

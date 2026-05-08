@@ -23,6 +23,10 @@ const userSchema = mongosse.Schema({
   type: [String],
   default: []
 },
+avatar: {
+  type: String,
+  default: ""
+},
 isPremium: { type: Boolean, default: false },
 premiumExpiry: Date,
 role: {

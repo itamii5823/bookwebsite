@@ -12,6 +12,7 @@ export default function Settings() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const [activeTab, setActiveTab] = useState("profile"); //
 
@@ -84,6 +85,44 @@ const handleDeleteAccount = async () => {
     navigate("/login");
   };
 
+
+const handleAvatarUpload = async (e) => {
+
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  try {
+
+    setUploading(true);
+
+    const formData = new FormData();
+
+    formData.append("avatar", file);
+
+    const res = await axios.post(
+      "https://bookwebsite-4q2b.onrender.com/upload-avatar",
+      formData,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+
+    setUser(prev => ({
+      ...prev,
+      avatar: res.data.avatar
+    }));
+
+  } catch (err) {
+    console.log(err);
+    alert("Failed to upload avatar");
+  } finally {
+    setUploading(false);
+  }
+};
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#060304] text-gray-400">
@@ -111,30 +150,83 @@ console.log(user);
             Settings
           </h1>
 
-          <div className="space-y-3 text-sm">
+         <div className="flex flex-col items-center md:items-start">
 
-            <div
-              onClick={() => setActiveTab("profile")}
-              className={`cursor-pointer ${activeTab === "profile" ? "text-white" : "text-gray-400"}`}
-            >
-              Profile
-            </div>
+  {/* AVATAR */}
+  <div className="relative">
 
-            <div
-              onClick={() => setActiveTab("saved")}
-              className={`cursor-pointer ${activeTab === "saved" ? "text-white" : "text-gray-400"}`}
-            >
-              Saved
-            </div>
+    <img
+      src={
+        user?.avatar ||
+        `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username}`
+      }
+      alt=""
+      className="
+        w-28 h-28
+        rounded-full
+        object-cover
+        border-2 border-white/10
+        shadow-xl
+      "
+    />
 
-            <div
-              onClick={() => setActiveTab("security")}
-              className={`cursor-pointer ${activeTab === "security" ? "text-white" : "text-gray-400"}`}
-            >
-              Security
-            </div>
+    <label
+      className="
+        absolute bottom-0 right-0
+        w-9 h-9
+        rounded-full
+        bg-fuchsia-500
+        flex items-center justify-center
+        cursor-pointer
+        text-sm
+        hover:scale-105
+        transition
+      "
+    >
+      ✎
 
-          </div>
+      <input
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={handleAvatarUpload}
+      />
+    </label>
+
+  </div>
+
+  {uploading && (
+    <p className="text-xs text-gray-400 mt-3">
+      Uploading...
+    </p>
+  )}
+
+  {/* INFO */}
+  <div className="mt-6 space-y-4 w-full">
+
+    <div>
+      <p className="text-xs text-gray-400">
+        Username
+      </p>
+
+      <p className="text-sm">
+        {user?.username}
+      </p>
+    </div>
+
+    <div>
+      <p className="text-xs text-gray-400">
+        Email
+      </p>
+
+      <p className="text-sm">
+        {user?.email}
+      </p>
+    </div>
+
+  </div>
+
+</div>
         </div>
 
         <button
