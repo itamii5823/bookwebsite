@@ -698,7 +698,8 @@ app.get("/creator/:username", async (req, res) => {
       creator: req.params.username,
       totalBooks,
       totalLikes,
-      books
+      books,
+      avatar
     });
 
   } catch(err){

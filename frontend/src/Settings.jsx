@@ -156,7 +156,15 @@ console.log(user);
   <div className="relative">
 
     <img
-  src={user?.avatar}
+  src={
+    data?.avatar && data.avatar !== ""
+      ? data.avatar
+      : `https://api.dicebear.com/7.x/initials/svg?seed=${data?.creator}`
+  }
+  onError={(e) => {
+    e.target.src =
+      `https://api.dicebear.com/7.x/initials/svg?seed=${data?.creator}`;
+  }}
   alt=""
   className="
     w-24 h-24 md:w-28 md:h-28

@@ -146,7 +146,7 @@ export default function Creator() {
 
             {/* AVATAR */}
          
-{/* AVATAR */}
+
 {/* AVATAR */}
 <img
   src={
