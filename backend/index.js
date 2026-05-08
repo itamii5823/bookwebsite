@@ -676,6 +676,35 @@ app.delete("/delete-account", async (req, res) => {
     res.status(500).json({ message: "Error deleting account" });
   }
 });
+
+app.get("/creator/:username", async (req, res) => {
+
+  try {
+
+    const books = await Book.find({
+      username: req.params.username
+    }).select(
+      "title cover category description ratings isPremium username"
+    );
+
+    const totalBooks = books.length;
+
+    const totalLikes = books.reduce((acc, book) => {
+      return acc + (book.ratings?.length || 0);
+    }, 0);
+
+    res.json({
+      creator: req.params.username,
+      totalBooks,
+      totalLikes,
+      books
+    });
+
+  } catch(err){
+    console.log(err);
+    res.status(500).send("error");
+  }
+});
 // ================= START SERVER =================
 const PORT = process.env.PORT || 5000;
 

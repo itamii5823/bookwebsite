@@ -8,6 +8,7 @@ import Bookd from "./Bookd";
 import Search from "./Search";
 import Settings from "./Settings";
 import AdminDashboard from "./Admindash";
+import Creator from "./Creator";
 
 
 
@@ -24,6 +25,8 @@ function Mainroutes(){
           <Route path="/search" element={<Search/>}/>
           <Route path="/setting" element={<Settings/>}/>
           <Route path="/owner" element={<AdminDashboard/>}/>
+          <Route path="/creator/:username" element={<Creator />}
+/>
 
 
        </Routes>
