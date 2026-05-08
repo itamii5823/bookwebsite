@@ -14,11 +14,14 @@ export default function Creator() {
   useEffect(() => {
 
     const fetchData = async () => {
+
       try {
 
         const creatorRes = await axios.get(
           `https://bookwebsite-4q2b.onrender.com/creator/${username}`
         );
+
+        console.log("CREATOR:", creatorRes.data);
 
         setData(creatorRes.data);
 
@@ -40,6 +43,7 @@ export default function Creator() {
       } finally {
         setLoading(false);
       }
+
     };
 
     fetchData();
@@ -71,6 +75,20 @@ export default function Creator() {
           </p>
 
         </div>
+      </div>
+    );
+  }
+
+
+  if (!data) {
+    return (
+      <div className="
+        min-h-screen
+        bg-[#07010f]
+        flex items-center justify-center
+        text-white
+      ">
+        Creator not found
       </div>
     );
   }
@@ -145,24 +163,19 @@ export default function Creator() {
           ">
 
             {/* AVATAR */}
-         
-
-{/* AVATAR */}
-<img
-  src={
-    data.avatar
-  }
-  alt=""
-  className="
-    w-24 h-24 md:w-28 md:h-28
-    rounded-full
-    object-cover
-    border-2 border-white/10
-    shadow-[0_0_40px_rgba(217,70,239,0.5)]
-    shrink-0
-    bg-[#12071c]
-  "
-/>
+            <img
+              src={data?.avatar}
+              alt=""
+              className="
+                w-24 h-24 md:w-28 md:h-28
+                rounded-full
+                object-cover
+                border-2 border-white/10
+                shadow-[0_0_40px_rgba(217,70,239,0.5)]
+                shrink-0
+                bg-[#12071c]
+              "
+            />
 
             {/* INFO */}
             <div>
@@ -177,7 +190,7 @@ export default function Creator() {
                   font-black
                   tracking-tight
                 ">
-                  @{data.creator}
+                  @{data?.creator}
                 </h1>
 
                 <div className="
@@ -205,20 +218,18 @@ export default function Creator() {
                 Writing immersive fantasy and emotional stories on StarLit.
               </p>
 
-              <button className="
+              <div className="
                 mt-5
-                px-6 py-3
+                inline-flex items-center gap-2
+                px-5 py-3
                 rounded-2xl
-                bg-gradient-to-r
-                from-fuchsia-500
-                to-violet-600
-                font-semibold
-                hover:scale-105
-                transition-all
-                shadow-lg
+                bg-white/5
+                border border-white/10
+                text-sm text-gray-300
+                backdrop-blur-xl
               ">
-                Follow Creator
-              </button>
+                ✨ Premium Story Creator
+              </div>
 
             </div>
 
@@ -243,7 +254,7 @@ export default function Creator() {
                 text-3xl
                 font-black
               ">
-                {data.totalBooks}
+                {data?.totalBooks || 0}
               </p>
 
               <p className="
@@ -267,7 +278,7 @@ export default function Creator() {
                 text-3xl
                 font-black
               ">
-                {data.totalLikes}
+                {data?.totalLikes || 0}
               </p>
 
               <p className="
@@ -321,165 +332,168 @@ export default function Creator() {
         gap-5
       ">
 
-        {data.books.map((book) => (
+        {data?.books?.length > 0 ? (
 
-          <div
-            key={book._id}
-            onClick={() => {
+          data.books.map((book) => (
 
-              if (book.isPremium && !isPremium) return;
+            <div
+              key={book._id}
+              onClick={() => {
 
-              navigate(`/bookd/${book._id}`);
-            }}
-            className="
-              cursor-pointer
-              group
-              hover:-translate-y-2
-              transition-all
-              duration-300
-            "
-          >
+                if (book.isPremium && !isPremium) return;
 
-            {/* COVER */}
-            <div className="
-              relative
-              aspect-[2/3]
-              rounded-[24px]
-              overflow-hidden
-              bg-white/5
-              border border-white/10
-              hover:border-fuchsia-500/40
-              transition-all
-              shadow-xl
-            ">
+                navigate(`/bookd/${book._id}`);
+              }}
+              className="
+                cursor-pointer
+                group
+                hover:-translate-y-2
+                transition-all
+                duration-300
+              "
+            >
 
-              <img
-                src={book.cover}
-                alt={book.title}
-                className={`
-                  w-full h-full
-                  object-cover
-                  transition-all
-                  duration-500
-                  ${
-                    book.isPremium && !isPremium
-                      ? "blur-sm brightness-50"
-                      : "group-hover:scale-110"
-                  }
-                `}
-              />
-
-
-              {/* OVERLAY */}
+              {/* COVER */}
               <div className="
-                absolute inset-0
-                bg-gradient-to-t
-                from-black
-                via-black/10
-                to-transparent
-              " />
+                relative
+                aspect-[2/3]
+                rounded-[24px]
+                overflow-hidden
+                bg-white/5
+                border border-white/10
+                hover:border-fuchsia-500/40
+                transition-all
+                shadow-xl
+              ">
 
+                <img
+                  src={book.cover}
+                  alt={book.title}
+                  className={`
+                    w-full h-full
+                    object-cover
+                    transition-all
+                    duration-500
+                    ${
+                      book.isPremium && !isPremium
+                        ? "blur-sm brightness-50"
+                        : "group-hover:scale-110"
+                    }
+                  `}
+                />
 
-              {/* LOCK */}
-              {book.isPremium && !isPremium && (
                 <div className="
                   absolute inset-0
-                  bg-black/40
-                  flex flex-col
-                  items-center justify-center
-                  backdrop-blur-[2px]
-                ">
+                  bg-gradient-to-t
+                  from-black
+                  via-black/10
+                  to-transparent
+                " />
 
+                {book.isPremium && !isPremium && (
                   <div className="
-                    text-3xl
-                    mb-2
+                    absolute inset-0
+                    bg-black/40
+                    flex flex-col
+                    items-center justify-center
+                    backdrop-blur-[2px]
                   ">
-                    🔒
+
+                    <div className="
+                      text-3xl
+                      mb-2
+                    ">
+                      🔒
+                    </div>
+
+                    <p className="
+                      text-xs
+                      font-medium
+                      tracking-wide
+                    ">
+                      PREMIUM STORY
+                    </p>
+
                   </div>
+                )}
 
-                  <p className="
-                    text-xs
-                    font-medium
-                    tracking-wide
+                {book.isPremium && (
+                  <div className="
+                    absolute top-3 right-3
+                    bg-gradient-to-r
+                    from-yellow-400
+                    to-orange-400
+                    text-black
+                    text-[10px]
+                    font-black
+                    px-3 py-1
+                    rounded-full
+                    shadow-lg
                   ">
-                    PREMIUM STORY
-                  </p>
+                    PREMIUM
+                  </div>
+                )}
 
-                </div>
-              )}
+              </div>
 
+              {/* TEXT */}
+              <div className="mt-4 px-1">
 
-              {/* PREMIUM BADGE */}
-              {book.isPremium && (
+                <h3 className="
+                  text-sm md:text-base
+                  font-semibold
+                  line-clamp-2
+                  group-hover:text-fuchsia-300
+                  transition-colors
+                ">
+                  {book.title}
+                </h3>
+
+                <p className="
+                  text-xs
+                  text-gray-400
+                  mt-2
+                  line-clamp-2
+                  leading-relaxed
+                ">
+                  {book.description}
+                </p>
+
                 <div className="
-                  absolute top-3 right-3
-                  bg-gradient-to-r
-                  from-yellow-400
-                  to-orange-400
-                  text-black
-                  text-[10px]
-                  font-black
-                  px-3 py-1
-                  rounded-full
-                  shadow-lg
+                  flex items-center justify-between
+                  mt-3
+                  text-xs
+                  text-gray-500
                 ">
-                  PREMIUM
+
+                  <span className="
+                    px-2 py-1
+                    rounded-full
+                    bg-white/5
+                    border border-white/10
+                  ">
+                    {book.category}
+                  </span>
+
+                  <span>
+                    ❤️ {book.ratings?.length || 0}
+                  </span>
+
                 </div>
-              )}
-
-            </div>
-
-
-            {/* TEXT */}
-            <div className="mt-4 px-1">
-
-              <h3 className="
-                text-sm md:text-base
-                font-semibold
-                line-clamp-2
-                group-hover:text-fuchsia-300
-                transition-colors
-              ">
-                {book.title}
-              </h3>
-
-              <p className="
-                text-xs
-                text-gray-400
-                mt-2
-                line-clamp-2
-                leading-relaxed
-              ">
-                {book.description}
-              </p>
-
-              <div className="
-                flex items-center justify-between
-                mt-3
-                text-xs
-                text-gray-500
-              ">
-
-                <span className="
-                  px-2 py-1
-                  rounded-full
-                  bg-white/5
-                  border border-white/10
-                ">
-                  {book.category}
-                </span>
-
-                <span>
-                  ❤️ {book.ratings?.length || 0}
-                </span>
 
               </div>
 
             </div>
 
+          ))
+
+        ) : (
+
+          <div className="text-gray-400">
+            No stories found.
           </div>
 
-        ))}
+        )}
 
       </div>
 

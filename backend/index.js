@@ -699,7 +699,6 @@ app.get("/creator/:username", async (req, res) => {
       totalBooks,
       totalLikes,
       books,
-      avatar,
     });
 
   } catch(err){
