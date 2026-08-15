@@ -10,6 +10,7 @@ import {
   Flame,
   ArrowRight,
   Lock,
+  User,
 } from "lucide-react";
 import cuteLogo from "/silver.png";
 import darkLogo from "/silver.png";
@@ -314,9 +315,9 @@ export default function Home() {
               path: "/search",
             },
             {
-              icon: <Mail size={18} />,
-              text: "About",
-              path: "/about",
+              icon: <User size={18} />,
+              text: "Account",
+              path: "/setting",
             },
           ].map((item, index) => (
             <button
@@ -412,8 +413,8 @@ export default function Home() {
 
             {
               icon: <Mail size={18} />,
-              text: "About",
-              path: "/about",
+              text: "account",
+              path: "/setting",
             },
           ].map((item, index) => (
 
