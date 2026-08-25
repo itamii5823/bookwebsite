@@ -199,35 +199,7 @@ export default function BookDetail() {
       `}
     >
       {/* AMBIENT BACKGROUND */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="
-            absolute
-            top-[-10%]
-            left-[-10%]
-            w-125
-            h-125
-            bg-fuchsia-500/10
-            blur-[120px]
-            rounded-full
-            animate-pulse
-          "
-        />
-
-        <div
-          className="
-            absolute
-            bottom-[-20%]
-            right-[-10%]
-            w-125
-            h-125
-            bg-violet-500/10
-            blur-[120px]
-            rounded-full
-            animate-pulse
-          "
-        />
-      </div>
+      
 
       {/* TOP NAV */}
       <div
