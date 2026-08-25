@@ -368,11 +368,11 @@ backgroundSize: "160px 160px",
 
             <div className="max-w-3xl">
               <h2 className="font-sans text-4xl font-semibold leading-tight text-white sm:text-5xl">
-                New voices. Carefully chosen.
+                Stories with something to say.
               </h2>
 
               <p className="mt-6 max-w-2xl text-base leading-8 text-gray-400 sm:text-lg">
-                We look for writers with a distinct voice, a strong point of view, and something worth saying. Silverveil Press is interested in character, atmosphere, and stories that feel considered rather than hurried.
+                A good book doesn't need to shout. We look for writing with its own voice, characters you remember, and ideas that stay with you.
               </p>
 
               <p className="mt-4 max-w-2xl text-base leading-8 text-white/40">

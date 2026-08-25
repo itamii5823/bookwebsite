@@ -55,7 +55,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#060304] text-white">
+    <div className="min-h-screen flex bg-[#0B0F1A] text-white">
 
       {/* LEFT SIDE (branding / fills space) */}
       <div className="hidden md:flex flex-1 items-center justify-center relative overflow-hidden">
