@@ -82,9 +82,9 @@ console.log("USER PREMIUM:", isPremium);
 
   
   const subMap = {
-    Cute: ["Romance","Slice of Life","Coming-of-Age","Cozy Fantasy","Light Comedy","Young Adult"],
+    Cute: ["Slice of Life","Coming-of-Age","Cozy Fantasy","Light Comedy","Young Adult"],
     Neutral: ["Literary Fiction","Adventure","Fantasy","Mystery","Sci-Fi"],
-    Dark: ["Dark Romance","Thriller","Horror","Crime","Dystopian"]
+    Dark: ["Thriller","Horror","Crime","Dystopian"]
   };
 
   const handleRating = async (bookId, value) => {
@@ -297,7 +297,7 @@ const handleBuyPremium = async () => {
         </button>
 
         <button onClick={()=>{setCategory("Cute"); setSubCategory("All");}} className="flex items-center gap-2 px-4 py-1.5 bg-pink-400 text-black rounded-full text-sm">
-          <Heart size={14}/> Cute
+          <Heart size={14}/> Dreamy
         </button>
 
         <button onClick={()=>{setCategory("Neutral"); setSubCategory("All");}} className="flex items-center gap-2 px-4 py-1.5 bg-yellow-400 text-black rounded-full text-sm">
@@ -305,7 +305,7 @@ const handleBuyPremium = async () => {
         </button>
 
         <button onClick={()=>{setCategory("Dark"); setSubCategory("All");}} className="flex items-center gap-2 px-4 py-1.5 bg-red-900 text-white rounded-full text-sm">
-          <Skull size={14}/> Dark
+          <Skull size={14}/> Chilling
         </button>
 
       </div>
@@ -334,9 +334,9 @@ const handleBuyPremium = async () => {
 
             {(category === "All"
               ? [
-                  "Romance","Slice of Life","Coming-of-Age","Cozy Fantasy","Light Comedy","Young Adult",
+                  "Slice of Life","Coming-of-Age","Cozy Fantasy","Light Comedy","Young Adult",
                   "Literary Fiction","Adventure","Fantasy","Mystery","Sci-Fi",
-                  "Dark Romance","Thriller","Horror","Crime","Dystopian"
+                  "Thriller","Horror","Crime","Dystopian"
                 ]
               : subMap[category] || []
             ).map(sub => (
@@ -403,7 +403,7 @@ const handleBuyPremium = async () => {
         }`}
       />
 
-      {/* 🔒 LOCK OVERLAY */}
+      {/* LOCK OVERLAY */}
       {book.isPremium && !isPremium && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white">
           <div className="flex items-center gap-1.5">

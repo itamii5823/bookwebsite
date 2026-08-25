@@ -11,27 +11,18 @@ import {
   ArrowRight,
   Lock,
   User,
+  CalendarDays,
+  Clock3,
+  Star,
 } from "lucide-react";
-import cuteLogo from "/silver.png";
 import darkLogo from "/silver.png";
-import neutralLogo from "/silver.png";
 
 export default function Home() {
-  const [theme, setTheme] = useState("dark");
   const [menuOpen, setMenuOpen] = useState(false);
   const [books, setBooks] = useState([]);
   const [filter, setFilter] = useState("All");
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) setTheme(saved);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-  }, [theme]);
 
   useEffect(() => {
     fetch("https://bookwebsite-4q2b.onrender.com/books")
@@ -51,812 +42,549 @@ export default function Home() {
       ? books
       : books.filter((b) => getSide(b.category) === filter);
 
-  const content = {
-    cute: {
-      heading: "Stories wrapped in futuristic elegance.",
-      sub: "A premium storytelling experience crafted with emotion, atmosphere, and immersive visuals.",
-      about:
-        "Silverveil blends cinematic design with meaningful storytelling to create an unforgettable reading experience.",
-    },
 
-    dark: {
-      heading: "Where stories become obsessions.",
-      sub: "Dive into cinematic worlds filled with mystery, emotion, and unforgettable characters.",
-      about:
-        "Built for readers who crave premium storytelling experiences beyond ordinary platforms.",
-    },
+  const getGenre = (book) => book?.genre || getSide(book?.category) || "Fiction";
+  const getAuthor = (book) => book?.author || book?.username || "Silverveil Press";
 
-    neutral: {
-      heading: "Stories designed to feel timeless.",
-      sub: "A calm, luxurious reading space inspired by elegance, depth, and modern aesthetics.",
-      about:
-        "Minimal yet immersive — crafted for readers who value atmosphere as much as storytelling.",
-    },
+  const formatDate = (value) => {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
   };
 
-  const themes = {
-    dark: {
-      bg: `
-        bg-[#06070A]
-        text-[#F5F7FA]
-      `,
-
-      nav: `
-        bg-black/30
-        backdrop-blur-3xl
-        border-b border-white/[0.06]
-        shadow-[0_10px_40px_rgba(0,0,0,0.45)]
-      `,
-
-      card: `
-        bg-gradient-to-b
-        from-white/[0.07]
-        to-white/[0.03]
-        backdrop-blur-2xl
-        border border-white/[0.08]
-        shadow-[0_10px_60px_rgba(0,0,0,0.45)]
-        hover:border-[#7C8BFF]/30
-        hover:shadow-[0_0_40px_rgba(124,139,255,0.15)]
-        transition-all duration-500
-      `,
-
-      primaryBtn: `
-        bg-gradient-to-r
-        from-[#7C8BFF]
-        via-[#8F6BFF]
-        to-[#B06CFF]
-        text-white
-        hover:scale-[1.03]
-        hover:shadow-[0_0_30px_rgba(143,107,255,0.45)]
-        transition-all duration-300
-      `,
-
-      secondaryBtn: `
-        bg-white/[0.04]
-        border border-white/[0.08]
-        hover:bg-white/[0.07]
-        transition-all duration-300
-      `,
-
-      accent: `
-        text-transparent
-        bg-clip-text
-        bg-gradient-to-r
-        from-[#DDE7FF]
-        via-[#AEBBFF]
-        to-[#8F6BFF]
-      `,
-
-      muted: "text-[#A1A8B8]",
-
-      logo: darkLogo,
-    },
-
-    neutral: {
-      bg: `
-        bg-[#0D0E12]
-        text-[#ECECEC]
-      `,
-
-      nav: `
-        bg-[#111318]/70
-        backdrop-blur-3xl
-        border-b border-white/[0.05]
-      `,
-
-      card: `
-        bg-[#151821]/70
-        backdrop-blur-2xl
-        border border-white/[0.06]
-        shadow-[0_10px_40px_rgba(0,0,0,0.35)]
-        hover:border-[#C7A86D]/20
-        transition-all duration-500
-      `,
-
-      primaryBtn: `
-        bg-gradient-to-r
-        from-[#C7A86D]
-        to-[#E7C58A]
-        text-black
-        hover:scale-[1.03]
-        transition-all duration-300
-      `,
-
-      secondaryBtn: `
-        bg-white/[0.03]
-        border border-white/[0.08]
-        hover:bg-white/[0.05]
-        transition-all duration-300
-      `,
-
-      accent: `
-        text-transparent
-        bg-clip-text
-        bg-gradient-to-r
-        from-[#F5D9A5]
-        to-[#C7A86D]
-      `,
-
-      muted: "text-[#9A9DA5]",
-
-      logo: neutralLogo,
-    },
-
-    cute: {
-      bg: `
-        bg-[#0A0D14]
-        text-[#F4F7FF]
-      `,
-
-      nav: `
-        bg-[#0D111A]/70
-        backdrop-blur-3xl
-        border-b border-cyan-400/10
-      `,
-
-      card: `
-        bg-gradient-to-b
-        from-[#121826]/90
-        to-[#0F1420]/90
-        backdrop-blur-2xl
-        border border-cyan-400/10
-        shadow-[0_10px_50px_rgba(0,0,0,0.4)]
-        hover:border-cyan-300/30
-        hover:shadow-[0_0_35px_rgba(34,211,238,0.12)]
-        transition-all duration-500
-      `,
-
-      primaryBtn: `
-        bg-gradient-to-r
-        from-[#22D3EE]
-        via-[#38BDF8]
-        to-[#818CF8]
-        text-white
-        hover:scale-[1.03]
-        hover:shadow-[0_0_35px_rgba(34,211,238,0.35)]
-        transition-all duration-300
-      `,
-
-      secondaryBtn: `
-        bg-white/[0.03]
-        border border-cyan-400/10
-        hover:bg-cyan-400/[0.05]
-        transition-all duration-300
-      `,
-
-      accent: `
-        text-transparent
-        bg-clip-text
-        bg-gradient-to-r
-        from-[#67E8F9]
-        via-[#93C5FD]
-        to-[#A5B4FC]
-      `,
-
-      muted: "text-[#A7B3C7]",
-
-      logo: cuteLogo,
-    },
+  const getReadingTime = (book) => {
+    if (book?.readingTime) return `${book.readingTime} min read`;
+    if (book?.pages) {
+      const minutes = Math.max(5, Math.round(Number(book.pages) * 1.2));
+      return `${minutes} min read`;
+    }
+    return "";
   };
 
-  const current = themes[theme];
-  const text = content[theme];
+  const current = {
+    bg: "bg-[#0B0F1A] text-white",
+    nav: "bg-[#0B0F1A] border-white/10",
+    card: "bg-[#151821] border-white/10 hover:border-white/15",
+    primaryBtn: "bg-yellow-400 text-black hover:bg-yellow-300",
+    secondaryBtn: "bg-white/5 border-white/10 hover:bg-yellow-300/10",
+    accent: "text-white",
+    muted: "text-gray-400",
+    subtext: "text-gray-500",
+    line: "border-white/10",
+    logo: darkLogo,
+  };
+
+  const pressBooks = filteredBooks.slice(-4);
+  const gridBooks = filteredBooks.slice(-6);
+  const editorBook = filteredBooks[filteredBooks.length - 1] || null;
+
+  const editorRecommendation =
+    "A quietly assured piece of writing with a strong sense of place. It is the kind of story that rewards a slower read and stays in the mind after the page is closed.";
 
   return (
     <div
-      className={`${current.bg} min-h-screen overflow-hidden`}
+      className={`${current.bg} min-h-screen relative`}
       style={{
-        fontFamily:
-          "'Inter', 'SF Pro Display', 'Poppins', sans-serif",
+        fontFamily: "'Segoe UI', Arial, sans-serif",
       }}
     >
-      {/* PREMIUM BACKGROUND */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-[#05060A]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 -z-10 opacity-[0.16]"
+        style={{
+          backgroundImage: "url(/silverveil-paper-grain.svg)",
+backgroundSize: "160px 160px",
+        }}
+      />
 
-        <div className="absolute top-[-20%] left-[-10%] w-175 h-175 rounded-full bg-[#7C8BFF]/10 blur-[160px]" />
-
-        <div className="absolute bottom-[-20%] right-[-10%] w-175 h-175 rounded-full bg-[#22D3EE]/10 blur-[180px]" />
-
-        <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-size-[80px_80px]" />
-      </div>
-
-      {/* THEME SWITCHER */}
-      <div className="hidden md:flex fixed top-28 right-5 z-50 flex-col gap-3">
-        {["cute", "dark", "neutral"].map((t) => (
+      {/* NAVIGATION */}
+      <nav className={`sticky top-0 z-40 border-b ${current.nav} backdrop-blur-sm`}>
+        <div className="mx-auto flex h-18 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <button
-            key={t}
-            onClick={() => {
-              setTheme(t);
-              setFilter(
-                t.charAt(0).toUpperCase() + t.slice(1)
-              );
-            }}
-            className="
-              px-4 py-2 rounded-2xl
-              backdrop-blur-xl
-              border border-white/10
-              bg-white/4
-              hover:bg-white/8
-              hover:scale-105
-              transition-all duration-300
-              capitalize
-            "
+            type="button"
+            onClick={() => navigate("/")}
+            className="shrink-0"
+            aria-label="Silverveil Press home"
           >
-            {t}
+            <img
+              src={current.logo}
+              alt="Silverveil Press"
+              className="h-9 w-auto object-contain"
+            />
           </button>
-        ))}
-      </div>
 
-      {/* NAVBAR */}
-      <nav
-        className={`h-20 flex justify-between items-center px-4 md:px-10 sticky top-0 z-40 ${current.nav}`}
-      >
-        <img
-          src={current.logo}
-          className="h-14 object-contain cursor-pointer"
-        />
+          <div className="hidden md:flex items-center gap-5">
+            {[
+              { icon: <BookOpen size={16} />, text: "Books", path: "/book" },
+              { icon: <Feather size={16} />, text: "Submit", path: "/sign" },
+              { icon: <Search size={16} />, text: "Search", path: "/search" },
+              { icon: <User size={16} />, text: "Account", path: "/setting" },
+            ].map((item) => (
+              <button
+                type="button"
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                className="group flex items-center gap-2 py-2 text-sm text-gray-300 transition-colors hover:text-[#f1ece4]"
+              >
+                {item.icon}
+                <span className="relative">
+                  {item.text}
+                  <span className="absolute -bottom-1 left-0 h-px w-0 bg-white/70 transition-all duration-200 group-hover:w-full" />
+                </span>
+              </button>
+            ))}
+          </div>
 
-        <div className="hidden md:flex items-center gap-2">
-          {[
-            {
-              icon: <BookOpen size={18} />,
-              text: "Books",
-              path: "/book",
-            },
-            {
-              icon: <Feather size={18} />,
-              text: "Submit",
-              path: "/sign",
-            },
-            {
-              icon: <Search size={18} />,
-              text: "Search",
-              path: "/search",
-            },
-            {
-              icon: <User size={18} />,
-              text: "Account",
-              path: "/setting",
-            },
-          ].map((item, index) => (
-            <button
-              key={index}
-              onClick={() => navigate(item.path)}
-              className="
-                px-5 py-2.5 rounded-2xl
-                flex items-center gap-2
-                hover:bg-white/6
-                transition-all duration-300
-              "
-            >
-              {item.icon}
-              {item.text}
-            </button>
-          ))}
+          <button
+            type="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            className="flex h-9 w-9 flex-col items-center justify-center rounded-md border border-white/10 md:hidden"
+          >
+            <span className={`block h-px w-5 bg-current transition-transform ${menuOpen ? "translate-y-1.5 rotate-45" : ""}`} />
+            <span className={`my-1 block h-px w-5 bg-current transition-opacity ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`block h-px w-5 bg-current transition-transform ${menuOpen ? "-translate-y-1.5 -rotate-45" : ""}`} />
+          </button>
         </div>
-
-        {/* MOBILE BUTTON */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="
-            md:hidden flex flex-col justify-center items-center
-            w-10 h-10 rounded-xl
-            hover:bg-white/6
-            transition
-          "
-        >
-          <span
-            className={`block w-6 h-0.5 bg-current transition ${
-              menuOpen ? "rotate-45 translate-y-1.5" : ""
-            }`}
-          />
-
-          <span
-            className={`block w-6 h-0.5 bg-current my-1 transition ${
-              menuOpen ? "opacity-0" : ""
-            }`}
-          />
-
-          <span
-            className={`block w-6 h-0.5 bg-current transition ${
-              menuOpen ? "-rotate-45 -translate-y-1.5" : ""
-            }`}
-          />
-        </button>
       </nav>
 
       {/* MOBILE MENU */}
-    
-{menuOpen && (
-  <div className="md:hidden fixed inset-0 z-50">
+      {menuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <button
+            type="button"
+            aria-label="Close menu"
+            className="absolute inset-0 bg-black/70"
+            onClick={() => setMenuOpen(false)}
+          />
 
-    {/* BACKDROP */}
-    <div
-      className="absolute inset-0 bg-black/70 backdrop-blur-md"
-      onClick={() => setMenuOpen(false)}
-    />
-
-    {/* MENU PANEL */}
-    <div className="absolute top-20 left-0 w-full px-4">
-
-      <div
-        className={`
-          rounded-[28px]
-          p-6
-          space-y-6
-          ${current.card}
-        `}
-      >
-
-        {/* NAVIGATION */}
-        <div className="space-y-3">
-
-          {[
-            {
-              icon: <BookOpen size={18} />,
-              text: "Books",
-              path: "/book",
-            },
-
-            {
-              icon: <Feather size={18} />,
-              text: "Submit",
-              path: "/sign",
-            },
-
-            {
-              icon: <Search size={18} />,
-              text: "Search",
-              path: "/search",
-            },
-
-            {
-              icon: <Mail size={18} />,
-              text: "account",
-              path: "/setting",
-            },
-          ].map((item, index) => (
-
-            <button
-              key={index}
-              onClick={() => {
-                navigate(item.path);
-                setMenuOpen(false);
-              }}
-              className="
-                w-full
-                p-4
-                rounded-2xl
-                flex items-center gap-3
-                bg-white/3
-                hover:bg-white/6
-                border border-white/5
-                transition-all duration-300
-              "
-            >
-              {item.icon}
-              <span className="font-medium">
-                {item.text}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* DIVIDER */}
-        <div className="h-px bg-white/6" />
-
-        {/* THEME SECTION */}
-<div>
-
-  <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-white/40 mb-4">
-    Story Atmosphere
-  </p>
-
-  <div className="space-y-3">
-
-    {[
-      {
-        key: "dark",
-        title: "Dark",
-        desc: "Mystery • Power • Shadows",
-        dot: "bg-violet-400",
-        active:
-          "border-violet-400/30 bg-violet-400/10",
-      },
-
-      {
-        key: "neutral",
-        title: "Neutral",
-        desc: "Elegant • Calm • Timeless",
-        dot: "bg-amber-300",
-        active:
-          "border-amber-300/30 bg-amber-300/10",
-      },
-
-      {
-        key: "cute",
-        title: "Cute",
-        desc: "Fantasy • Soft • Dreamy",
-        dot: "bg-cyan-300",
-        active:
-          "border-cyan-300/30 bg-cyan-300/10",
-      },
-    ].map((t) => (
-
-      <button
-        key={t.key}
-        onClick={() => {
-          setTheme(t.key);
-
-          setFilter(
-            t.key.charAt(0).toUpperCase() +
-            t.key.slice(1)
-          );
-        }}
-        className={`w-full rounded-[20px] border overflow-hidden transition-all duration-300 ${
-          theme === t.key
-            ? t.active +
-              " shadow-[0_0_25px_rgba(255,255,255,0.03)]"
-            : "border-white/6 bg-white/3 hover:bg-white/5"
-        }`}
-      >
-
-        <div className="flex items-center justify-between px-5 py-4">
-
-          {/* LEFT */}
-          <div className="flex items-center gap-4">
-
-            {/* DOT */}
-            <div
-              className={`w-3 h-3 rounded-full ${t.dot}`}
-            />
-
-            {/* TEXT */}
-            <div className="text-left">
-
-              <h3 className="text-sm font-semibold text-white">
-                {t.title}
-              </h3>
-
-              <p className="text-xs text-white/45 mt-1">
-                {t.desc}
-              </p>
-
+          <div className="absolute left-3 right-3 top-[4.75rem]">
+            <div className={`rounded-lg border p-3 shadow-xl ${current.card}`}>
+              {[
+                { icon: <BookOpen size={18} />, text: "Books", path: "/book" },
+                { icon: <Feather size={18} />, text: "Submit", path: "/sign" },
+                { icon: <Search size={18} />, text: "Search", path: "/search" },
+                { icon: <Mail size={18} />, text: "Account", path: "/setting" },
+              ].map((item) => (
+                <button
+                  type="button"
+                  key={item.path}
+                  onClick={() => {
+                    navigate(item.path);
+                    setMenuOpen(false);
+                  }}
+                  className="flex w-full items-center gap-3 border-b border-white/5 px-3 py-3 text-left text-sm text-white last:border-b-0 hover:bg-yellow-300/5"
+                >
+                  {item.icon}
+                  {item.text}
+                </button>
+              ))}
             </div>
           </div>
-
-          {/* ACTIVE CHECK */}
-          <div
-            className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${
-              theme === t.key
-                ? "border-white/30 bg-white/10"
-                : "border-white/10"
-            }`}
-          >
-
-            {theme === t.key && (
-              <div className="w-2 h-2 rounded-full bg-white" />
-            )}
-
-          </div>
         </div>
-      </button>
-    ))}
-  </div>
-</div>
-
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
       {/* HERO */}
-      <section className="relative text-center py-36 md:py-44 px-4 max-w-7xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/4 backdrop-blur-xl mb-8 text-sm">
-          <Sparkles size={16} />
-          Premium Storytelling Platform
-        </div>
+      <header className="border-b border-white/10">
+        <div className="mx-auto max-w-6xl px-4 pb-16 pt-16 sm:px-6 sm:pb-20 sm:pt-20 lg:px-8">
+          <div className="grid items-end gap-10 lg:grid-cols-[1fr_280px]">
+            <div className="max-w-3xl">
+              <p className="mb-5 text-xs uppercase tracking-[0.22em] text-gray-400">
+                Silverveil Press
+              </p>
 
-        <h1
-          className={`
-            text-5xl sm:text-6xl md:text-8xl
-            font-black tracking-[-0.04em]
-            leading-[0.95]
-            max-w-6xl mx-auto mb-8
-            drop-shadow-[0_0_25px_rgba(255,255,255,0.08)]
-            ${current.accent}
-          `}
-        >
-          {text.heading}
-        </h1>
+              <h1 className="font-sans text-5xl font-semibold leading-[1.05] tracking-[-0.025em] text-white sm:text-6xl lg:text-7xl">
+                Find a book. Start reading.
+              </h1>
 
-        <p
-          className={`max-w-2xl mx-auto text-lg md:text-xl leading-8 mb-10 ${current.muted}`}
-        >
-          {text.sub}
-        </p>
+              <p className="mt-6 max-w-2xl text-base leading-7 text-gray-300 sm:text-lg">
+               Explore books and stories from different writers.
+              </p>
 
-        <div className="flex flex-wrap justify-center gap-5">
-          <button
-            onClick={() => navigate("/book")}
-            className={`px-8 py-4 rounded-2xl font-semibold flex items-center gap-2 ${current.primaryBtn}`}
-          >
-            Explore Stories
-            <ArrowRight size={18} />
-          </button>
+              <div className="mt-8 flex flex-col gap-2.5 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={() => navigate("/book")}
+                  className="group inline-flex items-center justify-center gap-2 rounded-md bg-yellow-400 px-5 py-3 text-sm font-medium text-black transition-colors hover:bg-yellow-300"
+                >
+                  Explore the Library
+                  <ArrowRight size={15} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                </button>
 
-          <button
-            onClick={() => navigate("/admin")}
-            className={`px-8 py-4 rounded-2xl font-semibold flex items-center gap-2 ${current.secondaryBtn}`}
-          >
-            <Sparkles size={18} />
-            Submit Story
-          </button>
-        </div>
-      </section>
-
-      {/* STATS */}
-      <section className="max-w-6xl mx-auto px-4 mb-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            [books.length, "Stories"],
-            ["24/7", "Readers"],
-            ["∞", "Imagination"],
-            ["100%", "Passion"],
-          ].map(([value, label], index) => (
-            <div
-              key={index}
-              className={`
-                p-7 rounded-3xl
-                text-center
-                hover:-translate-y-1
-                hover:scale-[1.01]
-                active:scale-[0.99]
-                transition-all duration-500
-                ${current.card}
-              `}
-            >
-              <h3
-                className={`text-3xl font-black mb-2 ${current.accent}`}
-              >
-                {value}
-              </h3>
-
-              <p className="text-sm opacity-70">{label}</p>
+                <button
+                  type="button"
+                  onClick={() => navigate("/admin")}
+                  className="group inline-flex items-center justify-center gap-2 rounded-md border border-white/20 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-yellow-300/5"
+                >
+                  Share Your Story
+                  <Feather size={15} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                </button>
+              </div>
             </div>
-          ))}
+
+            <div className="hidden border-l border-white/10 pl-6 lg:block">
+              <p className="text-sm leading-6 text-gray-400">
+                Independent publishing for stories with a point of view.
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* FROM THE PRESS */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div className="mb-8 flex items-end justify-between gap-4">
+          <div>
+            <p className="mb-2 text-xs uppercase tracking-[0.18em] text-white/35">
+              Recent selection
+            </p>
+            <h2 className="font-sans text-3xl font-medium text-white sm:text-4xl">
+              From the Press
+            </h2>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate("/book")}
+            className="hidden text-sm text-gray-400 transition-colors hover:text-[#f1ece4] sm:inline-flex sm:items-center sm:gap-1"
+          >
+            View library
+            <ArrowRight size={14} />
+          </button>
+        </div>
+
+        <div className="space-y-6 md:grid md:grid-cols-2 md:gap-8 md:space-y-0 xl:grid-cols-4">
+          {pressBooks.map((book) => {
+            const date = formatDate(book.publishedAt || book.createdAt);
+            const readTime = getReadingTime(book);
+
+            return (
+              <article key={book._id} className="group border-b border-white/10 pb-6 last:border-b-0 md:border-b-0 md:pb-0">
+                <div className="flex gap-4 sm:gap-5 md:block">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (book.isPremium) return;
+                      navigate(`/bookd/${book._id}`);
+                    }}
+                    className="block shrink-0 text-left"
+                  >
+                    <div className="relative h-36 w-24 overflow-hidden rounded-md border border-white/10 bg-[#151821] sm:h-40 sm:w-27 md:h-auto md:w-full">
+                      <div className="h-full w-full md:aspect-[2/3]">
+                        <img
+                          src={book.cover}
+                          alt={book.title}
+                          loading="lazy"
+                          className={`h-full w-full object-cover transition-transform duration-300 ${
+                            book.isPremium
+                              ? "blur-sm brightness-75"
+                              : "group-hover:scale-[1.025]"
+                          }`}
+                        />
+                      </div>
+
+                      {book.isPremium && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-xs font-medium text-white">
+                          <span className="flex items-center gap-1.5">
+                            <Lock size={12} />
+                            Premium
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+
+                  <div className="min-w-0 flex-1 pt-1 md:pt-4">
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-amber-300">
+                    {getGenre(book)}
+                  </p>
+
+                  <h3 className="mt-1 font-sans text-2xl font-semibold leading-tight text-white">
+                    {book.title}
+                  </h3>
+
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/creator/${book.username}`)}
+                    className="mt-1 text-sm text-gray-400 transition-colors hover:text-[#f1ece4]"
+                  >
+                    by {getAuthor(book)}
+                  </button>
+
+                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-white/50">
+                    {book.description}
+                  </p>
+
+                  <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-[11px] uppercase tracking-[0.1em] text-white/30">
+                    {date && (
+                      <span className="inline-flex items-center gap-1">
+                        <CalendarDays size={11} />
+                        {date}
+                      </span>
+                    )}
+                    {readTime && (
+                      <span className="inline-flex items-center gap-1">
+                        <Clock3 size={11} />
+                        {readTime}
+                      </span>
+                    )}
+                  </div>
+
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm text-gray-300 transition-colors group-hover:text-[#f1ece4]">
+                    Read story
+                    <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </span>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => navigate("/book")}
+          className="mt-8 inline-flex items-center gap-1 text-sm text-gray-400 hover:text-[#f1ece4] sm:hidden"
+        >
+          View library
+          <ArrowRight size={14} />
+        </button>
+      </section>
+
+      {/* EDITORIAL STATEMENT */}
+      <section className="border-y border-white/10 bg-[#0B0F1A]">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <div className="grid gap-8 md:grid-cols-[180px_1fr] md:gap-12">
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] text-white/35">
+                Our approach
+              </p>
+            </div>
+
+            <div className="max-w-3xl">
+              <h2 className="font-sans text-4xl font-semibold leading-tight text-white sm:text-5xl">
+                New voices. Carefully chosen.
+              </h2>
+
+              <p className="mt-6 max-w-2xl text-base leading-8 text-gray-400 sm:text-lg">
+                We look for writers with a distinct voice, a strong point of view, and something worth saying. Silverveil Press is interested in character, atmosphere, and stories that feel considered rather than hurried.
+              </p>
+
+              <p className="mt-4 max-w-2xl text-base leading-8 text-white/40">
+                We publish selectively, read closely, and give each story room to breathe.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* MAIN CONTENT */}
-      <section className="max-w-362.5 mx-auto px-4 md:px-8 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* FEATURED */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-              <Flame className={current.accent} />
-              <h2 className="text-3xl font-bold">
-                Featured Stories
+      {/* EDITOR'S PICK */}
+      {editorBook && (
+        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="grid overflow-hidden border border-white/10 bg-[#151821] md:grid-cols-[0.9fr_1.1fr]">
+            <div className="relative h-[300px] sm:h-[380px] md:h-[560px]">
+              <img
+                src={editorBook.cover}
+                alt={editorBook.title}
+                loading="lazy"
+                className={`h-full w-full object-cover ${
+                  editorBook.isPremium ? "blur-sm brightness-75" : ""
+                }`}
+              />
+
+              {editorBook.isPremium && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-sm font-medium text-white">
+                  <span className="flex items-center gap-1.5">
+                    <Lock size={14} />
+                    Premium
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-14">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-300">
+                Editor&apos;s Pick
+              </p>
+
+              <h2 className="mt-4 font-sans text-4xl font-semibold leading-tight text-white sm:text-5xl">
+                {editorBook.title}
+              </h2>
+
+              <p className="mt-2 text-sm text-gray-400">
+                by {getAuthor(editorBook)}
+              </p>
+
+              <p className="mt-7 max-w-xl text-base leading-8 text-gray-300">
+                {editorRecommendation}
+              </p>
+
+              <p className="mt-5 max-w-xl text-sm leading-6 text-white/40">
+                {editorBook.description}
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (editorBook.isPremium) return;
+                    navigate(`/bookd/${editorBook._id}`);
+                  }}
+                  className="group inline-flex items-center gap-2 text-sm text-white"
+                >
+                  Read more
+                  <ArrowRight size={15} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                </button>
+
+                <span className="text-xs uppercase tracking-[0.12em] text-white/30">
+                  {getGenre(editorBook)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* NEW BOOKS */}
+      <section className="border-t border-white/10">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <p className="mb-2 text-xs uppercase tracking-[0.18em] text-white/35">
+                Latest arrivals
+              </p>
+              <h2 className="font-sans text-3xl font-medium text-white sm:text-4xl">
+                New Books
               </h2>
             </div>
 
-            <div className="space-y-5">
-              {filteredBooks.slice(-4).map((book) => (
-                <div
-                  key={book._id}
+            <button
+              type="button"
+              onClick={() => navigate("/book")}
+              className="group inline-flex items-center gap-1 text-sm text-gray-400 hover:text-[#f1ece4]"
+            >
+              View all
+              <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
+            {gridBooks.map((book, index) => (
+              <article
+                key={book._id}
+                className={`group ${
+                  index === 1 ? "lg:pt-10" : index === 4 ? "lg:-mt-6" : ""
+                }`}
+              >
+                <button
+                  type="button"
                   onClick={() => {
                     if (book.isPremium) return;
                     navigate(`/bookd/${book._id}`);
                   }}
-                  className={`
-                    group p-5 rounded-3xl
-                    cursor-pointer
-                    hover:-translate-y-1
-                    hover:scale-[1.01]
-                    active:scale-[0.99]
-                    transition-all duration-500
-                    ${current.card}
-                  `}
+                  className="block w-full text-left"
                 >
-                  <div className="flex gap-5">
-                    <div className="relative w-28 aspect-2/3 rounded-2xl overflow-hidden shrink-0">
-                      <img
-                        src={book.cover}
-                        loading="lazy"
-                        className={`
-                          w-full h-full object-cover transition duration-700
-                          ${
-                            book.isPremium
-                              ? "blur-sm brightness-75"
-                              : "group-hover:scale-110"
-                          }
-                        `}
-                      />
-
-                      {book.isPremium && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-xs font-medium">
-                          <div className="flex items-center gap-1.5">
-                            <Lock size={13} strokeWidth={2.5} />
-                              <span>Premium</span>
-                           </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col justify-center flex-1">
-                      <h3
-                        className={`text-2xl font-bold mb-3 ${current.accent}`}
-                      >
-                        {book.title}
-                      </h3>
-
-                      <p className="opacity-70 leading-7 line-clamp-3">
-                        {book.description}
-                      </p>
-                      
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* TRENDING */}
-          <div
-            className={`
-              p-6 rounded-3xl
-              h-fit sticky top-28
-              ${current.card}
-            `}
-          >
-            <div className="flex items-center gap-2 mb-6">
-              <Sparkles className={current.accent} size={20} />
-              <h3 className="text-2xl font-bold">Trending</h3>
-            </div>
-
-            <div className="space-y-3">
-              {filteredBooks.map((b, index) => (
-                <div
-                  key={b._id}
-                  onClick={() => navigate(`/bookd/${b._id}`)}
-                  className="
-                    group flex items-center justify-between
-                    p-4 rounded-2xl
-                    hover:bg-white/4
-                    cursor-pointer transition-all
-                  "
-                >
-                  <div>
-                    <p className="font-semibold group-hover:translate-x-1 transition-all">
-                      {b.title}
-                    </p>
-                  </div>
-
-                  <span className="text-xs opacity-40 font-bold">
-                    0{index + 1}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* NEW STORIES */}
-        <div className="mt-24">
-          <div className="flex items-center justify-between mb-10 flex-wrap gap-4">
-            <h2 className="text-3xl md:text-4xl font-black">
-              New Stories
-            </h2>
-
-            <button
-              onClick={() => navigate("/book")}
-              className={`px-5 py-3 rounded-2xl font-medium ${current.secondaryBtn}`}
-            >
-              View All
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
-            {filteredBooks.slice(-6).map((book) => (
-              <div
-                key={book._id}
-                onClick={() => {
-                  if (book.isPremium) return;
-                  navigate(`/bookd/${book._id}`);
-                }}
-                className={`
-                  group overflow-hidden rounded-3xl
-                  cursor-pointer
-                  hover:-translate-y-1
-                  hover:scale-[1.01]
-                  active:scale-[0.99]
-                  transition-all duration-500
-                  ${current.card}
-                `}
-              >
-                <div className="relative h-72 overflow-hidden">
-                  <img
-                    src={book.cover}
-                    loading="lazy"
-                    className={`
-                      w-full h-full object-cover transition duration-700
-                      ${
+                  <div className="mx-auto aspect-[2/3] w-full max-w-[140px] overflow-hidden rounded-md border border-white/10 bg-[#151821] sm:max-w-none">
+                    <img
+                      src={book.cover}
+                      alt={book.title}
+                      loading="lazy"
+                      className={`h-full w-full object-cover transition-transform duration-300 ${
                         book.isPremium
                           ? "blur-sm brightness-75"
-                          : "group-hover:scale-110"
-                      }
-                    `}
-                  />
+                          : "group-hover:scale-[1.025]"
+                      }`}
+                    />
+                  </div>
+                </button>
 
-                  <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent" />
+                <div className="pt-4">
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-amber-300">
+                    {getGenre(book)}
+                  </p>
 
-                  {book.isPremium && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-sm font-semibold">
-                       <div className="flex items-center gap-1.5">
-                            <Lock size={13} strokeWidth={2.5} />
-                                  <span>Premium</span>
-                                    </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-7">
-                  <h3
-                    className={`text-xl font-bold mb-3 ${current.accent}`}
-                  >
+                  <h3 className="mt-1 font-sans text-base font-semibold leading-tight text-white sm:text-2xl">
                     {book.title}
                   </h3>
 
-                  <p className="text-sm opacity-70 leading-7 line-clamp-3">
+                  <p className="mt-1 text-xs text-gray-400 sm:text-sm">
+                    by {getAuthor(book)}
+                  </p>
+
+                  <p className="mt-2 line-clamp-2 text-xs leading-5 text-gray-400 sm:text-sm sm:leading-6">
                     {book.description}
                   </p>
-                  <button
-  onClick={(e) => {
-    e.stopPropagation();
-    navigate(`/creator/${book.username}`);
-  }}
-  className="
-    mt-4
-    text-sm
-    text-white/50
-    hover:text-white
-    transition-all
-  "
->
-  @{book.username}
-</button>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ABOUT */}
-      <section className="px-4 pb-24">
-        <div
-          className={`
-            max-w-5xl mx-auto
-            p-10 md:p-16
-            rounded-[28px]
-            text-center
-            ${current.card}
-          `}
-        >
-          <h2 className="text-4xl md:text-5xl font-black mb-6">
-            Our Story
-          </h2>
+      {/* ABOUT / CLOSE */}
+      <section className="border-t border-white/10">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <div className="grid gap-8 md:grid-cols-[180px_1fr] md:gap-12">
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] text-white/35">
+                Silverveil Press
+              </p>
+            </div>
 
-          <p className="text-lg leading-9 opacity-80 max-w-3xl mx-auto">
-            {text.about}
-          </p>
+            <div className="max-w-3xl">
+              <h2 className="font-sans text-3xl font-medium text-white sm:text-4xl">
+                Stories with a little more weight.
+              </h2>
+
+              <p className="mt-5 max-w-2xl text-base leading-8 text-white/50">
+                We publish stories for readers who still like to linger over a sentence, notice a voice, and remember a book after it is finished.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/10 py-10 text-center text-sm opacity-50 backdrop-blur-xl bg-white/2">
-        © 2026 Silverveil.press — Crafted for dreamers.
+      <footer className="border-t border-white/10">
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="grid gap-8 md:grid-cols-[1.5fr_1fr_1fr]">
+            <div>
+              <img
+                src={current.logo}
+                alt="Silverveil Press"
+                className="h-9 w-auto object-contain"
+              />
+              <p className="mt-3 max-w-xs text-sm leading-6 text-white/35">
+                Stories with a little more weight.
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs uppercase tracking-[0.16em] text-white/30">
+                Navigation
+              </p>
+              <div className="mt-3 space-y-2 text-sm text-gray-400">
+                <button type="button" onClick={() => navigate("/book")} className="block hover:text-[#f1ece4]">Books</button>
+                <button type="button" onClick={() => navigate("/sign")} className="block hover:text-[#f1ece4]">Submit</button>
+                <button type="button" onClick={() => navigate("/search")} className="block hover:text-[#f1ece4]">About</button>
+                <button type="button" onClick={() => navigate("/setting")} className="block hover:text-[#f1ece4]">Contact</button>
+              </div>
+            </div>
+
+            <div>
+             
+            </div>
+          </div>
+
+          <div className="mt-10 border-t border-white/10 pt-5 text-xs text-white/25">
+            © 2026 Silverveil Press
+          </div>
+        </div>
       </footer>
     </div>
   );

@@ -64,7 +64,7 @@ export default function Signup() {
       {/* LEFT SIDE */}
       <div className="hidden md:flex flex-1 items-center justify-center relative overflow-hidden">
 
-        <div className="absolute w-125 h-125 bg-pink-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute w-125 h-125  rounded-full blur-3xl"></div>
 
         <div className="relative z-10 max-w-md px-10">
           <h1 className="text-4xl font-semibold leading-tight">
