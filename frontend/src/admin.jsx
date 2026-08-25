@@ -153,9 +153,9 @@ export default function Admin() {
             className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-[#E37EAF] focus:outline-none text-gray-300"
           >
             <option value="">Select Story Tone</option>
-            <option value="Cute">🌈 Cute</option>
-            <option value="Neutral">📘 Neutral</option>
-            <option value="Dark">🖤 Dark</option>
+            <option value="Cute">Cute</option>
+            <option value="Neutral">Neutral</option>
+            <option value="Dark">Dark</option>
           </select>
 
           {/* GENRE SELECT */}
