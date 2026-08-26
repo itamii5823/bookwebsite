@@ -27,4 +27,4 @@ Data fetching is currently being fixed and will be updated soon.
 
 ## Author
 Sahil Bansal  
-https://github.com/itamii5823
+https://github.com/sahill1249
